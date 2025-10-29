@@ -146,7 +146,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
           ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」`
           : `1位「${topRoleNames[0]}」`;
 
-        const shareText = `🚀 宇宙業界適性診断の結果が出ました！\n\n私に向いている役割は...\n${rolesList}\n\n✨ あなたも宇宙で活躍できる適性を発見しませんか？\n無料診断は3分で完了！`;
+        const shareText = `🚀 宇宙業界適性診断の結果が出ました！\n\n私に向いている職種は...\n${rolesList}\n\n✨ あなたも宇宙で活躍できる適性を発見しませんか？\n無料診断は3分で完了！`;
 
         await navigator.share({
           title: '宇宙スキル標準アセスメント',
@@ -170,7 +170,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
           ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」`
           : `1位「${topRoleNames[0]}」`;
 
-        const copyText = `🚀 宇宙業界適性診断の結果が出ました！\n\n私に向いている役割は...\n${rolesList}\n\n✨ あなたも宇宙で活躍できる適性を発見しませんか？\n無料診断は3分で完了！\n\n${shareUrl}`;
+        const copyText = `🚀 宇宙業界適性診断の結果が出ました！\n\n私に向いている職種は...\n${rolesList}\n\n✨ あなたも宇宙で活躍できる適性を発見しませんか？\n無料診断は3分で完了！\n\n${shareUrl}`;
 
         await navigator.clipboard.writeText(copyText);
         alert('結果をクリップボードにコピーしました！');
@@ -199,7 +199,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
           診断結果
         </h1>
         <p className="text-xl text-gray-600">
-          あなたに向いている役割 TOP3
+          あなたに向いている職種 TOP3
         </p>
       </div>
 
@@ -239,7 +239,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
               )}
             </div>
 
-            {/* 役割情報 */}
+            {/* 職種情報 */}
             <div className="mb-4">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 {roleResult.role.name}
@@ -262,7 +262,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
                     href={`/categories/${slug}`}
                     className="flex-1 bg-indigo-600 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
                   >
-                    この役割に必要なスキルを診断
+                    この職種に必要なスキルを診断
                   </Link>
                 );
               })()}

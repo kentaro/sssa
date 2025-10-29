@@ -126,7 +126,7 @@ export default function QuickAssessmentPage() {
           クイック診断
         </h1>
         <p className="text-gray-600">
-          24問の質問に答えて、あなたに向いている役割を見つけましょう
+          24問の質問に答えて、あなたに向いている職種を見つけましょう
         </p>
       </div>
 

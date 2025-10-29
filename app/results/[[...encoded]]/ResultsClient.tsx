@@ -279,14 +279,14 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
         <CategoryRadarChart summaries={summaries} />
       </div>
 
-      {/* 推奨役割 */}
+      {/* 推奨職種 */}
       {topCategories.length > 0 && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            推奨される役割
+            推奨される職種
           </h2>
           <p className="text-gray-600 mb-4">
-            評価の高いカテゴリに基づいて、以下の役割が推奨されます。
+            評価の高いカテゴリに基づいて、以下の職種が推奨されます。
             <span className="block text-sm text-gray-500 mt-1">
               ※ スコアが2.0未満のカテゴリは表示されません
             </span>
