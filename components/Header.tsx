@@ -8,23 +8,23 @@ export default function Header() {
 
   return (
     <header className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-2xl">
-      <div className="container mx-auto px-6 py-6">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold hover:text-indigo-100 transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <Link href="/" className="text-xl sm:text-2xl font-bold hover:text-indigo-100 transition-colors">
             🚀 宇宙スキル標準アセスメント
           </Link>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-3 sm:gap-6 text-sm sm:text-base">
             <Link
               href="/skills"
-              className="hover:text-indigo-100 transition-colors font-medium text-lg"
+              className="hover:text-indigo-100 transition-colors font-medium whitespace-nowrap"
             >
               スキル一覧
             </Link>
             <Link
               href="/results"
-              className={`transition-colors text-lg ${
+              className={`transition-colors whitespace-nowrap ${
                 pathname?.startsWith('/results')
-                  ? 'bg-white/30 px-3 py-1 rounded-lg font-semibold'
+                  ? 'bg-white/30 px-2 sm:px-3 py-1 rounded-lg font-semibold'
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
@@ -32,7 +32,7 @@ export default function Header() {
             </Link>
             <Link
               href="/about"
-              className="hover:text-indigo-100 transition-colors font-medium text-lg"
+              className="hover:text-indigo-100 transition-colors font-medium whitespace-nowrap"
             >
               このサイトについて
             </Link>
