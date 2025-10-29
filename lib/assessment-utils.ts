@@ -64,15 +64,26 @@ export function calculateCategorySummary(
 }
 
 /**
- * すべてのカテゴリのサマリーを計算
+ * すべてのカテゴリのサマリーを計算（未評価カテゴリも含む）
  */
 export function calculateAllCategorySummaries(
   data: SpaceSkillStandard,
   assessments: { [category: string]: CategoryAssessment }
 ): CategorySummary[] {
-  return Object.entries(assessments).map(([category, assessment]) =>
-    calculateCategorySummary(data, category, assessment)
-  );
+  // 全カテゴリを取得
+  const allCategories = new Set<string>();
+  data.skills.forEach(skill => {
+    const normalizedCategory = normalizeCategory(skill.category);
+    if (normalizedCategory !== '*') {
+      allCategories.add(normalizedCategory);
+    }
+  });
+
+  // 各カテゴリのサマリーを計算（未評価の場合は空のassessmentで計算）
+  return Array.from(allCategories).map(category => {
+    const assessment = assessments[category] || {};
+    return calculateCategorySummary(data, category, assessment);
+  });
 }
 
 /**

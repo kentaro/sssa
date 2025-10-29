@@ -43,10 +43,14 @@ export default function AssessmentClient({
     const assessment = categoryAssessment[parseInt(skillNumber)];
     if (!assessment) return false;
 
-    // すべての評価軸に対して値が設定されているかチェック
+    // すべての評価軸に対して値が設定されているかチェック（0-5の範囲）
     for (const axis of evaluationAxes) {
       const value = assessment[axis.number];
-      if (value === undefined || value === null || value === 0) {
+      if (value === undefined || value === null) {
+        return false;
+      }
+      // 0-5の範囲外の値は無効
+      if (value < 0 || value > 5) {
         return false;
       }
     }
