@@ -8,56 +8,56 @@ export default function Header() {
 
   return (
     <header className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-2xl">
-      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
-        <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
-          <Link href="/" className="text-xl sm:text-2xl font-bold hover:text-indigo-100 transition-colors leading-tight text-center sm:text-left">
+      <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-6">
+        <div className="flex flex-col lg:flex-row items-center lg:justify-between gap-4">
+          <Link href="/" className="text-xl lg:text-2xl font-bold hover:text-indigo-100 transition-colors leading-tight text-center lg:text-left">
             <span className="inline-block">🚀 宇宙スキル標準</span>
             <span className="inline-block">アセスメント</span>
           </Link>
-          <nav className="flex items-center justify-center flex-wrap gap-2 sm:gap-6 text-xs sm:text-base">
+          <nav className="flex items-center justify-center flex-wrap gap-2 lg:gap-6 text-xs lg:text-base">
             <Link
               href="/categories"
-              className={`transition-colors whitespace-nowrap px-2 sm:px-3 py-1 rounded-lg ${
+              className={`transition-colors whitespace-nowrap px-2 lg:px-3 py-1 rounded-lg ${
                 pathname?.startsWith('/categories')
                   ? 'bg-white/30 font-semibold'
                   : 'hover:bg-white/10 font-medium'
               }`}
             >
-              <span className="hidden sm:inline">カテゴリ一覧</span>
-              <span className="sm:hidden">カテゴリ</span>
+              <span className="hidden lg:inline">カテゴリ一覧</span>
+              <span className="lg:hidden">カテゴリ</span>
             </Link>
             <Link
               href="/quick-assessment/results"
-              className={`transition-colors whitespace-nowrap px-2 sm:px-3 py-1 rounded-lg ${
+              className={`transition-colors whitespace-nowrap px-2 lg:px-3 py-1 rounded-lg ${
                 pathname?.startsWith('/quick-assessment')
                   ? 'bg-white/30 font-semibold'
                   : 'hover:bg-white/10 font-medium'
               }`}
             >
-              <span className="hidden sm:inline">クイック診断結果</span>
-              <span className="sm:hidden">簡易結果</span>
+              <span className="hidden lg:inline">クイック診断結果</span>
+              <span className="lg:hidden">簡易結果</span>
             </Link>
             <Link
               href="/results"
-              className={`transition-colors whitespace-nowrap px-2 sm:px-3 py-1 rounded-lg ${
+              className={`transition-colors whitespace-nowrap px-2 lg:px-3 py-1 rounded-lg ${
                 pathname?.startsWith('/results')
                   ? 'bg-white/30 font-semibold'
                   : 'hover:bg-white/10 font-medium'
               }`}
             >
-              <span className="hidden sm:inline">詳細診断結果</span>
-              <span className="sm:hidden">詳細結果</span>
+              <span className="hidden lg:inline">詳細診断結果</span>
+              <span className="lg:hidden">詳細結果</span>
             </Link>
             <Link
               href="/about"
-              className={`transition-colors whitespace-nowrap px-2 sm:px-3 py-1 rounded-lg ${
+              className={`transition-colors whitespace-nowrap px-2 lg:px-3 py-1 rounded-lg ${
                 pathname?.startsWith('/about')
                   ? 'bg-white/30 font-semibold'
                   : 'hover:bg-white/10 font-medium'
               }`}
             >
-              <span className="hidden sm:inline">このサイトについて</span>
-              <span className="sm:hidden">サイト情報</span>
+              <span className="hidden lg:inline">このサイトについて</span>
+              <span className="lg:hidden">サイト情報</span>
             </Link>
           </nav>
         </div>
