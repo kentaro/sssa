@@ -118,6 +118,13 @@ function ResultsContent({ roles }: ResultsClientProps) {
         // 共有URL生成（ハッシュ形式）
         const roleNumbers = calculatedResult.topRoles.map(r => r.role.number);
         const encoded = encodeQuickResult(roleNumbers);
+
+        // ハッシュがない場合は、ハッシュ付きURLにリダイレクト
+        // これにより、次回アクセス時もlocalStorageなしで結果を表示可能
+        if (!window.location.hash) {
+          window.location.hash = encoded;
+        }
+
         // 現在のパスからbasePathを取得してURLを生成
         const currentPath = window.location.pathname;
         const basePath = currentPath.includes('/sssa/') ? '/sssa' : '';
