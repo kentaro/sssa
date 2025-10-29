@@ -10,8 +10,9 @@ export default function Home() {
     <div className="max-w-4xl mx-auto">
       <section className="text-center mb-16 py-8">
         <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-          <span className="sm:block">🚀 宇宙スキル標準</span>
-          <span className="sm:block">アセスメント</span>
+          🚀 宇宙スキル標準
+          <br />
+          アセスメント
         </h1>
         <p className="text-2xl text-gray-600 mb-10 leading-relaxed">
           あなたのスキルを評価し、宇宙産業でのキャリアパスを見つけましょう
