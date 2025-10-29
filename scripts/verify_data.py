@@ -164,9 +164,24 @@ class DataVerifier:
         sheet = self.wb['④‐2スキルレベル一覧']
         excel_count = 0
 
-        for row in sheet.iter_rows(min_row=5, values_only=True):
-            if row[4]:  # 評価軸が存在する行
-                excel_count += 1
+        # Excelのスキルレベル定義を正しくカウント
+        # 各スキルは4行（4つの評価軸）を持つ
+        row_idx = 5
+        while row_idx <= sheet.max_row:
+            skill_number = sheet.cell(row=row_idx, column=4).value
+            if not skill_number:
+                row_idx += 1
+                continue
+
+            # このスキルの4つの評価軸をカウント
+            for axis_offset in range(4):
+                current_row = row_idx + axis_offset
+                eval_axis = sheet.cell(row=current_row, column=6).value
+                if eval_axis:
+                    excel_count += 1
+
+            # 次のスキル（4行スキップ）
+            row_idx += 4
 
         yaml_count = len(self.yaml_data['skill_levels'])
 
@@ -178,18 +193,27 @@ class DataVerifier:
             print(f"  結果:  ✓")
         else:
             print(f"  結果:  ✗")
-            self.warnings.append(f"スキルレベル定義数が異なります (差分: {abs(excel_count - yaml_count)}件)")
+            self.errors.append(f"スキルレベル定義数が異なります (差分: {abs(excel_count - yaml_count)}件)")
 
         # サンプルチェック（最初のスキルレベル定義）
         if self.yaml_data['skill_levels']:
             sample = self.yaml_data['skill_levels'][0]
             print(f"\nサンプル確認:")
-            print(f"  スキル: {sample['skill_name']}")
+            print(f"  スキル番号: {sample['skill_number']}")
+            print(f"  スキル名: {sample['skill_name']}")
             print(f"  評価軸: {sample['evaluation_axis']}")
             print(f"  レベル数: {len(sample['levels'])}段階")
 
+            # データ構造の検証
+            if not isinstance(sample['skill_number'], int):
+                self.errors.append("skill_numberが整数型ではありません")
             if len(sample['levels']) != 5:
                 self.warnings.append("一部のスキルレベルが5段階ではありません")
+
+            # レベル1の説明が評価軸名になっていないか確認（以前のバグ）
+            level_1_desc = sample['levels'].get(1, '')
+            if level_1_desc in ['遂行可能な業務範囲・深さ', '業務遂行時の自立性', '資格・検定', '経験年数']:
+                self.errors.append("skill_levelsのデータ構造が不正です（フィールドがずれています）")
         print()
 
     def verify_categories(self):
