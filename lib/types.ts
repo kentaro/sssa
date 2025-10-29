@@ -52,12 +52,12 @@ export interface SkillLevel {
   };
 }
 
-// ロール
+// ロール（職種）
 export interface Role {
-  category: string;      // ロール（大）カテゴリ
-  number: number;        // ロール番号
-  name: string;          // ロール（小）名称
-  description: string;   // 役割・責任の説明
+  category: string;      // 職種カテゴリ（16種類）
+  number: number;        // ロール番号（1-39）
+  name: string;          // 職種名
+  description: string;   // 職種の説明（責任・役割を含む）
 }
 
 // 参考プログラム

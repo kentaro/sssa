@@ -11,7 +11,7 @@ import {
 } from '@/lib/quick-assessment-scoring';
 import type { QuickAssessmentAnswer, QuickAssessmentResult, Role } from '@/lib/types';
 
-// 役割カテゴリからスキルカテゴリへのマッピング
+// 職種カテゴリからスキルカテゴリへのマッピング
 function getRoleToSkillCategoryMapping(roleCategory: string): string | null {
   const normalized = roleCategory.replace(/\n/g, '').trim();
 
@@ -145,7 +145,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
     // Web Share API対応チェック
     if (navigator.share) {
       try {
-        // トップ3の役割名を取得
+        // トップ3の職種名を取得
         const topRoleNames = result.topRoles.slice(0, 3).map(r => r.role.name);
         const rolesList = topRoleNames.length >= 3
           ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」、3位「${topRoleNames[2]}」`
@@ -169,7 +169,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
     } else {
       // Web Share API非対応の場合はクリップボードにコピー
       try {
-        // トップ3の役割名を取得
+        // トップ3の職種名を取得
         const topRoleNames = result.topRoles.slice(0, 3).map(r => r.role.name);
         const rolesList = topRoleNames.length >= 3
           ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」、3位「${topRoleNames[2]}」`
@@ -210,7 +210,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
         </p>
       </div>
 
-      {/* トップ3の役割 */}
+      {/* トップ3の職種 */}
       <div className="space-y-6 mb-8">
         {result.topRoles.map((roleResult, index) => (
           <div
