@@ -92,7 +92,10 @@ function ResultsContent({ roles }: ResultsClientProps) {
         // 共有URL生成（ハッシュ形式）
         const roleNumbers = calculatedResult.topRoles.map(r => r.role.number);
         const encoded = encodeQuickResult(roleNumbers);
-        const url = `${window.location.origin}/quick-assessment/results#${encoded}`;
+        // 現在のパスからbasePathを取得してURLを生成
+        const currentPath = window.location.pathname;
+        const basePath = currentPath.includes('/sssa/') ? '/sssa' : '';
+        const url = `${window.location.origin}${basePath}/quick-assessment/results/#${encoded}`;
         setShareUrl(url);
 
         setIsLoading(false);
@@ -101,7 +104,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
         router.push('/quick-assessment');
       }
     }
-  }, [router, roles]);
+  }, [router, roles]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleShare = async () => {
     if (!shareUrl || !result) return;
