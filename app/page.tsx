@@ -70,7 +70,7 @@ export default function Home() {
             本アプリケーションでは、この標準に基づいて自己評価を行い、自身のスキルレベルを可視化できます。
           </p>
           <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg">
-            <li>95の専門スキル項目</li>
+            <li>94の専門スキル項目</li>
             <li>8つのスキルカテゴリ</li>
             <li>4つの評価軸（業務範囲・自立性・資格・経験年数）</li>
             <li>5段階のスキルレベル定義</li>
@@ -98,7 +98,7 @@ export default function Home() {
             あなたに最適なカテゴリをおすすめします
           </p>
           <p className="text-lg text-gray-500 mb-8">
-            宇宙産業には95のスキルがありますが、すべてを評価する必要はありません。<br />
+            宇宙産業には94のスキルがありますが、すべてを評価する必要はありません。<br />
             あなたの専門性に応じて、関連性の高いカテゴリだけをご提案します。
           </p>
         </section>

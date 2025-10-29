@@ -43,7 +43,7 @@ export default function AboutPage() {
 
         <div className="space-y-4">
           <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">95のスキル項目</h3>
+            <h3 className="font-bold text-gray-900 mb-2">94のスキル項目</h3>
             <p className="text-gray-700 text-sm">
               プログラム創造・組成からコーポレートまで、
               宇宙産業に必要な幅広いスキルを網羅
@@ -101,7 +101,7 @@ export default function AboutPage() {
                 <Link href="/skills" className="text-blue-600 hover:underline">
                   スキル一覧ページ
                 </Link>
-                から、8つのカテゴリに分類された95のスキル項目を確認できます。
+                から、8つのカテゴリに分類された94のスキル項目を確認できます。
                 各スキルには詳細な説明が付いています。
               </p>
             </div>
