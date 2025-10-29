@@ -103,13 +103,13 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
 
   const topCategories = getTopCategories(summaries, 3);
 
-  // カテゴリに関連するロールを取得
-  const getRelatedRolesForCategory = (category: string): Role[] => {
+  // カテゴリに関連するロールを取得（スコアでフィルタリング）
+  const getRelatedRolesForCategory = (category: string, categoryScore: number): Role[] => {
     const normalizedCategory = category.replace(/\n/g, '').trim();
 
     // role_descriptionはスキル番号を示しているので、
     // そのスキル番号からカテゴリを取得してマッチング
-    return data.roles.filter((role) => {
+    const relatedRoles = data.roles.filter((role) => {
       // role_descriptionをスキル番号として解釈
       const skillNumber = parseInt(role.role_description, 10);
       if (isNaN(skillNumber)) return false;
@@ -120,6 +120,27 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
 
       // スキルのカテゴリと比較
       return skill.category.replace(/\n/g, '').trim() === normalizedCategory;
+    });
+
+    // そのスキルのスコアを取得してフィルタリング
+    return relatedRoles.filter((role) => {
+      const skillNumber = parseInt(role.role_description, 10);
+      const skill = data.skills.find(s => s.number === skillNumber);
+      if (!skill) return false;
+
+      // そのスキルの評価を取得
+      const categoryAssessment = result.assessments[category];
+      if (!categoryAssessment) return false;
+
+      const skillAssessment = categoryAssessment[skillNumber];
+      if (!skillAssessment) return false;
+
+      // スキルの平均スコアを計算
+      const scores = Object.values(skillAssessment);
+      const avgScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+
+      // 平均スコアが2.5以上のスキルに関連するロールのみ表示
+      return avgScore >= 2.5;
     });
   };
 
@@ -206,7 +227,7 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
           </p>
 
           {topCategories.map((category) => {
-            const roles = getRelatedRolesForCategory(category.category);
+            const roles = getRelatedRolesForCategory(category.category, category.averageScore);
 
             return (
               <div key={category.category} className="mb-6 last:mb-0">
@@ -226,11 +247,13 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
                         <h4 className="font-bold text-gray-900 mb-2">
                           {role.role_name}
                         </h4>
-                        <p className="text-sm text-gray-700 mb-2">
-                          {role.role_description}
-                        </p>
+                        {role.required_tasks && (
+                          <p className="text-sm text-gray-700 mb-2">
+                            {role.required_tasks}
+                          </p>
+                        )}
                         {role.required_skills && (
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-gray-600 mt-2">
                             <span className="font-semibold">必要スキル: </span>
                             {role.required_skills}
                           </div>
@@ -240,7 +263,7 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
                   </div>
                 ) : (
                   <p className="text-gray-500 text-sm pl-4">
-                    このカテゴリに関連するロール情報はありません
+                    十分なスコアを持つロールがありません（推奨には各スキルで平均2.5以上が必要です）
                   </p>
                 )}
               </div>
