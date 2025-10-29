@@ -18,12 +18,22 @@ export default function Header() {
             <Link
               href="/quick-assessment"
               className={`transition-colors whitespace-nowrap ${
-                pathname?.startsWith('/quick-assessment')
+                pathname === '/quick-assessment'
                   ? 'bg-white/30 px-2 sm:px-3 py-1 rounded-lg font-semibold'
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
               クイック診断
+            </Link>
+            <Link
+              href="/quick-assessment/results"
+              className={`transition-colors whitespace-nowrap ${
+                pathname?.startsWith('/quick-assessment/results')
+                  ? 'bg-white/30 px-2 sm:px-3 py-1 rounded-lg font-semibold'
+                  : 'hover:text-indigo-100 font-medium'
+              }`}
+            >
+              クイック診断結果
             </Link>
             <Link
               href="/categories"
@@ -43,7 +53,7 @@ export default function Header() {
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
-              評価結果
+              詳細診断結果
             </Link>
             <Link
               href="/about"
