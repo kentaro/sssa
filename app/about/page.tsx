@@ -167,33 +167,23 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* 技術情報 */}
+      {/* 開発者情報 */}
       <section className="bg-white rounded-lg shadow-md p-8 mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          技術情報
+          開発者
         </h2>
         <div className="text-gray-700 space-y-2">
           <p>
-            <strong>フレームワーク:</strong> Next.js 15 (App Router)
+            <strong>栗林健太郎</strong>
           </p>
           <p>
-            <strong>言語:</strong> TypeScript
-          </p>
-          <p>
-            <strong>スタイリング:</strong> Tailwind CSS
-          </p>
-          <p>
-            <strong>デプロイ:</strong> GitHub Pages (Static Export)
-          </p>
-          <p>
-            <strong>ソースコード:</strong>{' '}
             <a
-              href="https://github.com/kentaro/sssa"
+              href="https://kentarokuribayashi.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
-              GitHub Repository
+              https://kentarokuribayashi.com
             </a>
           </p>
         </div>
