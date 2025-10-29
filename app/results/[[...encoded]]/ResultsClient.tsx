@@ -286,7 +286,10 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
             推奨される役割
           </h2>
           <p className="text-gray-600 mb-4">
-            評価の高いカテゴリに基づいて、以下の役割が推奨されます：
+            評価の高いカテゴリに基づいて、以下の役割が推奨されます。
+            <span className="block text-sm text-gray-500 mt-1">
+              ※ スコアが2.0未満のカテゴリは表示されません
+            </span>
           </p>
 
           {topCategories.map((category) => {
