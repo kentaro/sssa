@@ -106,11 +106,28 @@ function ResultsContent({ roles }: ResultsClientProps) {
   const handleShare = async () => {
     if (!shareUrl) return;
 
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      alert('結果のURLをクリップボードにコピーしました！');
-    } catch (error) {
-      alert('URLのコピーに失敗しました。手動でコピーしてください。');
+    // Web Share API対応チェック
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: '宇宙スキル標準アセスメント - クイック診断結果',
+          text: 'あなたに向いている役割の診断結果をシェアします',
+          url: shareUrl,
+        });
+      } catch (error) {
+        // ユーザーがキャンセルした場合など
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Share failed:', error);
+        }
+      }
+    } else {
+      // Web Share API非対応の場合はクリップボードにコピー
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('結果のURLをクリップボードにコピーしました！');
+      } catch (error) {
+        alert('URLのコピーに失敗しました。手動でコピーしてください。');
+      }
     }
   };
 
