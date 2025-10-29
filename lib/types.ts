@@ -157,3 +157,38 @@ export interface AssessmentResult {
     [category: string]: CategoryAssessment;
   };
 }
+
+// クイック診断関連の型
+
+// クイック診断の選択肢
+export interface QuickAssessmentOption {
+  text: string;
+  emoji: string;
+  weights: { [roleCategory: string]: number };
+}
+
+// クイック診断の質問
+export interface QuickAssessmentQuestion {
+  id: number;
+  section: string;
+  sectionNumber: number;
+  leftOption: QuickAssessmentOption;
+  rightOption: QuickAssessmentOption;
+}
+
+// クイック診断の回答
+export interface QuickAssessmentAnswer {
+  questionId: number;
+  choice: 'left' | 'right' | 'neutral'; // neutral = どちらでもない
+}
+
+// クイック診断の結果
+export interface QuickAssessmentResult {
+  topRoles: Array<{
+    role: Role;
+    score: number;
+    percentage: number;
+  }>;
+  answers: QuickAssessmentAnswer[];
+  timestamp: string;
+}
