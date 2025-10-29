@@ -90,8 +90,19 @@ export default function AssessmentClient({
 
   const handleComplete = () => {
     saveCategoryAssessment(category, categoryAssessment);
-    // カテゴリ評価完了後はおすすめページに戻る
-    router.push('/recommendations');
+
+    // 完了メッセージと次のアクションを表示
+    const nextAction = confirm(
+      `🎉 「${category}」の評価が完了しました！\n\n` +
+      `✓ OK → 評価結果を見る\n` +
+      `✗ キャンセル → 他のカテゴリを評価する`
+    );
+
+    if (nextAction) {
+      router.push('/results');
+    } else {
+      router.push('/recommendations');
+    }
   };
 
   const isAllComplete = completedSkills === skills.length;
