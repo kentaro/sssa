@@ -8,9 +8,24 @@ interface CategoryRadarChartProps {
 }
 
 export default function CategoryRadarChart({ summaries }: CategoryRadarChartProps) {
+  // カテゴリ名を短縮（スマホ対応）
+  const shortenCategory = (category: string) => {
+    const shortNames: { [key: string]: string } = {
+      'プログラム創造・組成': 'プログラム',
+      'プロジェクトマネジメント': 'PM',
+      '基盤技術': '基盤技術',
+      '設計・解析': '設計',
+      '試験': '試験',
+      '製造・加工': '製造',
+      '打上げ・衛星運用': '運用',
+      'コーポレート': '経営',
+    };
+    return shortNames[category] || category;
+  };
+
   // rechartsのデータ形式に変換
   const data = summaries.map((summary) => ({
-    category: summary.category.length > 12 ? summary.category.substring(0, 12) + '...' : summary.category,
+    category: shortenCategory(summary.category),
     fullCategory: summary.category,
     score: summary.averageScore,
   }));
@@ -21,12 +36,13 @@ export default function CategoryRadarChart({ summaries }: CategoryRadarChartProp
       <ResponsiveContainer width="100%" height={400}>
         <RadarChart data={data}>
           <PolarGrid />
-          <PolarAngleAxis dataKey="category" />
+          <PolarAngleAxis dataKey="category" tick={{ fontSize: 12 }} />
           <PolarRadiusAxis angle={90} domain={[0, 5]} />
           <Radar
             name="平均スコア"
             dataKey="score"
             stroke="#2563eb"
+            strokeWidth={3}
             fill="#3b82f6"
             fillOpacity={0.6}
           />

@@ -106,9 +106,21 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
   // カテゴリに関連するロールを取得
   const getRelatedRolesForCategory = (category: string): Role[] => {
     const normalizedCategory = category.replace(/\n/g, '').trim();
-    return data.roles.filter(
-      (role) => role.category.replace(/\n/g, '').trim() === normalizedCategory
-    );
+
+    // role_descriptionはスキル番号を示しているので、
+    // そのスキル番号からカテゴリを取得してマッチング
+    return data.roles.filter((role) => {
+      // role_descriptionをスキル番号として解釈
+      const skillNumber = parseInt(role.role_description, 10);
+      if (isNaN(skillNumber)) return false;
+
+      // スキル番号に対応するスキルを検索
+      const skill = data.skills.find(s => s.number === skillNumber);
+      if (!skill) return false;
+
+      // スキルのカテゴリと比較
+      return skill.category.replace(/\n/g, '').trim() === normalizedCategory;
+    });
   };
 
   return (
@@ -128,31 +140,53 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
           カテゴリ別サマリー
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {summaries.map((summary) => (
-            <div
-              key={summary.category}
-              className="bg-white rounded-lg shadow-md p-6"
-            >
-              <h3 className="font-bold text-gray-900 mb-2">{summary.category}</h3>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-3xl font-bold text-blue-600">
-                  {summary.averageScore.toFixed(1)}
-                </span>
-                <span className="text-gray-600">/ 5.0</span>
+          {summaries.map((summary) => {
+            const isEvaluated = summary.assessedSkillCount > 0;
+
+            return (
+              <div
+                key={summary.category}
+                className={`rounded-lg shadow-md p-6 ${
+                  isEvaluated ? 'bg-white' : 'bg-gray-50 border-2 border-dashed border-gray-300'
+                }`}
+              >
+                <h3 className="font-bold text-gray-900 mb-2">{summary.category}</h3>
+                {isEvaluated ? (
+                  <>
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl font-bold text-indigo-600">
+                        {summary.averageScore.toFixed(1)}
+                      </span>
+                      <span className="text-gray-600">/ 5.0</span>
+                    </div>
+                    <div className="text-sm text-gray-600 space-y-1">
+                      <p>
+                        評価済み: {summary.assessedSkillCount} / {summary.skillCount}スキル
+                      </p>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-indigo-600 h-2 rounded-full transition-all"
+                          style={{ width: `${summary.completionRate}%` }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl font-bold text-gray-400">
+                        未評価
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      <p>{summary.skillCount}スキル</p>
+                      <p className="mt-2 text-xs">このカテゴリはまだ評価されていません</p>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>
-                  評価済み: {summary.assessedSkillCount} / {summary.skillCount}スキル
-                </p>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full"
-                    style={{ width: `${summary.completionRate}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
