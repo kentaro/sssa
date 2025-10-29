@@ -10,8 +10,9 @@ export default function Header() {
     <header className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-2xl">
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <Link href="/" className="text-xl sm:text-2xl font-bold hover:text-indigo-100 transition-colors">
-            🚀 宇宙スキル標準アセスメント
+          <Link href="/" className="text-xl sm:text-2xl font-bold hover:text-indigo-100 transition-colors leading-tight">
+            <span className="inline-block">🚀 宇宙スキル標準</span>
+            <span className="inline-block">アセスメント</span>
           </Link>
           <nav className="flex items-center gap-3 sm:gap-6 text-sm sm:text-base">
             <Link
