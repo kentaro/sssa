@@ -91,18 +91,14 @@ export default function AssessmentClient({
   const handleComplete = () => {
     saveCategoryAssessment(category, categoryAssessment);
 
-    // 完了メッセージと次のアクションを表示
-    const nextAction = confirm(
+    // 完了メッセージを表示してカテゴリ一覧に戻る
+    alert(
       `🎉 「${category}」の評価が完了しました！\n\n` +
-      `✓ OK → 評価結果を見る\n` +
-      `✗ キャンセル → 他のカテゴリを評価する`
+      `カテゴリ一覧に戻って、他のカテゴリも評価できます。\n` +
+      `評価結果は画面上部のメニューから確認できます。`
     );
 
-    if (nextAction) {
-      router.push('/results');
-    } else {
-      router.push('/recommendations');
-    }
+    router.push('/categories');
   };
 
   const isAllComplete = completedSkills === skills.length;
@@ -132,8 +128,8 @@ export default function AssessmentClient({
       {/* ヘッダー */}
       <div className="mb-6">
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-          <Link href="/skills" className="hover:text-blue-600">
-            スキル一覧
+          <Link href="/categories" className="hover:text-blue-600">
+            カテゴリ一覧
           </Link>
           <span>›</span>
           <span>{category}</span>

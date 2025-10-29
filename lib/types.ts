@@ -54,11 +54,10 @@ export interface SkillLevel {
 
 // ロール
 export interface Role {
-  category: string;
-  role_name: string;
-  role_description: string;
-  required_skills: string;
-  required_tasks: string;
+  category: string;      // ロール（大）カテゴリ
+  number: number;        // ロール番号
+  name: string;          // ロール（小）名称
+  description: string;   // 役割・責任の説明
 }
 
 // 参考プログラム

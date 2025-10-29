@@ -16,10 +16,14 @@ export default function Header() {
           </Link>
           <nav className="flex items-center justify-center gap-3 sm:gap-6 text-sm sm:text-base">
             <Link
-              href="/skills"
-              className="hover:text-indigo-100 transition-colors font-medium whitespace-nowrap"
+              href="/categories"
+              className={`transition-colors whitespace-nowrap ${
+                pathname?.startsWith('/categories')
+                  ? 'bg-white/30 px-2 sm:px-3 py-1 rounded-lg font-semibold'
+                  : 'hover:text-indigo-100 font-medium'
+              }`}
             >
-              スキル一覧
+              カテゴリ一覧
             </Link>
             <Link
               href="/results"
@@ -33,7 +37,11 @@ export default function Header() {
             </Link>
             <Link
               href="/about"
-              className="hover:text-indigo-100 transition-colors font-medium whitespace-nowrap"
+              className={`transition-colors whitespace-nowrap ${
+                pathname?.startsWith('/about')
+                  ? 'bg-white/30 px-2 sm:px-3 py-1 rounded-lg font-semibold'
+                  : 'hover:text-indigo-100 font-medium'
+              }`}
             >
               このサイトについて
             </Link>

@@ -43,24 +43,25 @@ export default function AboutPage() {
 
         <div className="space-y-4">
           <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">94のスキル項目</h3>
+            <h3 className="font-bold text-gray-900 mb-2">94のスキル項目（67項目が評価可能）</h3>
             <p className="text-gray-700 text-sm">
               プログラム創造・組成からコーポレートまで、
-              宇宙産業に必要な幅広いスキルを網羅
+              宇宙産業に必要な幅広いスキルを網羅。
+              現在、67のスキル項目について評価基準が定義されており、診断可能です。
             </p>
           </div>
 
           <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">8つのカテゴリ</h3>
+            <h3 className="font-bold text-gray-900 mb-2">8つのカテゴリ（6カテゴリが評価可能）</h3>
             <ul className="text-gray-700 text-sm list-disc list-inside space-y-1">
-              <li>プログラム創造・組成</li>
-              <li>プロジェクトマネジメント</li>
-              <li>基盤技術</li>
-              <li>設計・解析</li>
-              <li>試験</li>
-              <li>製造・加工</li>
-              <li>打上げ・衛星運用</li>
-              <li>コーポレート</li>
+              <li>プログラム創造・組成 ✅</li>
+              <li>プロジェクトマネジメント ✅</li>
+              <li>基盤技術 ✅</li>
+              <li>設計・解析 ✅</li>
+              <li>試験 ✅</li>
+              <li>製造・加工 ✅</li>
+              <li>打上げ・衛星運用 （評価基準未定義）</li>
+              <li>コーポレート （評価基準未定義）</li>
             </ul>
           </div>
 
@@ -96,13 +97,13 @@ export default function AboutPage() {
               1
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">スキルを知る</h3>
+              <h3 className="font-bold text-gray-900 mb-2">診断モードを選ぶ</h3>
               <p className="text-gray-700">
-                <Link href="/skills" className="text-blue-600 hover:underline">
-                  スキル一覧ページ
+                <Link href="/" className="text-blue-600 hover:underline">
+                  トップページ
                 </Link>
-                から、8つのカテゴリに分類された94のスキル項目を確認できます。
-                各スキルには詳細な説明が付いています。
+                から「クイック診断」または「詳細診断」を選択します。
+                クイック診断は約5分で完了する簡易版、詳細診断はカテゴリ別に詳しく評価できます。
               </p>
             </div>
           </div>
@@ -112,11 +113,13 @@ export default function AboutPage() {
               2
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">セルフアセスメント</h3>
+              <h3 className="font-bold text-gray-900 mb-2">カテゴリを選ぶ（詳細診断の場合）</h3>
               <p className="text-gray-700">
-                評価したいカテゴリを選択し、そのカテゴリ内のスキルを
-                4つの評価軸で5段階評価します。各レベルの詳細説明を見ながら、
-                自分に最も当てはまるレベルを選択してください。
+                <Link href="/categories" className="text-blue-600 hover:underline">
+                  カテゴリ一覧ページ
+                </Link>
+                から評価したいカテゴリを選択します。
+                6つのカテゴリが評価可能で、それぞれのカテゴリには詳細な説明が付いています。
               </p>
             </div>
           </div>
@@ -126,11 +129,10 @@ export default function AboutPage() {
               3
             </div>
             <div>
-              <h3 className="font-bold text-gray-900 mb-2">結果の確認</h3>
+              <h3 className="font-bold text-gray-900 mb-2">セルフアセスメント</h3>
               <p className="text-gray-700">
-                評価が完了すると、カテゴリ別のサマリーとレーダーチャートで
-                あなたのスキルプロファイルが可視化されます。
-                評価の高いカテゴリに基づいて、推奨されるロールも表示されます。
+                各スキルを4つの評価軸で5段階評価します。
+                各レベルの詳細説明を見ながら、自分に最も当てはまるレベルを選択してください。
               </p>
             </div>
           </div>
@@ -138,6 +140,20 @@ export default function AboutPage() {
           <div className="flex gap-4">
             <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
               4
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 mb-2">結果の確認</h3>
+              <p className="text-gray-700">
+                評価が完了すると、カテゴリ別のサマリーとレーダーチャートで
+                あなたのスキルプロファイルが可視化されます。
+                評価の高いカテゴリに基づいて、推奨されるロール（39種類）も表示されます。
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+              5
             </div>
             <div>
               <h3 className="font-bold text-gray-900 mb-2">結果の共有</h3>
@@ -197,12 +213,20 @@ export default function AboutPage() {
         <p className="text-gray-700 mb-6">
           自分のスキルを評価して、宇宙産業でのキャリアパスを見つけましょう
         </p>
-        <Link
-          href="/skills"
-          className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-        >
-          スキル一覧を見る
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/"
+            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+          >
+            診断を開始する
+          </Link>
+          <Link
+            href="/categories"
+            className="inline-block bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+          >
+            カテゴリ一覧を見る
+          </Link>
+        </div>
       </section>
     </div>
   );

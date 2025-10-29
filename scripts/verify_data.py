@@ -49,7 +49,6 @@ class DataVerifier:
             ('スキル', '①スキル一覧', 4, 3, 'skills'),
             ('業務', '②業務一覧', 4, 3, 'tasks'),
             ('スキルディクショナリ', '③スキルディクショナリ', 4, 3, 'skill_dictionary'),
-            ('ロール', '⑥ロール一覧', 4, 1, 'roles'),
         ]
 
         for name, sheet_name, min_row, col_idx, yaml_key in checks:
@@ -72,6 +71,34 @@ class DataVerifier:
             if not match:
                 self.errors.append(f"{name}の件数が一致しません (Excel: {excel_count}, YAML: {yaml_count})")
             print()
+
+        # ロールは別途カウント（プレースホルダーを除外）
+        name = 'ロール'
+        sheet_name = '⑥ロール一覧'
+        yaml_key = 'roles'
+
+        excel_count = 0
+        sheet = self.wb[sheet_name]
+        for row in sheet.iter_rows(min_row=4, values_only=True):
+            col3 = row[2]  # #（番号）
+            col4 = row[3]  # ロール（小）
+            if col3 and col4 and col4 != '*':
+                excel_count += 1
+
+        yaml_roles = [r for r in self.yaml_data[yaml_key] if r.get('name') != '*']
+        yaml_count = len(yaml_roles)
+
+        match = excel_count == yaml_count
+        status = "✓" if match else "✗"
+
+        print(f"{name}:")
+        print(f"  Excel: {excel_count:3d}件")
+        print(f"  YAML:  {yaml_count:3d}件")
+        print(f"  結果:  {status}")
+
+        if not match:
+            self.errors.append(f"{name}の件数が一致しません (Excel: {excel_count}, YAML: {yaml_count})")
+        print()
 
     def verify_skills(self):
         """スキルデータの詳細検証"""
@@ -216,10 +243,81 @@ class DataVerifier:
                 self.errors.append("skill_levelsのデータ構造が不正です（フィールドがずれています）")
         print()
 
+    def verify_roles(self):
+        """ロールデータの詳細検証"""
+        print("=" * 80)
+        print("【5. ロールデータ検証】")
+        print("=" * 80)
+
+        sheet = self.wb['⑥ロール一覧']
+        excel_roles = []
+        current_category = ''
+
+        for row in sheet.iter_rows(min_row=4, values_only=True):
+            col2 = row[1]  # ロール（大）
+            col3 = row[2]  # #（番号）
+            col4 = row[3]  # ロール（小）
+
+            if col3 and col4 and col4 != '*':
+                if col2:
+                    current_category = col2
+                excel_roles.append({
+                    'category': current_category,
+                    'number': col3,
+                    'name': col4
+                })
+
+        yaml_roles = [r for r in self.yaml_data['roles'] if r.get('name') != '*']
+
+        print(f"ロール数:")
+        print(f"  Excel: {len(excel_roles)}件")
+        print(f"  YAML:  {len(yaml_roles)}件")
+
+        if len(excel_roles) == len(yaml_roles):
+            print(f"  結果:  ✓")
+        else:
+            print(f"  結果:  ✗")
+            self.errors.append(f"ロール数が一致しません (Excel: {len(excel_roles)}, YAML: {len(yaml_roles)})")
+
+        # カテゴリ別の集計
+        excel_cat_count = {}
+        yaml_cat_count = {}
+
+        for role in excel_roles:
+            cat = role['category'] if role['category'] else '（カテゴリなし）'
+            excel_cat_count[cat] = excel_cat_count.get(cat, 0) + 1
+
+        for role in yaml_roles:
+            cat = role['category'] if role['category'] else '（カテゴリなし）'
+            yaml_cat_count[cat] = yaml_cat_count.get(cat, 0) + 1
+
+        print(f"\nカテゴリ別ロール数:")
+        all_cats = set(excel_cat_count.keys()) | set(yaml_cat_count.keys())
+        all_match = True
+
+        for cat in sorted(all_cats):
+            excel_count = excel_cat_count.get(cat, 0)
+            yaml_count = yaml_cat_count.get(cat, 0)
+            match = excel_count == yaml_count
+            status = "✓" if match else "✗"
+
+            if not match:
+                all_match = False
+                self.errors.append(f"ロールカテゴリ「{cat}」の件数が一致しません")
+
+            cat_display = cat.replace('\n', ' ')[:40]
+            print(f"  {cat_display:40s}: Excel={excel_count:2d}, YAML={yaml_count:2d} {status}")
+
+        if all_match and len(excel_roles) == len(yaml_roles):
+            print(f"\n✓ 全ロールの件数とカテゴリが一致しています")
+        else:
+            print(f"\n✗ 一部のロールで不一致があります")
+        print()
+
     def verify_categories(self):
         """カテゴリ分類の検証"""
         print("=" * 80)
-        print("【5. カテゴリ分類検証】")
+        print("【6. カテゴリ分類検証】")
         print("=" * 80)
 
         # スキルカテゴリ
@@ -295,6 +393,7 @@ class DataVerifier:
         self.verify_skills()
         self.verify_tasks()
         self.verify_skill_levels()
+        self.verify_roles()
         self.verify_categories()
 
         return self.print_summary()
