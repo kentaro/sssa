@@ -100,8 +100,19 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
     } else {
       // Web Share API非対応の場合はクリップボードにコピー
       try {
-        await navigator.clipboard.writeText(permalink);
-        alert('パーマリンクをクリップボードにコピーしました！');
+        // 評価の高いカテゴリトップ3を取得
+        const topCategories = summaries
+          .filter(s => s.averageScore > 0)
+          .sort((a, b) => b.averageScore - a.averageScore)
+          .slice(0, 3)
+          .map(s => s.category);
+
+        const copyText = topCategories.length > 0
+          ? `宇宙業界でのスキル評価結果\n\n高評価の分野:\n「${topCategories.join('」\n「')}」\n\nあなたもスキルを診断してみませんか？\n\n${permalink}`
+          : `宇宙業界でのスキル評価を完了しました！\n\nあなたもチャレンジしてみませんか？\n\n${permalink}`;
+
+        await navigator.clipboard.writeText(copyText);
+        alert('結果をクリップボードにコピーしました！');
       } catch (error) {
         console.error('Failed to copy permalink:', error);
         alert('コピーに失敗しました');

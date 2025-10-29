@@ -133,10 +133,20 @@ function ResultsContent({ roles }: ResultsClientProps) {
     } else {
       // Web Share API非対応の場合はクリップボードにコピー
       try {
-        await navigator.clipboard.writeText(shareUrl);
-        alert('結果のURLをクリップボードにコピーしました！');
+        // トップ3の役割名を取得
+        const topRoleNames = result.topRoles.slice(0, 3).map(r => r.role.name);
+        const rolesList = topRoleNames.length >= 3
+          ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」、3位「${topRoleNames[2]}」`
+          : topRoleNames.length === 2
+          ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」`
+          : `1位「${topRoleNames[0]}」`;
+
+        const copyText = `宇宙業界での私の適性診断結果\n\n${rolesList}\n\nあなたはどのタイプ？診断してみよう！\n\n${shareUrl}`;
+
+        await navigator.clipboard.writeText(copyText);
+        alert('結果をクリップボードにコピーしました！');
       } catch (error) {
-        alert('URLのコピーに失敗しました。手動でコピーしてください。');
+        alert('コピーに失敗しました。手動でコピーしてください。');
       }
     }
   };
