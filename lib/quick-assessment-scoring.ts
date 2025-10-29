@@ -36,15 +36,21 @@ export function calculateRoleScores(
   });
 
   // カテゴリスコアをロールスコアに変換
-  // 各カテゴリ内のロールに均等にスコアを分配
+  // 各カテゴリ内のロールに均等にスコアを分配（ロール数による不利を調整）
   const roleScores: { [roleNumber: number]: number } = {};
 
   roles.forEach((role) => {
     const categoryScore = categoryScores[role.category] || 0;
     // カテゴリ内のロール数を取得
     const rolesInCategory = roles.filter(r => r.category === role.category).length;
-    // スコアを均等分配
-    roleScores[role.number] = categoryScore / rolesInCategory;
+
+    // ロール数による不利を緩和する調整係数
+    // 1ロール: 係数1.0, 3ロール: 係数1.64, 9ロール: 係数2.69
+    // これによりロール数が多いカテゴリの不利が軽減される
+    const adjustmentFactor = Math.pow(rolesInCategory, 0.45);
+
+    // スコアを均等分配し、調整係数を適用
+    roleScores[role.number] = (categoryScore / rolesInCategory) * adjustmentFactor;
   });
 
   // スコアでソートしてトップ3を取得
