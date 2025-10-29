@@ -41,7 +41,16 @@ export default function AssessmentClient({
   // 完了したスキル数を計算
   const completedSkills = Object.keys(categoryAssessment).filter((skillNumber) => {
     const assessment = categoryAssessment[parseInt(skillNumber)];
-    return assessment && Object.keys(assessment).length === evaluationAxes.length;
+    if (!assessment) return false;
+
+    // すべての評価軸に対して値が設定されているかチェック
+    for (const axis of evaluationAxes) {
+      const value = assessment[axis.number];
+      if (value === undefined || value === null || value === 0) {
+        return false;
+      }
+    }
+    return true;
   }).length;
 
   const handleAssessmentChange = (assessment: SkillAssessment) => {
@@ -82,6 +91,18 @@ export default function AssessmentClient({
   };
 
   const isAllComplete = completedSkills === skills.length;
+
+  // デバッグ: コンソールに完了状況を出力
+  useEffect(() => {
+    console.log('Assessment Debug:', {
+      category,
+      totalSkills: skills.length,
+      completedSkills,
+      isAllComplete,
+      categoryAssessment: Object.keys(categoryAssessment).length,
+      evaluationAxesCount: evaluationAxes.length,
+    });
+  }, [completedSkills, isAllComplete, category, skills.length, categoryAssessment, evaluationAxes.length]);
 
   if (isLoading) {
     return (
@@ -210,6 +231,19 @@ export default function AssessmentClient({
           </button>
         )}
       </div>
+
+      {/* 評価進捗情報 */}
+      {!isAllComplete && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm mb-4">
+          <p className="font-semibold mb-2">📊 評価進捗</p>
+          <div className="space-y-1 text-gray-700">
+            <p>完了スキル数: <span className="font-bold">{completedSkills} / {skills.length}</span> ({Math.round((completedSkills / skills.length) * 100)}%)</p>
+            <p className="text-sm text-gray-600 mt-2">
+              ⚠️ 各スキルで全ての評価軸（{evaluationAxes.length}つ）を選択する必要があります
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ヘルプ */}
       {!isAllComplete && (
