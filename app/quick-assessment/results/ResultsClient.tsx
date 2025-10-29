@@ -120,7 +120,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
           ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」`
           : `1位「${topRoleNames[0]}」`;
 
-        const shareText = `宇宙業界での私の適性診断結果\n\n${rolesList}\n\nあなたはどのタイプ？診断してみよう！`;
+        const shareText = `🚀 宇宙業界適性診断の結果が出ました！\n\n私に向いている役割は...\n${rolesList}\n\n✨ あなたも宇宙で活躍できる適性を発見しませんか？\n無料診断は3分で完了！`;
 
         await navigator.share({
           title: '宇宙スキル標準アセスメント',
@@ -144,7 +144,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
           ? `1位「${topRoleNames[0]}」、2位「${topRoleNames[1]}」`
           : `1位「${topRoleNames[0]}」`;
 
-        const copyText = `宇宙業界での私の適性診断結果\n\n${rolesList}\n\nあなたはどのタイプ？診断してみよう！\n\n${shareUrl}`;
+        const copyText = `🚀 宇宙業界適性診断の結果が出ました！\n\n私に向いている役割は...\n${rolesList}\n\n✨ あなたも宇宙で活躍できる適性を発見しませんか？\n無料診断は3分で完了！\n\n${shareUrl}`;
 
         await navigator.clipboard.writeText(copyText);
         alert('結果をクリップボードにコピーしました！');

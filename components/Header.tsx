@@ -16,6 +16,16 @@ export default function Header() {
           </Link>
           <nav className="flex items-center justify-center gap-3 sm:gap-6 text-sm sm:text-base">
             <Link
+              href="/quick-assessment"
+              className={`transition-colors whitespace-nowrap ${
+                pathname?.startsWith('/quick-assessment')
+                  ? 'bg-white/30 px-2 sm:px-3 py-1 rounded-lg font-semibold'
+                  : 'hover:text-indigo-100 font-medium'
+              }`}
+            >
+              クイック診断
+            </Link>
+            <Link
               href="/categories"
               className={`transition-colors whitespace-nowrap ${
                 pathname?.startsWith('/categories')
@@ -23,7 +33,7 @@ export default function Header() {
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
-              カテゴリ一覧
+              詳細診断
             </Link>
             <Link
               href="/results"
