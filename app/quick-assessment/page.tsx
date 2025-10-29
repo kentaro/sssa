@@ -71,15 +71,16 @@ export default function QuickAssessmentPage() {
     };
 
     const newAnswers = [...answers, newAnswer];
-    setAnswers(newAnswers);
 
     // 次の質問へ
     if (currentQuestionIndex < quickAssessmentQuestions.length - 1) {
+      // 途中の質問：状態を更新（自動保存が走る）
+      setAnswers(newAnswers);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       // 全問完了 → 結果ページへ
+      // 進捗をクリアしてから回答を保存（自動保存を防ぐ）
       clearQuickAssessmentProgress();
-      // 回答をLocalStorageに一時保存して結果ページで読み取る
       localStorage.setItem('quick-assessment-answers', JSON.stringify(newAnswers));
       router.push('/quick-assessment/results');
     }
