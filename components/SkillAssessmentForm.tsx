@@ -63,16 +63,16 @@ export default function SkillAssessmentForm({
           const isExpanded = expandedAxis === axis.number;
 
           return (
-            <div key={axis.number} className="border border-gray-200 rounded-lg p-4">
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-semibold text-gray-900">
+            <div key={axis.number} className="border-2 border-gray-300 rounded-lg p-6 bg-white">
+              <div className="mb-5">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-bold text-gray-900 text-lg">
                     {axis.evaluation_axis}
                   </h4>
                   {skillLevel && (
                     <button
                       onClick={() => toggleAxisExpansion(axis.number)}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+                      className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-indigo-50 transition"
                     >
                       {isExpanded ? '詳細を閉じる' : 'レベル詳細を見る'}
                       <svg
@@ -96,13 +96,13 @@ export default function SkillAssessmentForm({
 
                 {/* レベル詳細説明（展開時） */}
                 {isExpanded && skillLevel && (
-                  <div className="bg-blue-50 rounded-lg p-4 mb-4 space-y-2 text-sm">
+                  <div className="bg-indigo-50 rounded-lg p-4 mb-4 space-y-3 text-sm border border-indigo-200">
                     {Object.entries(skillLevel.levels).map(([level, description]) => (
-                      <div key={level} className="flex gap-2">
-                        <span className="flex-shrink-0 font-bold text-blue-600">
-                          Lv{level}:
+                      <div key={level} className="flex gap-3">
+                        <span className="flex-shrink-0 font-bold text-indigo-700 bg-white px-2 py-1 rounded">
+                          Lv{level}
                         </span>
-                        <span className="text-gray-700">{description}</span>
+                        <span className="text-gray-800">{description}</span>
                       </div>
                     ))}
                   </div>
@@ -110,27 +110,27 @@ export default function SkillAssessmentForm({
               </div>
 
               {/* レベル選択 */}
-              <div className="flex gap-2">
+              <div className="grid grid-cols-5 gap-3">
                 {[1, 2, 3, 4, 5].map((level) => (
                   <button
                     key={level}
                     onClick={() => handleLevelChange(axis.number, level)}
-                    className={`flex-1 py-3 px-2 rounded-lg border-2 transition font-semibold ${
+                    className={`py-4 px-2 rounded-xl border-2 transition-all font-bold text-center ${
                       selectedLevel === level
-                        ? 'border-blue-600 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-blue-300 text-gray-600 hover:text-gray-900'
+                        ? 'border-indigo-600 bg-indigo-600 text-white shadow-lg transform scale-105'
+                        : 'border-gray-300 bg-white hover:border-indigo-400 text-gray-700 hover:text-indigo-700 hover:bg-indigo-50'
                     }`}
                   >
-                    <div className="text-xs mb-1">Level</div>
-                    <div className="text-lg">{level}</div>
+                    <div className="text-xs mb-1 opacity-75">Level</div>
+                    <div className="text-2xl">{level}</div>
                   </button>
                 ))}
               </div>
 
               {/* 選択されたレベルの説明 */}
               {selectedLevel && skillLevel?.levels[selectedLevel] && (
-                <div className="mt-3 p-3 bg-gray-50 rounded text-sm text-gray-700">
-                  <span className="font-semibold">選択中 (Lv{selectedLevel}):</span>{' '}
+                <div className="mt-4 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg text-sm text-gray-800 border border-indigo-200">
+                  <span className="font-bold text-indigo-700">選択中 (Lv{selectedLevel}):</span>{' '}
                   {skillLevel.levels[selectedLevel]}
                 </div>
               )}
