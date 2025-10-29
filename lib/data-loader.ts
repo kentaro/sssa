@@ -46,19 +46,43 @@ export function normalizeCategory(category: string): string {
 }
 
 /**
+ * カテゴリ名と英語スラッグのマッピング
+ */
+const CATEGORY_SLUG_MAP: { [key: string]: string } = {
+  'プログラム創造・組成': 'program-creation',
+  'プロジェクトマネジメント': 'project-management',
+  '基盤技術': 'foundation-technology',
+  '設計・解析': 'design-analysis',
+  '試験': 'testing',
+  '製造・加工': 'manufacturing',
+  '打上げ・衛星運用': 'launch-operations',
+  'コーポレート': 'corporate',
+};
+
+/**
+ * スラッグからカテゴリ名のマッピング（逆引き）
+ */
+const SLUG_CATEGORY_MAP: { [key: string]: string } = Object.entries(CATEGORY_SLUG_MAP).reduce(
+  (acc, [category, slug]) => {
+    acc[slug] = category;
+    return acc;
+  },
+  {} as { [key: string]: string }
+);
+
+/**
  * カテゴリのURLスラッグを生成
  */
 export function getCategorySlug(category: string): string {
   const normalized = normalizeCategory(category);
-  // カテゴリ名から安全なURLスラッグを生成
-  return encodeURIComponent(normalized);
+  return CATEGORY_SLUG_MAP[normalized] || encodeURIComponent(normalized);
 }
 
 /**
  * スラッグからカテゴリ名を復元
  */
 export function getCategoryFromSlug(slug: string): string {
-  return decodeURIComponent(slug);
+  return SLUG_CATEGORY_MAP[slug] || decodeURIComponent(slug);
 }
 
 /**
