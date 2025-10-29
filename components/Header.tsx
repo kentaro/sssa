@@ -23,7 +23,7 @@ export default function Header() {
             <Link
               href="/results"
               className={`px-4 py-2 rounded-lg transition-colors font-semibold text-lg backdrop-blur-sm ${
-                pathname === '/results'
+                pathname?.startsWith('/results')
                   ? 'bg-white/40'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
