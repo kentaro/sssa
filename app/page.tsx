@@ -1,123 +1,322 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { loadSpaceSkillStandard, getCategories, getSkillCountByCategory } from '@/lib/data-loader';
+
+type Step = 'intro' | 'user-type' | 'science-type' | 'recommendations';
+type UserType = 'science' | 'liberal-arts';
+type ScienceType = 'engineering' | 'operations';
+
+interface CategoryRecommendation {
+  category: string;
+  slug: string;
+  description: string;
+  skillCount: number;
+}
 
 export default function Home() {
-  const data = loadSpaceSkillStandard();
-  const categories = getCategories(data);
-  const skillCounts = getSkillCountByCategory(data);
+  const [step, setStep] = useState<Step>('intro');
+  const [userType, setUserType] = useState<UserType | null>(null);
+  const [scienceType, setScienceType] = useState<ScienceType | null>(null);
 
-  return (
-    <div className="max-w-5xl mx-auto">
-      {/* ヒーローセクション */}
-      <section className="text-center mb-16 py-8">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-          宇宙スキル標準アセスメント
-        </h1>
-        <p className="text-2xl text-gray-600 mb-10 leading-relaxed">
-          あなたのスキルを評価し、宇宙産業でのキャリアパスを見つけましょう
-        </p>
-        <div className="flex gap-6 justify-center">
+  const handleUserTypeSelect = (type: UserType) => {
+    setUserType(type);
+    if (type === 'liberal-arts') {
+      setStep('recommendations');
+    } else {
+      setStep('science-type');
+    }
+  };
+
+  const handleScienceTypeSelect = (type: ScienceType) => {
+    setScienceType(type);
+    setStep('recommendations');
+  };
+
+  const handleReset = () => {
+    setStep('intro');
+    setUserType(null);
+    setScienceType(null);
+  };
+
+  const getRecommendations = (): CategoryRecommendation[] => {
+    if (userType === 'liberal-arts') {
+      return [
+        { category: 'プログラム創造・組成', slug: 'program-creation', description: '新規事業・プログラムの企画立案', skillCount: 3 },
+        { category: 'プロジェクトマネジメント', slug: 'project-management', description: 'プロジェクトの計画・実行・管理', skillCount: 10 },
+        { category: 'コーポレート', slug: 'corporate', description: '法務、財務、人事、総務など', skillCount: 18 },
+      ];
+    }
+
+    if (scienceType === 'engineering') {
+      return [
+        { category: 'プログラム創造・組成', slug: 'program-creation', description: '新規事業・プログラムの企画立案', skillCount: 3 },
+        { category: '基盤技術', slug: 'foundation-technology', description: 'ソフトウェア、AI、データサイエンス', skillCount: 7 },
+        { category: '設計・解析', slug: 'design-analysis', description: '構造、電気、熱、機構などの設計・解析', skillCount: 26 },
+        { category: 'プロジェクトマネジメント', slug: 'project-management', description: 'プロジェクトの計画・実行・管理', skillCount: 10 },
+      ];
+    }
+
+    if (scienceType === 'operations') {
+      return [
+        { category: 'プロジェクトマネジメント', slug: 'project-management', description: 'プロジェクトの計画・実行・管理', skillCount: 10 },
+        { category: '試験', slug: 'testing', description: '機能試験、環境試験など', skillCount: 8 },
+        { category: '製造・加工', slug: 'manufacturing', description: '組立、加工、製造作業', skillCount: 13 },
+        { category: '打上げ・衛星運用', slug: 'launch-operations', description: '射場管制、衛星運用など', skillCount: 9 },
+      ];
+    }
+
+    return [];
+  };
+
+  // イントロ画面
+  if (step === 'intro') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <section className="text-center mb-16 py-8">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            宇宙スキル標準アセスメント
+          </h1>
+          <p className="text-2xl text-gray-600 mb-10 leading-relaxed">
+            あなたのスキルを評価し、宇宙産業でのキャリアパスを見つけましょう
+          </p>
+          <button
+            onClick={() => setStep('user-type')}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-12 py-5 rounded-xl font-bold text-xl hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl transform hover:scale-105 transition-all"
+          >
+            アセスメントを始める
+          </button>
+        </section>
+
+        <section className="bg-white rounded-2xl shadow-lg p-10 mb-10">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            宇宙スキル標準とは
+          </h2>
+          <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+            内閣府宇宙開発戦略推進事務局が公開している、宇宙産業で求められるスキルを体系化した標準です。
+            本アプリケーションでは、この標準に基づいて自己評価を行い、自身のスキルレベルを可視化できます。
+          </p>
+          <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg">
+            <li>95の専門スキル項目</li>
+            <li>8つのスキルカテゴリ</li>
+            <li>4つの評価軸（業務範囲・自立性・資格・経験年数）</li>
+            <li>5段階のスキルレベル定義</li>
+          </ul>
+        </section>
+
+        <div className="text-center">
+          <Link href="/skills" className="text-indigo-600 hover:text-purple-600 hover:underline font-semibold text-lg">
+            または、すべてのスキル一覧を見る →
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ユーザータイプ選択
+  if (step === 'user-type') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <section className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            あなたの専門分野を教えてください
+          </h1>
+          <p className="text-xl text-gray-600 mb-4">
+            あなたに最適なカテゴリをおすすめします
+          </p>
+          <p className="text-lg text-gray-500 mb-8">
+            宇宙産業には95のスキルがありますが、すべてを評価する必要はありません。<br />
+            あなたの専門性に応じて、関連性の高いカテゴリだけをご提案します。
+          </p>
+        </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <button
+            onClick={() => handleUserTypeSelect('science')}
+            className="bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl hover:scale-105 transition-all text-left border-2 border-transparent hover:border-indigo-600"
+          >
+            <div className="text-6xl mb-4">🔬</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              理系（技術系）
+            </h2>
+            <p className="text-gray-600 text-lg">
+              エンジニアリング、設計、開発、運用などの技術職
+            </p>
+          </button>
+
+          <button
+            onClick={() => handleUserTypeSelect('liberal-arts')}
+            className="bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl hover:scale-105 transition-all text-left border-2 border-transparent hover:border-indigo-600"
+          >
+            <div className="text-6xl mb-4">💼</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              文系（ビジネス系）
+            </h2>
+            <p className="text-gray-600 text-lg">
+              マネジメント、経営、法務、財務などのビジネス職
+            </p>
+          </button>
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handleReset}
+            className="text-gray-600 hover:text-gray-900 hover:underline"
+          >
+            ← 戻る
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 理系の細分化
+  if (step === 'science-type') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <section className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            どちらの分野に近いですか？
+          </h1>
+          <p className="text-xl text-gray-600 mb-4">
+            より具体的なカテゴリをおすすめします
+          </p>
+          <p className="text-lg text-gray-500 mb-8">
+            理系の中でも、開発・設計をする方と、現場で運用・製造をする方では<br />
+            必要なスキルが異なります。あなたの業務に近い方を選んでください。
+          </p>
+        </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <button
+            onClick={() => handleScienceTypeSelect('engineering')}
+            className="bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl hover:scale-105 transition-all text-left border-2 border-transparent hover:border-indigo-600"
+          >
+            <div className="text-6xl mb-4">⚙️</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              エンジニアリング・開発系
+            </h2>
+            <p className="text-gray-600 text-lg mb-4">
+              ソフトウェア、設計、解析などの開発業務
+            </p>
+            <p className="text-sm text-gray-500">
+              例: システムエンジニア、構造設計、電気設計、ソフトウェア開発など
+            </p>
+          </button>
+
+          <button
+            onClick={() => handleScienceTypeSelect('operations')}
+            className="bg-white rounded-2xl shadow-lg p-10 hover:shadow-2xl hover:scale-105 transition-all text-left border-2 border-transparent hover:border-indigo-600"
+          >
+            <div className="text-6xl mb-4">🔧</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              運用・製造・現場系
+            </h2>
+            <p className="text-gray-600 text-lg mb-4">
+              試験、製造、打上げ、衛星運用などの現場業務
+            </p>
+            <p className="text-sm text-gray-500">
+              例: 試験エンジニア、製造技術者、射場管制、衛星運用など
+            </p>
+          </button>
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handleReset}
+            className="text-gray-600 hover:text-gray-900 hover:underline"
+          >
+            ← 最初に戻る
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 推奨カテゴリ表示
+  if (step === 'recommendations') {
+    const recommendations = getRecommendations();
+
+    return (
+      <div className="max-w-5xl mx-auto">
+        <section className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            あなたにおすすめのカテゴリ
+          </h1>
+          <p className="text-xl text-gray-600 mb-2">
+            {userType === 'liberal-arts'
+              ? '文系（ビジネス系）の方におすすめ'
+              : scienceType === 'engineering'
+              ? '理系（エンジニアリング・開発系）の方におすすめ'
+              : '理系（運用・製造・現場系）の方におすすめ'}
+          </p>
+          <p className="text-gray-500 mb-8">
+            以下のカテゴリから評価を始めましょう。興味のあるカテゴリだけ選んでOKです。
+          </p>
+        </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          {recommendations.map((rec) => (
+            <div
+              key={rec.slug}
+              className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all"
+            >
+              <h3 className="font-bold text-2xl text-gray-900 mb-3">
+                {rec.category}
+              </h3>
+              <p className="text-gray-600 mb-4 text-lg">{rec.description}</p>
+              <p className="text-gray-500 mb-6">{rec.skillCount}スキル</p>
+              <Link
+                href={`/assessment/${rec.slug}`}
+                className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105 transition-all"
+              >
+                このカテゴリを評価する
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-indigo-50 rounded-2xl p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            💡 評価のコツ
+          </h2>
+          <ul className="space-y-3 text-gray-700 text-lg">
+            <li className="flex gap-3">
+              <span className="text-indigo-600">✓</span>
+              <span>すべてのカテゴリを評価する必要はありません</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-indigo-600">✓</span>
+              <span>興味のあるカテゴリだけ選んで評価してください</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-indigo-600">✓</span>
+              <span>複数のカテゴリを評価すると、レーダーチャートで比較できます</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-indigo-600">✓</span>
+              <span>評価は自動保存されるので、途中で中断しても大丈夫です</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={handleReset}
+            className="text-gray-600 hover:text-gray-900 hover:underline font-semibold"
+          >
+            ← 最初に戻る
+          </button>
           <Link
             href="/skills"
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl transform hover:scale-105 transition-all"
+            className="text-indigo-600 hover:text-purple-600 hover:underline font-semibold"
           >
-            スキル一覧を見る
-          </Link>
-          <Link
-            href="/about"
-            className="bg-white text-gray-800 px-10 py-4 rounded-xl font-bold text-lg border-2 border-indigo-300 hover:border-indigo-600 hover:shadow-xl transform hover:scale-105 transition-all"
-          >
-            詳しく知る
+            すべてのカテゴリを見る →
           </Link>
         </div>
-      </section>
+      </div>
+    );
+  }
 
-      {/* 宇宙スキル標準について */}
-      <section className="bg-white rounded-2xl shadow-lg p-10 mb-10">
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          宇宙スキル標準とは
-        </h2>
-        <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-          内閣府宇宙開発戦略推進事務局が公開している、宇宙産業で求められるスキルを体系化した標準です。
-          本アプリケーションでは、この標準に基づいて自己評価を行い、自身のスキルレベルを可視化できます。
-        </p>
-        <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg">
-          <li>95の専門スキル項目</li>
-          <li>8つのスキルカテゴリ</li>
-          <li>4つの評価軸（業務範囲・自立性・資格・経験年数）</li>
-          <li>5段階のスキルレベル定義</li>
-        </ul>
-      </section>
-
-      {/* スキルカテゴリ概要 */}
-      <section className="mb-10">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">
-          スキルカテゴリ
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((category) => {
-            const count = skillCounts.get(category) || 0;
-            return (
-              <div
-                key={category}
-                className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl hover:scale-105 transition-all"
-              >
-                <h3 className="font-bold text-xl text-gray-900 mb-3">
-                  {category}
-                </h3>
-                <p className="text-gray-600 mb-6 text-lg">{count}スキル</p>
-                <Link
-                  href={`/skills#${encodeURIComponent(category)}`}
-                  className="text-indigo-600 hover:text-purple-600 hover:underline font-semibold text-lg"
-                >
-                  詳細を見る →
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 使い方 */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-10 shadow-lg">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">
-          使い方
-        </h2>
-        <ol className="space-y-6 text-gray-700">
-          <li className="flex gap-5">
-            <span className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-              1
-            </span>
-            <span className="text-lg pt-2">
-              <strong className="text-gray-900">スキルを知る:</strong> スキル一覧から興味のあるカテゴリを確認
-            </span>
-          </li>
-          <li className="flex gap-5">
-            <span className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-              2
-            </span>
-            <span className="text-lg pt-2">
-              <strong className="text-gray-900">自己評価:</strong> カテゴリごとに4つの評価軸で5段階評価
-            </span>
-          </li>
-          <li className="flex gap-5">
-            <span className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-              3
-            </span>
-            <span className="text-lg pt-2">
-              <strong className="text-gray-900">結果確認:</strong> レーダーチャートで強みを可視化し、推奨ロールを確認
-            </span>
-          </li>
-          <li className="flex gap-5">
-            <span className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-              4
-            </span>
-            <span className="text-lg pt-2">
-              <strong className="text-gray-900">共有:</strong> パーマリンクで結果を他者と共有
-            </span>
-          </li>
-        </ol>
-      </section>
-    </div>
-  );
+  return null;
 }
