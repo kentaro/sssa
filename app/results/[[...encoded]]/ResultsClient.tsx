@@ -18,6 +18,7 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
   const [summaries, setSummaries] = useState<CategorySummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [permalink, setPermalink] = useState('');
+  const [canShare, setCanShare] = useState(false);
 
   useEffect(() => {
     let assessmentResult: AssessmentResult | null = null;
@@ -61,23 +62,30 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
     setIsLoading(false);
   }, [encodedParam, data]);
 
+  // Web Share API対応チェック
+  useEffect(() => {
+    if (typeof window !== 'undefined' && navigator.share) {
+      setCanShare(true);
+    }
+  }, []);
+
   const handleCopyPermalink = async () => {
     if (!permalink || summaries.length === 0) return;
 
-    // 評価の高いカテゴリトップ3を取得
-    const topCategories = summaries
-      .filter(s => s.averageScore > 0)
-      .sort((a, b) => b.averageScore - a.averageScore)
-      .slice(0, 3)
-      .map(s => s.category);
-
-    const shareText = topCategories.length > 0
-      ? `宇宙業界でのスキル評価結果\n\n高評価の分野:\n「${topCategories.join('」\n「')}」\n\nあなたもスキルを診断してみませんか？`
-      : '宇宙業界でのスキル評価を完了しました！\n\nあなたもチャレンジしてみませんか？';
-
-    // Web Share API対応チェック
-    if (navigator.share) {
+    // Web Share API対応の場合
+    if (canShare && navigator.share) {
       try {
+        // 評価の高いカテゴリトップ3を取得
+        const topCategories = summaries
+          .filter(s => s.averageScore > 0)
+          .sort((a, b) => b.averageScore - a.averageScore)
+          .slice(0, 3)
+          .map(s => s.category);
+
+        const shareText = topCategories.length > 0
+          ? `宇宙業界でのスキル評価結果\n\n高評価の分野:\n「${topCategories.join('」\n「')}」\n\nあなたもスキルを診断してみませんか？`
+          : '宇宙業界でのスキル評価を完了しました！\n\nあなたもチャレンジしてみませんか？';
+
         await navigator.share({
           title: '宇宙スキル標準アセスメント',
           text: shareText,
@@ -303,31 +311,56 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
       {/* 共有セクション */}
       <div className="bg-blue-50 rounded-lg p-6 mb-8">
         <h2 className="text-xl font-bold text-gray-900 mb-4">結果を共有</h2>
-        <p className="text-gray-700 mb-4">
-          以下のURLで、この評価結果を他者と共有できます。
-        </p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={permalink}
-            readOnly
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-mono"
-          />
-          <button
-            onClick={handleCopyPermalink}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+        {!canShare && (
+          <>
+            <p className="text-gray-700 mb-4">
+              以下のURLで、この評価結果を他者と共有できます。
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={permalink}
+                readOnly
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-mono"
               />
-            </svg>
-            共有
-          </button>
-        </div>
+              <button
+                onClick={handleCopyPermalink}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                コピー
+              </button>
+            </div>
+          </>
+        )}
+        {canShare && (
+          <>
+            <p className="text-gray-700 mb-4">
+              評価結果を共有しましょう。
+            </p>
+            <button
+              onClick={handleCopyPermalink}
+              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                />
+              </svg>
+              共有
+            </button>
+          </>
+        )}
       </div>
 
       {/* アクションボタン */}
