@@ -77,8 +77,8 @@ export default function AssessmentClient({
 
   const handleComplete = () => {
     saveCategoryAssessment(category, categoryAssessment);
-    // カテゴリ評価完了後はスキル一覧に戻る
-    router.push('/skills');
+    // カテゴリ評価完了後は進捗ページに遷移
+    router.push(`/assessment-progress?completed=${encodeURIComponent(category)}`);
   };
 
   const isAllComplete = completedSkills === skills.length;
