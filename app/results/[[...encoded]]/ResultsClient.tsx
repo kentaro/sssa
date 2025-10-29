@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { loadAssessmentData } from '@/lib/storage';
-import { decodeAssessmentResult, encodeAssessmentResult, createAssessmentResult } from '@/lib/permalink';
+import { decodeAssessmentResult, encodeAssessmentResult, createAssessmentResult, compressAssessmentResult } from '@/lib/permalink';
 import { calculateAllCategorySummaries, getTopCategories } from '@/lib/assessment-utils';
 import CategoryRadarChart from '@/components/CategoryRadarChart';
 import type { AssessmentResult, CategorySummary, SpaceSkillStandard, Role } from '@/lib/types';
@@ -48,9 +48,10 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
       );
       setSummaries(calculatedSummaries);
 
-      // パーマリンク生成
+      // パーマリンク生成（圧縮版）
       if (typeof window !== 'undefined') {
-        const encoded = encodeAssessmentResult(assessmentResult);
+        const compressed = compressAssessmentResult(assessmentResult);
+        const encoded = encodeAssessmentResult(compressed);
         const basePath = process.env.NODE_ENV === 'production' ? '/sssa' : '';
         const url = `${window.location.origin}${basePath}/results#${encoded}`;
         setPermalink(url);

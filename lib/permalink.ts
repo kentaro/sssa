@@ -2,18 +2,62 @@
  * パーマリンク生成・復元ユーティリティ
  */
 
+import pako from 'pako';
 import type { AssessmentResult } from './types';
 
 const RESULT_VERSION = '1.0';
 
 /**
- * アセスメント結果をBase64エンコードされた文字列に変換
+ * 文字列をUint8Arrayに変換（ブラウザ互換）
+ */
+function stringToUint8Array(str: string): Uint8Array {
+  const encoder = new TextEncoder();
+  return encoder.encode(str);
+}
+
+/**
+ * Uint8Arrayを文字列に変換（ブラウザ互換）
+ */
+function uint8ArrayToString(uint8: Uint8Array): string {
+  const decoder = new TextDecoder();
+  return decoder.decode(uint8);
+}
+
+/**
+ * Uint8ArrayをBase64に変換（ブラウザ互換）
+ */
+function uint8ArrayToBase64(uint8: Uint8Array): string {
+  let binary = '';
+  const len = uint8.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(uint8[i]);
+  }
+  return btoa(binary);
+}
+
+/**
+ * Base64をUint8Arrayに変換（ブラウザ互換）
+ */
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const len = binary.length;
+  const uint8 = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    uint8[i] = binary.charCodeAt(i);
+  }
+  return uint8;
+}
+
+/**
+ * アセスメント結果をgzip圧縮してBase64エンコード
  */
 export function encodeAssessmentResult(result: AssessmentResult): string {
   try {
     const json = JSON.stringify(result);
+    // gzip圧縮
+    const compressed = pako.gzip(stringToUint8Array(json));
     // Base64エンコード（URLセーフ）
-    const base64 = Buffer.from(json, 'utf8').toString('base64');
+    const base64 = uint8ArrayToBase64(compressed);
     // URLセーフな形式に変換
     return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   } catch (error) {
@@ -35,7 +79,11 @@ export function decodeAssessmentResult(encoded: string): AssessmentResult | null
       base64 += '=';
     }
 
-    const json = Buffer.from(base64, 'base64').toString('utf8');
+    // Base64デコード
+    const compressed = base64ToUint8Array(base64);
+    // gzip解凍
+    const decompressed = pako.ungzip(compressed);
+    const json = uint8ArrayToString(decompressed);
     const result = JSON.parse(json) as AssessmentResult;
 
     // バージョンチェック
