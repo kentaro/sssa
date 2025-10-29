@@ -22,10 +22,10 @@ export default function Header() {
             </Link>
             <Link
               href="/results"
-              className={`px-4 py-2 rounded-lg transition-colors font-semibold text-lg backdrop-blur-sm ${
+              className={`transition-colors text-lg ${
                 pathname?.startsWith('/results')
-                  ? 'bg-white/40'
-                  : 'bg-white/20 hover:bg-white/30'
+                  ? 'bg-white/30 px-3 py-1 rounded-lg font-semibold'
+                  : 'hover:text-indigo-100 font-medium'
               }`}
             >
               評価結果
