@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { quickAssessmentQuestions } from '@/data/quick-assessment-questions';
 import {
@@ -11,20 +11,40 @@ import {
 } from '@/lib/quick-assessment-scoring';
 import type { QuickAssessmentAnswer, QuickAssessmentResult, Role } from '@/lib/types';
 
+// カテゴリ名からスラッグを生成
+function getCategorySlug(category: string): string {
+  const slugMap: { [key: string]: string } = {
+    'プログラム創造・組成': 'program-creation',
+    'プロジェクトマネジメント': 'project-management',
+    '基盤技術': 'foundation-technology',
+    '設計・解析': 'design-analysis',
+    '試験': 'testing',
+    '製造・加工': 'manufacturing',
+    '打上げ・衛星運用': 'launch-operations',
+    'コーポレート': 'corporate',
+  };
+  return slugMap[category] || 'categories';
+}
+
 interface ResultsClientProps {
   roles: Role[];
 }
 
 function ResultsContent({ roles }: ResultsClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [result, setResult] = useState<QuickAssessmentResult | null>(null);
   const [shareUrl, setShareUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // URLパラメータからロール番号を取得（共有URL経由）
-    const rolesParam = searchParams.get('roles');
+    // ハッシュからロール番号を取得（共有URL経由）
+    let rolesParam: string | null = null;
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.substring(1); // '#'を除去
+      if (hash) {
+        rolesParam = hash;
+      }
+    }
 
     if (rolesParam) {
       // 共有URL経由：ロール番号から結果を復元
@@ -69,14 +89,11 @@ function ResultsContent({ roles }: ResultsClientProps) {
 
         setResult(calculatedResult);
 
-        // 共有URL生成
+        // 共有URL生成（ハッシュ形式）
         const roleNumbers = calculatedResult.topRoles.map(r => r.role.number);
         const encoded = encodeQuickResult(roleNumbers);
-        const url = `${window.location.origin}/quick-assessment/results?roles=${encoded}`;
+        const url = `${window.location.origin}/quick-assessment/results#${encoded}`;
         setShareUrl(url);
-
-        // LocalStorageから回答をクリア
-        localStorage.removeItem('quick-assessment-answers');
 
         setIsLoading(false);
       } catch (error) {
@@ -84,7 +101,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
         router.push('/quick-assessment');
       }
     }
-  }, [searchParams, router, roles]);
+  }, [router, roles]);
 
   const handleShare = async () => {
     if (!shareUrl) return;
@@ -116,21 +133,21 @@ function ResultsContent({ roles }: ResultsClientProps) {
           診断結果
         </h1>
         <p className="text-xl text-gray-600">
-          あなたに向いているロール TOP3
+          あなたに向いている役割 TOP3
         </p>
       </div>
 
-      {/* トップ3のロール */}
+      {/* トップ3の役割 */}
       <div className="space-y-6 mb-8">
         {result.topRoles.map((roleResult, index) => (
           <div
             key={roleResult.role.number}
             className={`bg-white rounded-2xl shadow-lg p-6 md:p-8 border-2 ${
               index === 0
-                ? 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-amber-50'
+                ? 'border-yellow-400'
                 : index === 1
-                ? 'border-gray-300 bg-gradient-to-br from-gray-50 to-slate-50'
-                : 'border-orange-300 bg-gradient-to-br from-orange-50 to-amber-50'
+                ? 'border-gray-300'
+                : 'border-orange-300'
             }`}
           >
             {/* ランクバッジ */}
@@ -156,7 +173,7 @@ function ResultsContent({ roles }: ResultsClientProps) {
               )}
             </div>
 
-            {/* ロール情報 */}
+            {/* 役割情報 */}
             <div className="mb-4">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 {roleResult.role.name}
@@ -172,10 +189,10 @@ function ResultsContent({ roles }: ResultsClientProps) {
             {/* アクション */}
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/categories"
+                href={`/categories/${getCategorySlug(roleResult.role.category)}`}
                 className="flex-1 bg-indigo-600 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
               >
-                このロールに必要なスキルを診断
+                この役割に必要なスキルを診断
               </Link>
             </div>
           </div>

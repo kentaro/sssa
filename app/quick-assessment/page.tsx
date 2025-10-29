@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { quickAssessmentQuestions } from '@/data/quick-assessment-questions';
 import {
@@ -17,9 +17,13 @@ export default function QuickAssessmentPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<QuickAssessmentAnswer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isCompletedRef = useRef(false);
 
   // 初期化: LocalStorageから進捗を読み込み
   useEffect(() => {
+    // 前回の完了した回答をクリア
+    localStorage.removeItem('quick-assessment-answers');
+
     const progress = loadQuickAssessmentProgress();
     if (progress && progress.answers.length > 0) {
       // 続きから再開するか確認
@@ -38,12 +42,26 @@ export default function QuickAssessmentPage() {
     setIsLoading(false);
   }, []);
 
-  // 回答が変わったらLocalStorageに保存
+  // 回答が変わったらLocalStorageに保存（完了時は除く）
   useEffect(() => {
-    if (!isLoading && answers.length > 0) {
+    if (!isLoading && answers.length > 0 && !isCompletedRef.current) {
       saveQuickAssessmentProgress(answers, currentQuestionIndex);
     }
   }, [answers, currentQuestionIndex, isLoading]);
+
+  // 全問完了を検知して結果ページへ遷移
+  useEffect(() => {
+    if (answers.length === quickAssessmentQuestions.length && !isCompletedRef.current) {
+      // 完了フラグを立てて自動保存を防ぐ
+      isCompletedRef.current = true;
+      // 進捗をクリア
+      clearQuickAssessmentProgress();
+      // 回答をLocalStorageに保存
+      localStorage.setItem('quick-assessment-answers', JSON.stringify(answers));
+      // 結果ページへ遷移
+      router.push('/quick-assessment/results');
+    }
+  }, [answers, router]);
 
   // キーボード操作
   useEffect(() => {
@@ -72,17 +90,12 @@ export default function QuickAssessmentPage() {
 
     const newAnswers = [...answers, newAnswer];
 
-    // 次の質問へ
+    // 回答を保存
+    setAnswers(newAnswers);
+
+    // 次の質問へ（最後の質問でない場合のみ）
     if (currentQuestionIndex < quickAssessmentQuestions.length - 1) {
-      // 途中の質問：状態を更新（自動保存が走る）
-      setAnswers(newAnswers);
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      // 全問完了 → 結果ページへ
-      // 進捗をクリアしてから回答を保存（自動保存を防ぐ）
-      clearQuickAssessmentProgress();
-      localStorage.setItem('quick-assessment-answers', JSON.stringify(newAnswers));
-      router.push('/quick-assessment/results');
     }
   };
 
@@ -113,7 +126,7 @@ export default function QuickAssessmentPage() {
           クイック診断
         </h1>
         <p className="text-gray-600">
-          24問の質問に答えて、あなたに向いているロールを見つけましょう
+          24問の質問に答えて、あなたに向いている役割を見つけましょう
         </p>
       </div>
 
