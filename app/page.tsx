@@ -1,72 +1,45 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-type Step = 'intro' | 'user-type' | 'science-type' | 'recommendations';
+type Step = 'intro' | 'user-type' | 'science-type';
 type UserType = 'science' | 'liberal-arts';
 type ScienceType = 'engineering' | 'operations';
 
-interface CategoryRecommendation {
-  category: string;
-  slug: string;
-  description: string;
-  skillCount: number;
-}
-
 export default function Home() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>('intro');
   const [userType, setUserType] = useState<UserType | null>(null);
   const [scienceType, setScienceType] = useState<ScienceType | null>(null);
 
   const handleUserTypeSelect = (type: UserType) => {
     setUserType(type);
+    localStorage.setItem('sssa_user_type', type);
+
     if (type === 'liberal-arts') {
-      setStep('recommendations');
+      // 文系の場合は直接おすすめページへ
+      router.push('/recommendations');
     } else {
+      // 理系の場合はさらに分岐
       setStep('science-type');
     }
   };
 
   const handleScienceTypeSelect = (type: ScienceType) => {
     setScienceType(type);
-    setStep('recommendations');
+    localStorage.setItem('sssa_science_type', type);
+    // おすすめページへ遷移
+    router.push('/recommendations');
   };
 
   const handleReset = () => {
     setStep('intro');
     setUserType(null);
     setScienceType(null);
-  };
-
-  const getRecommendations = (): CategoryRecommendation[] => {
-    if (userType === 'liberal-arts') {
-      return [
-        { category: 'プログラム創造・組成', slug: 'program-creation', description: '新規事業・プログラムの企画立案', skillCount: 3 },
-        { category: 'プロジェクトマネジメント', slug: 'project-management', description: 'プロジェクトの計画・実行・管理', skillCount: 10 },
-        { category: 'コーポレート', slug: 'corporate', description: '法務、財務、人事、総務など', skillCount: 18 },
-      ];
-    }
-
-    if (scienceType === 'engineering') {
-      return [
-        { category: 'プログラム創造・組成', slug: 'program-creation', description: '新規事業・プログラムの企画立案', skillCount: 3 },
-        { category: '基盤技術', slug: 'foundation-technology', description: 'ソフトウェア、AI、データサイエンス', skillCount: 7 },
-        { category: '設計・解析', slug: 'design-analysis', description: '構造、電気、熱、機構などの設計・解析', skillCount: 26 },
-        { category: 'プロジェクトマネジメント', slug: 'project-management', description: 'プロジェクトの計画・実行・管理', skillCount: 10 },
-      ];
-    }
-
-    if (scienceType === 'operations') {
-      return [
-        { category: 'プロジェクトマネジメント', slug: 'project-management', description: 'プロジェクトの計画・実行・管理', skillCount: 10 },
-        { category: '試験', slug: 'testing', description: '機能試験、環境試験など', skillCount: 8 },
-        { category: '製造・加工', slug: 'manufacturing', description: '組立、加工、製造作業', skillCount: 13 },
-        { category: '打上げ・衛星運用', slug: 'launch-operations', description: '射場管制、衛星運用など', skillCount: 9 },
-      ];
-    }
-
-    return [];
+    localStorage.removeItem('sssa_user_type');
+    localStorage.removeItem('sssa_science_type');
   };
 
   // イントロ画面
@@ -233,90 +206,6 @@ export default function Home() {
     );
   }
 
-  // 推奨カテゴリ表示
-  if (step === 'recommendations') {
-    const recommendations = getRecommendations();
-
-    return (
-      <div className="max-w-5xl mx-auto">
-        <section className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            あなたにおすすめのカテゴリ
-          </h1>
-          <p className="text-xl text-gray-600 mb-2">
-            {userType === 'liberal-arts'
-              ? '文系（ビジネス系）の方におすすめ'
-              : scienceType === 'engineering'
-              ? '理系（エンジニアリング・開発系）の方におすすめ'
-              : '理系（運用・製造・現場系）の方におすすめ'}
-          </p>
-          <p className="text-gray-500 mb-8">
-            以下のカテゴリから評価を始めましょう。興味のあるカテゴリだけ選んでOKです。
-          </p>
-        </section>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          {recommendations.map((rec) => (
-            <div
-              key={rec.slug}
-              className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all"
-            >
-              <h3 className="font-bold text-2xl text-gray-900 mb-3">
-                {rec.category}
-              </h3>
-              <p className="text-gray-600 mb-4 text-lg">{rec.description}</p>
-              <p className="text-gray-500 mb-6">{rec.skillCount}スキル</p>
-              <Link
-                href={`/assessment/${rec.slug}`}
-                className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105 transition-all"
-              >
-                このカテゴリを評価する
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-indigo-50 rounded-2xl p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            💡 評価のコツ
-          </h2>
-          <ul className="space-y-3 text-gray-700 text-lg">
-            <li className="flex gap-3">
-              <span className="text-indigo-600">✓</span>
-              <span>すべてのカテゴリを評価する必要はありません</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-indigo-600">✓</span>
-              <span>興味のあるカテゴリだけ選んで評価してください</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-indigo-600">✓</span>
-              <span>複数のカテゴリを評価すると、レーダーチャートで比較できます</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="text-indigo-600">✓</span>
-              <span>評価は自動保存されるので、途中で中断しても大丈夫です</span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={handleReset}
-            className="text-gray-600 hover:text-gray-900 hover:underline font-semibold"
-          >
-            ← 最初に戻る
-          </button>
-          <Link
-            href="/skills"
-            className="text-indigo-600 hover:text-purple-600 hover:underline font-semibold"
-          >
-            すべてのカテゴリを見る →
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return null;
 }
