@@ -29,17 +29,17 @@ export default function SkillsPage() {
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
               {/* カテゴリヘッダー */}
-              <div className="bg-blue-600 text-white px-6 py-4">
-                <div className="flex items-center justify-between">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b-2 border-indigo-200 px-4 sm:px-6 py-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
-                    <h2 className="text-xl font-bold">{category}</h2>
-                    <p className="text-blue-100 text-sm mt-1">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-800">{category}</h2>
+                    <p className="text-gray-600 text-sm mt-1">
                       {skills.length}スキル
                     </p>
                   </div>
                   <Link
                     href={`/assessment/${categorySlug}`}
-                    className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition"
+                    className="bg-indigo-600 text-white px-4 sm:px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition text-center text-sm sm:text-base whitespace-nowrap"
                   >
                     このカテゴリを評価する
                   </Link>
@@ -49,9 +49,9 @@ export default function SkillsPage() {
               {/* スキルリスト */}
               <div className="divide-y divide-gray-200">
                 {skills.map((skill) => (
-                  <div key={skill.number} className="px-6 py-4 hover:bg-gray-50 transition">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold">
+                  <div key={skill.number} className="px-4 sm:px-6 py-4 hover:bg-gray-50 transition">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center font-bold text-sm sm:text-base">
                         {skill.number}
                       </div>
                       <div className="flex-1">
