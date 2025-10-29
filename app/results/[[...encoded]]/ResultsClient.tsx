@@ -83,8 +83,8 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
           .map(s => s.category);
 
         const shareText = topCategories.length > 0
-          ? `宇宙業界でのスキル評価結果\n\n高評価の分野:\n「${topCategories.join('」\n「')}」\n\nあなたもスキルを診断してみませんか？`
-          : '宇宙業界でのスキル評価を完了しました！\n\nあなたもチャレンジしてみませんか？';
+          ? `🚀 宇宙スキル標準で詳細診断を完了！\n\n私の強みは...\n「${topCategories.join('」\n「')}」\n\n✨ あなたも宇宙業界での適性を詳しく診断しませんか？`
+          : '🚀 宇宙スキル標準で詳細診断を完了！\n\n✨ あなたも宇宙業界での適性を診断してみませんか？';
 
         await navigator.share({
           title: '宇宙スキル標準アセスメント',
@@ -108,8 +108,8 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
           .map(s => s.category);
 
         const copyText = topCategories.length > 0
-          ? `宇宙業界でのスキル評価結果\n\n高評価の分野:\n「${topCategories.join('」\n「')}」\n\nあなたもスキルを診断してみませんか？\n\n${permalink}`
-          : `宇宙業界でのスキル評価を完了しました！\n\nあなたもチャレンジしてみませんか？\n\n${permalink}`;
+          ? `🚀 宇宙スキル標準で詳細診断を完了！\n\n私の強みは...\n「${topCategories.join('」\n「')}」\n\n✨ あなたも宇宙業界での適性を詳しく診断しませんか？\n\n${permalink}`
+          : `🚀 宇宙スキル標準で詳細診断を完了！\n\n✨ あなたも宇宙業界での適性を診断してみませんか？\n\n${permalink}`;
 
         await navigator.clipboard.writeText(copyText);
         alert('結果をクリップボードにコピーしました！');

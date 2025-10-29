@@ -14,7 +14,7 @@ export default function Header() {
             <span className="inline-block">🚀 宇宙スキル標準</span>
             <span className="inline-block">アセスメント</span>
           </Link>
-          <nav className="flex items-center justify-center gap-3 sm:gap-6 text-sm sm:text-base">
+          <nav className="flex items-center justify-center flex-wrap gap-2 sm:gap-6 text-xs sm:text-base">
             <Link
               href="/categories"
               className={`transition-colors whitespace-nowrap ${
@@ -23,7 +23,8 @@ export default function Header() {
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
-              カテゴリ一覧
+              <span className="hidden sm:inline">カテゴリ一覧</span>
+              <span className="sm:hidden">カテゴリ</span>
             </Link>
             <Link
               href="/quick-assessment/results"
@@ -33,7 +34,8 @@ export default function Header() {
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
-              クイック診断結果
+              <span className="hidden sm:inline">クイック診断結果</span>
+              <span className="sm:hidden">クイック結果</span>
             </Link>
             <Link
               href="/results"
@@ -43,7 +45,8 @@ export default function Header() {
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
-              詳細診断結果
+              <span className="hidden sm:inline">詳細診断結果</span>
+              <span className="sm:hidden">詳細結果</span>
             </Link>
             <Link
               href="/about"
@@ -53,7 +56,8 @@ export default function Header() {
                   : 'hover:text-indigo-100 font-medium'
               }`}
             >
-              このサイトについて
+              <span className="hidden sm:inline">このサイトについて</span>
+              <span className="sm:hidden">About</span>
             </Link>
           </nav>
         </div>
