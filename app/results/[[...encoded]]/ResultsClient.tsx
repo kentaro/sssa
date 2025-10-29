@@ -64,7 +64,7 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
 
   // Web Share API対応チェック
   useEffect(() => {
-    if (typeof window !== 'undefined' && navigator.share) {
+    if (typeof window !== 'undefined' && 'share' in navigator) {
       setCanShare(true);
     }
   }, []);
