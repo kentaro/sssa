@@ -72,14 +72,14 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
       .map(s => s.category);
 
     const shareText = topCategories.length > 0
-      ? `宇宙業界スキル評価結果: 「${topCategories.join('」「')}」などの分野で高評価を獲得！`
-      : '宇宙業界でのスキル評価結果をシェアします';
+      ? `宇宙業界でのスキル評価結果\n\n高評価の分野:\n「${topCategories.join('」\n「')}」\n\nあなたもスキルを診断してみませんか？`
+      : '宇宙業界でのスキル評価を完了しました！\n\nあなたもチャレンジしてみませんか？';
 
     // Web Share API対応チェック
     if (navigator.share) {
       try {
         await navigator.share({
-          title: '宇宙スキル標準アセスメント - スキル評価結果',
+          title: '宇宙スキル標準アセスメント',
           text: shareText,
           url: permalink,
         });
