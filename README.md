@@ -23,7 +23,7 @@ Excel形式で公開されている宇宙スキル標準をWebアプリケーシ
 |-----------|------|------|
 | スキル | 95件 | 宇宙産業で必要とされるスキル項目 |
 | 業務 | 58件 | 宇宙産業における業務項目 |
-| スキルレベル定義 | 68件 | スキルごとの4評価軸×5段階の詳細定義 |
+| スキルレベル定義 | 269件 | スキルごとの4評価軸×5段階の詳細定義（一部スキルは評価軸が定義されていない） |
 | スキル×業務マッピング | 57件 | スキルと業務の関連付け |
 | 評価軸 | 4件 | スキル評価の4つの軸 |
 | ロール | 17件 | 職種・役割の定義と必要スキル |
@@ -51,34 +51,42 @@ Excel形式で公開されている宇宙スキル標準をWebアプリケーシ
 3. **資格・検定**
 4. **経験年数**
 
-## 機能（予定）
+## 機能
 
-### 1. スキル選択
-- 95スキルからアセスメント対象を選択
-- カテゴリ別フィルタリング
-- スキル詳細情報の表示
+### 1. スキル一覧
+- ✅ 95スキル項目の表示
+- ✅ 8カテゴリ別のグループ表示
+- ✅ スキル詳細説明の表示
+- ✅ カテゴリごとの評価ページへの直接リンク
 
-### 2. アセスメント
-- 4つの評価軸ごとの自己評価
-- 5段階レベルの詳細説明表示
-- 直感的なレベル選択UI
+### 2. カテゴリ別アセスメント
+- ✅ カテゴリ内の全スキルを一括評価
+- ✅ 4つの評価軸×5段階レベルでの自己評価
+- ✅ レベルごとの詳細説明の表示（展開/折りたたみ）
+- ✅ 進捗表示（評価済みスキル数）
+- ✅ LocalStorageへの自動保存
+- ✅ スキル間のナビゲーション
 
 ### 3. 結果表示
-- スキルマップのビジュアル化（レーダーチャート等）
-- 推奨ロールの提示
-- 学習推奨リソースの提示
+- ✅ カテゴリ別レーダーチャート
+- ✅ カテゴリごとの平均スコアと完了率
+- ✅ 評価の高いカテゴリに基づく推奨ロールの提示
+- ✅ パーマリンクURLによる結果共有
 
 ### 4. データ管理
-- アセスメント結果の保存
-- 履歴管理・経時比較機能
-- エクスポート機能（PDF等）
+- ✅ LocalStorageによる進捗保存
+- ✅ URLハッシュによる結果の共有
+- ✅ GitHub Pages静的ホスティング対応
 
 ## 技術スタック
 
-- **Framework**: Next.js 15
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Data Format**: YAML
+- **Data Parsing**: js-yaml
+- **Visualization**: Recharts
+- **Deployment**: GitHub Pages (Static Export)
 
 ## Getting Started
 
@@ -103,17 +111,28 @@ bun dev
 cat data/space_skill_standard_complete.yaml
 ```
 
-### データ整合性の検証
+### データの再抽出
 
-元のExcelファイルと抽出したYAMLファイルの整合性を検証できます：
+Excelファイルからskill_levelsデータを再抽出する場合：
 
 ```bash
 # 必要なライブラリのインストール
 pip install openpyxl pyyaml
 
-# Excelファイルのダウンロード（初回のみ）
-curl -L -o /tmp/uchuskill2025.xlsx "https://www8.cao.go.jp/space/skill/uchuskill2025.xlsx"
+# Excelファイルのダウンロード
+curl -o uchuskill2025.xlsx https://www8.cao.go.jp/space/skill/uchuskill2025.xlsx
 
+# skill_levelsの抽出
+python3 scripts/extract_skill_levels.py uchuskill2025.xlsx
+
+# 既存YAMLファイルへの統合は手動で行う必要があります
+```
+
+### データ整合性の検証
+
+元のExcelファイルと抽出したYAMLファイルの整合性を検証できます：
+
+```bash
 # 検証スクリプトの実行
 python3 scripts/verify_data.py
 ```
@@ -122,22 +141,38 @@ python3 scripts/verify_data.py
 - ✓ 件数チェック（スキル、業務、ロール等）
 - ✓ スキル名・番号の照合
 - ✓ 業務名・番号の照合
-- ✓ スキルレベル定義の検証
+- ✓ スキルレベル定義の検証（skill_number、evaluation_axisの照合）
 - ✓ カテゴリ分類の検証
 
 ## プロジェクト構造
 
 ```
 sssa/
-├── app/                    # Next.js App Router
-├── data/                   # データファイル
-│   ├── README.md          # データ構造詳細ドキュメント
-│   └── space_skill_standard_complete.yaml
-├── scripts/                # ユーティリティスクリプト
-│   └── verify_data.py     # データ整合性検証スクリプト
-├── components/             # Reactコンポーネント
-├── lib/                    # ユーティリティ関数
-└── public/                 # 静的ファイル
+├── app/                                    # Next.js App Router
+│   ├── assessment/[category]/             # カテゴリ別評価ページ
+│   ├── results/[[...encoded]]/            # 結果表示ページ
+│   ├── skills/                            # スキル一覧ページ
+│   ├── about/                             # Aboutページ
+│   └── page.tsx                           # ホームページ
+├── components/                             # Reactコンポーネント
+│   ├── SkillAssessmentForm.tsx            # スキル評価フォーム
+│   ├── CategoryRadarChart.tsx             # レーダーチャート
+│   ├── ProgressIndicator.tsx              # 進捗表示
+│   ├── Header.tsx / Footer.tsx            # レイアウトコンポーネント
+├── lib/                                    # ユーティリティ関数
+│   ├── data-loader.ts                     # YAMLデータ読み込み（サーバーサイド）
+│   ├── types.ts                           # TypeScript型定義
+│   ├── storage.ts                         # LocalStorage管理
+│   ├── permalink.ts                       # パーマリンク生成
+│   └── assessment-utils.ts                # 評価計算ユーティリティ
+├── data/                                   # データファイル
+│   ├── README.md                          # データ構造詳細ドキュメント
+│   └── space_skill_standard_complete.yaml # 完全抽出データ（269 skill_levels）
+├── scripts/                                # データ処理スクリプト
+│   ├── extract_skill_levels.py            # skill_levels抽出スクリプト
+│   └── verify_data.py                     # データ整合性検証スクリプト
+├── public/                                 # 静的ファイル
+└── .github/workflows/deploy.yml           # GitHub Actions デプロイ設定
 ```
 
 ## ライセンス
