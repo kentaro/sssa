@@ -62,14 +62,25 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
   }, [encodedParam, data]);
 
   const handleCopyPermalink = async () => {
-    if (!permalink) return;
+    if (!permalink || summaries.length === 0) return;
+
+    // 評価の高いカテゴリトップ3を取得
+    const topCategories = summaries
+      .filter(s => s.averageScore > 0)
+      .sort((a, b) => b.averageScore - a.averageScore)
+      .slice(0, 3)
+      .map(s => s.category);
+
+    const shareText = topCategories.length > 0
+      ? `宇宙業界スキル評価結果: 「${topCategories.join('」「')}」などの分野で高評価を獲得！`
+      : '宇宙業界でのスキル評価結果をシェアします';
 
     // Web Share API対応チェック
     if (navigator.share) {
       try {
         await navigator.share({
-          title: '宇宙スキル標準アセスメント - 評価結果',
-          text: 'スキル評価の結果をシェアします',
+          title: '宇宙スキル標準アセスメント - スキル評価結果',
+          text: shareText,
           url: permalink,
         });
       } catch (error) {

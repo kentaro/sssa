@@ -104,14 +104,18 @@ function ResultsContent({ roles }: ResultsClientProps) {
   }, [router, roles]);
 
   const handleShare = async () => {
-    if (!shareUrl) return;
+    if (!shareUrl || !result) return;
+
+    // トップ3の役割名を取得
+    const topRoleNames = result.topRoles.slice(0, 3).map(r => r.role.name);
+    const shareText = `宇宙業界での私の適性診断結果: 1位「${topRoleNames[0]}」${topRoleNames[1] ? `、2位「${topRoleNames[1]}」` : ''}${topRoleNames[2] ? `、3位「${topRoleNames[2]}」` : ''}`;
 
     // Web Share API対応チェック
     if (navigator.share) {
       try {
         await navigator.share({
-          title: '宇宙スキル標準アセスメント - クイック診断結果',
-          text: 'あなたに向いている役割の診断結果をシェアします',
+          title: '宇宙スキル標準アセスメント - 適性診断結果',
+          text: shareText,
           url: shareUrl,
         });
       } catch (error) {
