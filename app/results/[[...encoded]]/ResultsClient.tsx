@@ -185,6 +185,11 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
 
   // カテゴリに関連するロールを取得（スコアに応じて上位のみ表示）
   const getRelatedRolesForCategory = (skillCategory: string, categoryScore: number): Role[] => {
+    // スコアが2.0未満の場合は推奨しない
+    if (categoryScore < 2.0) {
+      return [];
+    }
+
     // スキルカテゴリに対応するロールカテゴリを取得
     const roleCategories = getRelatedRoleCategoriesForSkillCategory(skillCategory);
 
@@ -195,7 +200,7 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
     });
 
     // スコアに応じて表示数を決定
-    // スコア4.0以上: 最大5件、3.0-3.9: 最大3件、それ以下: 最大2件
+    // スコア4.0以上: 最大5件、3.0-3.9: 最大3件、2.0-2.9: 最大2件
     const maxRoles = categoryScore >= 4.0 ? 5 : categoryScore >= 3.0 ? 3 : 2;
 
     // ロール番号順（データの定義順）で上位のみ返す
