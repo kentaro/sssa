@@ -35,7 +35,7 @@ export default function Header() {
               }`}
             >
               <span className="hidden sm:inline">クイック診断結果</span>
-              <span className="sm:hidden">クイック結果</span>
+              <span className="sm:hidden">簡易結果</span>
             </Link>
             <Link
               href="/results"
