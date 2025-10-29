@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Skill, SkillLevel, SkillAssessment } from '@/lib/types';
 
 interface SkillAssessmentFormProps {
@@ -20,6 +20,12 @@ export default function SkillAssessmentForm({
 }: SkillAssessmentFormProps) {
   const [assessment, setAssessment] = useState<SkillAssessment>(initialAssessment);
   const [expandedAxis, setExpandedAxis] = useState<number | null>(null);
+
+  // スキルが変わったときにassessmentをリセット
+  useEffect(() => {
+    setAssessment(initialAssessment);
+    setExpandedAxis(null);
+  }, [skill.number, initialAssessment]);
 
   const handleLevelChange = (axisNumber: number, level: number) => {
     const newAssessment = {
