@@ -22,19 +22,19 @@ export default function ResultsClient({ encodedParam, data }: ResultsClientProps
   useEffect(() => {
     let assessmentResult: AssessmentResult | null = null;
 
-    // ハッシュフラグメントから読み取り（GitHub Pages対応）
+    // 常にLocalStorageから全カテゴリのデータを読み込む
     if (typeof window !== 'undefined') {
-      const hash = window.location.hash.substring(1); // '#'を除去
-      if (hash) {
-        assessmentResult = decodeAssessmentResult(hash);
-      }
-    }
-
-    // ハッシュがない場合、LocalStorageから読み込み
-    if (!assessmentResult) {
       const storedData = loadAssessmentData();
       if (Object.keys(storedData.assessments).length > 0) {
         assessmentResult = createAssessmentResult(storedData.assessments);
+      }
+    }
+
+    // LocalStorageにデータがない場合のみ、ハッシュから読み取り（共有URL用）
+    if (!assessmentResult && typeof window !== 'undefined') {
+      const hash = window.location.hash.substring(1); // '#'を除去
+      if (hash) {
+        assessmentResult = decodeAssessmentResult(hash);
       }
     }
 

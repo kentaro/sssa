@@ -77,14 +77,8 @@ export default function AssessmentClient({
 
   const handleComplete = () => {
     saveCategoryAssessment(category, categoryAssessment);
-
-    // 結果ページへ遷移（URLパラメータで評価データを渡す）
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    const permalink = generatePermalinkUrl(baseUrl, {
-      [category]: categoryAssessment,
-    });
-
-    router.push(permalink.replace(baseUrl, ''));
+    // カテゴリ評価完了後はスキル一覧に戻る
+    router.push('/skills');
   };
 
   const isAllComplete = completedSkills === skills.length;
@@ -204,7 +198,7 @@ export default function AssessmentClient({
             }`}
             title={isAllComplete ? '' : 'すべてのスキルを評価してください'}
           >
-            結果を見る
+            評価を完了
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
