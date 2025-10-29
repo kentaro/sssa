@@ -57,7 +57,7 @@ export default function Header() {
               }`}
             >
               <span className="hidden sm:inline">このサイトについて</span>
-              <span className="sm:hidden">About</span>
+              <span className="sm:hidden">サイト情報</span>
             </Link>
           </nav>
         </div>

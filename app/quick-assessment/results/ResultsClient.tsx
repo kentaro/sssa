@@ -11,8 +11,34 @@ import {
 } from '@/lib/quick-assessment-scoring';
 import type { QuickAssessmentAnswer, QuickAssessmentResult, Role } from '@/lib/types';
 
-// カテゴリ名からスラッグを生成
-function getCategorySlug(category: string): string {
+// 役割カテゴリからスキルカテゴリへのマッピング
+function getRoleToSkillCategoryMapping(roleCategory: string): string | null {
+  const normalized = roleCategory.replace(/\n/g, '').trim();
+
+  const mapping: { [key: string]: string } = {
+    '全体統括職': 'プログラム創造・組成', // または プロジェクトマネジメント
+    '構造系エンジニア': '設計・解析',
+    '推進系エンジニア': '設計・解析',
+    '電気系エンジニア': '設計・解析',
+    '通信系エンジニア': '設計・解析',
+    '熱制御系エンジニア': '設計・解析',
+    '制御系エンジニア': '設計・解析',
+    '飛行解析エンジニア': '設計・解析',
+    'データ処理系エンジニア': '基盤技術',
+    'ソフトウェア系エンジニア': '基盤技術',
+    '試験エンジニア': '試験',
+    '品質保証・品質管理エンジニア': '試験',
+    '宇宙輸送機・人工衛星製造職': '製造・加工',
+    '打上げ管理（宇宙輸送機飛行安全、射場安全、地域の保安）': '打上げ・衛星運用',
+    '射場・地上試験設備設計・管理': '打上げ・衛星運用',
+    'コーポレート・ビジネス職': 'コーポレート',
+  };
+
+  return mapping[normalized] || null;
+}
+
+// スキルカテゴリ名からスラッグを生成
+function getCategorySlug(skillCategory: string): string {
   const slugMap: { [key: string]: string } = {
     'プログラム創造・組成': 'program-creation',
     'プロジェクトマネジメント': 'project-management',
@@ -23,7 +49,7 @@ function getCategorySlug(category: string): string {
     '打上げ・衛星運用': 'launch-operations',
     'コーポレート': 'corporate',
   };
-  return slugMap[category] || 'categories';
+  return slugMap[skillCategory] || 'categories';
 }
 
 interface ResultsClientProps {
@@ -228,12 +254,18 @@ function ResultsContent({ roles }: ResultsClientProps) {
 
             {/* アクション */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href={`/categories/${getCategorySlug(roleResult.role.category)}`}
-                className="flex-1 bg-indigo-600 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
-              >
-                この役割に必要なスキルを診断
-              </Link>
+              {(() => {
+                const skillCategory = getRoleToSkillCategoryMapping(roleResult.role.category);
+                const slug = skillCategory ? getCategorySlug(skillCategory) : 'categories';
+                return (
+                  <Link
+                    href={`/categories/${slug}`}
+                    className="flex-1 bg-indigo-600 text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                  >
+                    この役割に必要なスキルを診断
+                  </Link>
+                );
+              })()}
             </div>
           </div>
         ))}
