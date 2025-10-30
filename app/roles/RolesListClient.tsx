@@ -14,9 +14,9 @@ export default function RolesListClient({ rolesByCategory }: RolesListClientProp
     setExpandedCategory(expandedCategory === category ? null : category);
   };
 
-  // カテゴリをソート（ロール数が多い順）
+  // カテゴリをソート（各カテゴリの最初の職種番号順）
   const sortedCategories = Object.entries(rolesByCategory).sort(
-    ([, a], [, b]) => b.length - a.length
+    ([, a], [, b]) => a[0].number - b[0].number
   );
 
   const totalRoles = Object.values(rolesByCategory).reduce((sum, roles) => sum + roles.length, 0);
