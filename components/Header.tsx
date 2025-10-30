@@ -25,7 +25,6 @@ export default function Header() {
     {
       label: 'コンテンツ',
       submenu: [
-        { label: 'カテゴリ一覧', href: '/categories' },
         { label: 'スキル一覧', href: '/skills' },
         { label: '職種一覧', href: '/roles' },
       ],
@@ -34,7 +33,7 @@ export default function Header() {
       label: '診断',
       submenu: [
         { label: 'クイック診断', href: '/quick-assessment' },
-        { label: '詳細診断', href: '/assessment' },
+        { label: '詳細診断', href: '/categories' },
       ],
     },
     {
