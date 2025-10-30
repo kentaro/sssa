@@ -6,6 +6,13 @@ import type {
 } from './types';
 
 /**
+ * カテゴリ名を正規化（改行除去）
+ */
+function normalizeCategory(category: string): string {
+  return category.replace(/\n/g, '').trim();
+}
+
+/**
  * クイック診断の回答からロールスコアを計算する
  */
 export function calculateRoleScores(
@@ -13,7 +20,7 @@ export function calculateRoleScores(
   questions: QuickAssessmentQuestion[],
   roles: Role[]
 ): QuickAssessmentResult {
-  // 各ロールカテゴリのスコアを集計
+  // 各ロールカテゴリのスコアを集計（正規化されたカテゴリ名で）
   const categoryScores: { [category: string]: number } = {};
 
   answers.forEach((answer) => {
@@ -29,9 +36,10 @@ export function calculateRoleScores(
       ? question.leftOption
       : question.rightOption;
 
-    // 選択肢の重み付けをカテゴリスコアに加算
+    // 選択肢の重み付けをカテゴリスコアに加算（正規化してから）
     Object.entries(option.weights).forEach(([category, weight]) => {
-      categoryScores[category] = (categoryScores[category] || 0) + weight;
+      const normalizedCategory = normalizeCategory(category);
+      categoryScores[normalizedCategory] = (categoryScores[normalizedCategory] || 0) + weight;
     });
   });
 
@@ -40,9 +48,10 @@ export function calculateRoleScores(
   const roleScores: { [roleNumber: number]: number } = {};
 
   roles.forEach((role) => {
-    const categoryScore = categoryScores[role.category] || 0;
-    // カテゴリ内のロール数を取得
-    const rolesInCategory = roles.filter(r => r.category === role.category).length;
+    const normalizedRoleCategory = normalizeCategory(role.category);
+    const categoryScore = categoryScores[normalizedRoleCategory] || 0;
+    // カテゴリ内のロール数を取得（正規化したカテゴリ名で）
+    const rolesInCategory = roles.filter(r => normalizeCategory(r.category) === normalizedRoleCategory).length;
 
     // ロール数による不利を緩和する調整係数
     // 1ロール: 係数1.0, 3ロール: 係数1.64, 9ロール: 係数2.69

@@ -234,7 +234,7 @@ export default function ResultsClient({ data }: ResultsClientProps) {
             評価サマリー
           </CardTitle>
           <CardDescription>
-            各カテゴリの平均スコアと評価済みスキル数をまとめています。スコアは5段階で表示されます。
+            各カテゴリの平均スコアと評価済みスキル数をまとめています。スコアは6段階（Lv0〜Lv5）で表示されます。
           </CardDescription>
         </CardHeader>
         <CardContent>

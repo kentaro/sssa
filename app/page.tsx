@@ -43,7 +43,7 @@ const stats = [
   },
   {
     label: '評価レベル',
-    value: '5段階',
+    value: '6段階',
     sub: 'Lv0〜Lv5で定義',
     icon: <TrendingUp className="h-5 w-5" />
   },

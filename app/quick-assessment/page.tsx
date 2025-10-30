@@ -32,7 +32,7 @@ export default function QuickAssessmentPage() {
       );
 
       if (shouldResume) {
-        return { answers: progress.answers, index: progress.answers.length };
+        return { answers: progress.answers, index: progress.currentQuestionIndex };
       }
 
       clearQuickAssessmentProgress();

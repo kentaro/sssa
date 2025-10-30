@@ -4,7 +4,7 @@ const STORAGE_KEY = 'quick-assessment-progress';
 
 export interface QuickAssessmentProgress {
   answers: QuickAssessmentAnswer[];
-  currentQuestionId: number;
+  currentQuestionIndex: number;
   timestamp: string;
 }
 
@@ -13,13 +13,13 @@ export interface QuickAssessmentProgress {
  */
 export function saveQuickAssessmentProgress(
   answers: QuickAssessmentAnswer[],
-  currentQuestionId: number
+  currentQuestionIndex: number
 ): void {
   if (typeof window === 'undefined') return;
 
   const progress: QuickAssessmentProgress = {
     answers,
-    currentQuestionId,
+    currentQuestionIndex,
     timestamp: new Date().toISOString(),
   };
 
