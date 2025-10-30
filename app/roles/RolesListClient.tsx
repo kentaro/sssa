@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { Role } from '@/lib/types';
 
 interface RolesListClientProps {
@@ -9,9 +9,21 @@ interface RolesListClientProps {
 
 export default function RolesListClient({ rolesByCategory }: RolesListClientProps) {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const toggleCategory = (category: string) => {
+    const isExpanding = expandedCategory !== category;
     setExpandedCategory(expandedCategory === category ? null : category);
+
+    // 展開する場合、少し遅延してからスクロール
+    if (isExpanding) {
+      setTimeout(() => {
+        categoryRefs.current[category]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }, 100);
+    }
   };
 
   // カテゴリをソート（ロール数が多い順）
@@ -40,6 +52,7 @@ export default function RolesListClient({ rolesByCategory }: RolesListClientProp
           return (
             <div
               key={category}
+              ref={(el) => { categoryRefs.current[category] = el; }}
               className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
             >
               {/* カテゴリヘッダー */}
