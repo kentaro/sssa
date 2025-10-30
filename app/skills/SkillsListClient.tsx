@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import type { Skill } from '@/lib/types';
 
 // カテゴリのアイコンを取得
@@ -27,21 +27,9 @@ interface SkillsListClientProps {
 
 export default function SkillsListClient({ categoriesData }: SkillsListClientProps) {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const toggleCategory = (category: string) => {
-    const isExpanding = expandedCategory !== category;
     setExpandedCategory(expandedCategory === category ? null : category);
-
-    // 展開する場合、少し遅延してからスクロール
-    if (isExpanding) {
-      setTimeout(() => {
-        categoryRefs.current[category]?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        });
-      }, 100);
-    }
   };
 
   return (
@@ -63,7 +51,6 @@ export default function SkillsListClient({ categoriesData }: SkillsListClientPro
           return (
             <div
               key={category}
-              ref={(el) => { categoryRefs.current[category] = el; }}
               className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
             >
               {/* カテゴリヘッダー */}
