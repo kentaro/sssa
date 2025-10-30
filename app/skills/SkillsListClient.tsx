@@ -1,22 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Skill } from '@/lib/types';
 
-// カテゴリのアイコンを取得
-function getCategoryIcon(category: string): string {
-  const icons: { [key: string]: string } = {
-    'プログラム創造・組成': '🎯',
-    'プロジェクトマネジメント': '📊',
-    '基盤技術': '💻',
-    '設計・解析': '🔧',
-    '試験': '🧪',
-    '製造・加工': '⚙️',
-    '打上げ・衛星運用': '🚀',
-    'コーポレート': '💼',
-  };
-  return icons[category] || '📋';
-}
+const CATEGORY_BADGES: Record<string, string> = {
+  'プログラム創造・組成': 'bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-200',
+  'プロジェクトマネジメント': 'bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-200',
+  '基盤技術': 'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-200',
+  '設計・解析': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-200',
+  '試験': 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-200',
+  '製造・加工': 'bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-200',
+  '打上げ・衛星運用': 'bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/60 dark:text-fuchsia-200',
+  'コーポレート': 'bg-slate-200 text-slate-700 dark:bg-slate-900 dark:text-slate-200',
+};
 
 interface SkillsListClientProps {
   categoriesData: Array<{
@@ -26,105 +30,81 @@ interface SkillsListClientProps {
 }
 
 export default function SkillsListClient({ categoriesData }: SkillsListClientProps) {
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<string[]>([]);
 
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(category)) {
-        newSet.delete(category);
-      } else {
-        newSet.add(category);
-      }
-      return newSet;
-    });
-  };
+  const totalSkills = useMemo(
+    () => categoriesData.reduce((sum, category) => sum + category.skills.length, 0),
+    [categoriesData]
+  );
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          スキル一覧
-        </h1>
-        <p className="text-gray-600">
-          宇宙スキル標準に定義されている全{categoriesData.reduce((sum, cat) => sum + cat.skills.length, 0)}スキルを8つのカテゴリ別に表示しています。
-        </p>
-      </div>
+    <div className="space-y-10">
+      <header className="space-y-3">
+        <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.25em]">
+          Skill Catalogue
+        </Badge>
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">スキル一覧</h1>
+          <p className="text-sm text-muted-foreground">
+            宇宙スキル標準に定義された{totalSkills}スキルをカテゴリ別に整理しています。
+          </p>
+        </div>
+      </header>
 
-      <div className="space-y-4">
+      <Accordion
+        type="multiple"
+        value={expanded}
+        onValueChange={setExpanded}
+        className="space-y-4"
+      >
         {categoriesData.map(({ category, skills }) => {
-          const isExpanded = expandedCategories.has(category);
-          const icon = getCategoryIcon(category);
+          const badgeClass = CATEGORY_BADGES[category] ?? 'bg-muted text-muted-foreground';
 
           return (
-            <div
+            <AccordionItem
               key={category}
-              className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
+              value={category}
+              className="overflow-hidden rounded-xl border border-border/70 bg-card/80 shadow-sm"
             >
-              {/* カテゴリヘッダー */}
-              <button
-                onClick={() => toggleCategory(category)}
-                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">{icon}</span>
-                  <div className="text-left">
-                    <h2 className="text-xl font-bold text-gray-900">
+              <AccordionTrigger className="flex-1 px-6 py-4 text-left text-lg font-semibold">
+                <div className="flex flex-col gap-1 text-left">
+                  <span className="flex items-center gap-2">
+                    <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${badgeClass}`}>
                       {category}
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                      {skills.length}スキル項目
-                    </p>
-                  </div>
+                    </span>
+                    <span className="text-xs text-muted-foreground">{skills.length}スキル</span>
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    クリックしてスキル詳細を展開
+                  </span>
                 </div>
-                <svg
-                  className={`w-6 h-6 text-gray-400 transition-transform ${
-                    isExpanded ? 'transform rotate-180' : ''
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {/* スキル一覧 */}
-              {isExpanded && (
-                <div className="border-t border-gray-200 bg-gray-50">
-                  <div className="p-6 space-y-4">
-                    {skills.map((skill) => (
-                      <div
-                        key={skill.number}
-                        className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition"
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold text-sm">
-                            {skill.number}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-gray-900 mb-2">
-                              {skill.name}
-                            </h3>
-                            <p className="text-sm text-gray-600 leading-relaxed">
-                              {skill.description}
-                            </p>
-                          </div>
+              </AccordionTrigger>
+              <AccordionContent className="bg-muted/20">
+                <div className="divide-y divide-border/60">
+                  {skills.map((skill) => (
+                    <Card key={skill.number} className="rounded-none border-0 border-b border-border/60 shadow-none last:border-b-0">
+                      <CardHeader className="flex flex-row items-start gap-4 space-y-0">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          {skill.number}
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                        <div className="space-y-1">
+                          <CardTitle className="text-lg font-semibold text-foreground">
+                            {skill.name}
+                          </CardTitle>
+                          <CardDescription className="text-sm leading-relaxed text-muted-foreground">
+                            {skill.description}
+                          </CardDescription>
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  ))}
                 </div>
-              )}
-            </div>
+              </AccordionContent>
+            </AccordionItem>
           );
         })}
-      </div>
+      </Accordion>
     </div>
   );
 }
+

@@ -30,7 +30,6 @@ export function calculateCategorySummary(
   assessment: CategoryAssessment
 ): CategorySummary {
   const skills = getSkillsByCategory(data, category);
-  const evaluationAxesCount = data.evaluation_axes.length;
 
   const skillNumbers = Object.keys(assessment).map(Number);
   const assessedSkillCount = skillNumbers.length;

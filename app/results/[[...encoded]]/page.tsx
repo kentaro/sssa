@@ -16,5 +16,5 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
 
   const data = loadSpaceSkillStandard();
 
-  return <ResultsClient encodedParam={encodedParam} data={data} />;
+  return <ResultsClient key={encodedParam ?? 'default'} data={data} />;
 }

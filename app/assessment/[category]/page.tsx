@@ -48,6 +48,7 @@ export default async function AssessmentPage({ params }: AssessmentPageProps) {
 
   return (
     <AssessmentClient
+      key={category}
       category={category}
       skills={skills}
       skillLevelsMap={skillLevelsMap}

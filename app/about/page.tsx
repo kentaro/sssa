@@ -1,233 +1,191 @@
-import Link from 'next/link';
+import Link from "next/link";
+import { ArrowRight, ExternalLink, FolderCog, Layers, ShieldCheck } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
+const steps = [
+  {
+    step: "1",
+    title: "診断モードを選択",
+    description:
+      "トップページからクイック診断または詳細診断を選びます。クイック診断は約5分、詳細診断はカテゴリ単位で丁寧に評価します。",
+    href: "/",
+    linkLabel: "トップページへ",
+  },
+  {
+    step: "2",
+    title: "カテゴリを決める",
+    description:
+      "詳細診断では6つの対象カテゴリから評価対象を選択。カテゴリごとにスキル構造が異なり、説明文も添えています。",
+    href: "/categories",
+    linkLabel: "カテゴリ一覧を見る",
+  },
+  {
+    step: "3",
+    title: "セルフアセスメント",
+    description:
+      "各スキルについて4つの評価軸を5段階で判定。レベル詳細を確認しながら、自分の現在地に最も近いレベルを選択します。",
+  },
+  {
+    step: "4",
+    title: "結果を共有",
+    description:
+      "診断結果はレーダーチャートや推奨職種と共に整形。パーマリンクを生成して社内外で共有できます。",
+  },
+];
 
 export default function AboutPage() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
-        宇宙スキル標準アセスメントについて
-      </h1>
-
-      {/* 概要 */}
-      <section className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          本アプリケーションについて
-        </h2>
-        <p className="text-gray-700 mb-4">
-          このアプリケーションは、内閣府宇宙開発戦略推進事務局が公開している
-          <a
-            href="https://www8.cao.go.jp/space/skill/kaisai.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline mx-1"
-          >
-            宇宙スキル標準（試作版）
-          </a>
-          を基に開発されたWebベースのスキルアセスメントツールです。
+    <div className="mx-auto max-w-5xl space-y-10">
+      <div className="space-y-3">
+        <Badge variant="secondary" className="rounded-full px-4 py-1 text-xs uppercase tracking-[0.3em]">
+          Project Overview
+        </Badge>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          宇宙スキル標準アセスメントについて
+        </h1>
+        <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
+          内閣府宇宙開発戦略推進事務局が公開している宇宙スキル標準（試作版）をWebコンポーザブルな診断体験に再設計しました。Excelの情報構造を忠実に反映しつつ、操作性・視覚性・共有性を高めています。
         </p>
-        <p className="text-gray-700">
-          Excel形式で公開されている宇宙スキル標準を、より使いやすく、
-          アクセスしやすい形で提供し、宇宙産業に携わる方々や
-          これから携わろうとする方々のスキル評価と成長をサポートします。
-        </p>
-      </section>
+      </div>
 
-      {/* 宇宙スキル標準とは */}
-      <section className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          宇宙スキル標準とは
-        </h2>
-        <p className="text-gray-700 mb-4">
-          宇宙スキル標準は、宇宙産業で求められるスキルを体系的に整理し、
-          標準化したものです。以下の要素で構成されています：
-        </p>
-
-        <div className="space-y-4">
-          <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">94のスキル項目（67項目が評価可能）</h3>
-            <p className="text-gray-700 text-sm">
-              プログラム創造・組成からコーポレートまで、
-              宇宙産業に必要な幅広いスキルを網羅。
-              現在、67のスキル項目について評価基準が定義されており、診断可能です。
-            </p>
-          </div>
-
-          <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">8つのカテゴリ（6カテゴリが評価可能）</h3>
-            <ul className="text-gray-700 text-sm list-disc list-inside space-y-1">
-              <li>プログラム創造・組成 ✅</li>
-              <li>プロジェクトマネジメント ✅</li>
-              <li>基盤技術 ✅</li>
-              <li>設計・解析 ✅</li>
-              <li>試験 ✅</li>
-              <li>製造・加工 ✅</li>
-              <li>打上げ・衛星運用 （評価基準未定義）</li>
-              <li>コーポレート （評価基準未定義）</li>
-            </ul>
-          </div>
-
-          <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">4つの評価軸</h3>
-            <ul className="text-gray-700 text-sm list-disc list-inside space-y-1">
-              <li>遂行可能な業務範囲・深さ</li>
-              <li>業務遂行時の自立性</li>
-              <li>資格・検定</li>
-              <li>経験年数</li>
-            </ul>
-          </div>
-
-          <div className="border-l-4 border-blue-600 pl-4">
-            <h3 className="font-bold text-gray-900 mb-2">5段階のレベル定義</h3>
-            <p className="text-gray-700 text-sm">
-              各スキル・評価軸ごとに、レベル1（基礎）からレベル5（エキスパート）
-              までの詳細な到達基準が定義されています
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 使い方 */}
-      <section className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          使い方
-        </h2>
-
-        <div className="space-y-6">
-          <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-              1
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 mb-2">診断モードを選ぶ</h3>
-              <p className="text-gray-700">
-                <Link href="/" className="text-blue-600 hover:underline">
-                  トップページ
-                </Link>
-                から「クイック診断」または「詳細診断」を選択します。
-                クイック診断は約5分で完了する簡易版、詳細診断はカテゴリ別に詳しく評価できます。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-              2
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 mb-2">カテゴリを選ぶ（詳細診断の場合）</h3>
-              <p className="text-gray-700">
-                <Link href="/categories" className="text-blue-600 hover:underline">
-                  カテゴリ一覧ページ
-                </Link>
-                から評価したいカテゴリを選択します。
-                6つのカテゴリが評価可能で、それぞれのカテゴリには詳細な説明が付いています。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-              3
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 mb-2">セルフアセスメント</h3>
-              <p className="text-gray-700">
-                各スキルを4つの評価軸で5段階評価します。
-                各レベルの詳細説明を見ながら、自分に最も当てはまるレベルを選択してください。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-              4
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 mb-2">結果の確認</h3>
-              <p className="text-gray-700">
-                評価が完了すると、カテゴリ別のサマリーとレーダーチャートで
-                あなたのスキルプロファイルが可視化されます。
-                評価の高いカテゴリに基づいて、推奨される職種（39種類）も表示されます。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-              5
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 mb-2">結果の共有</h3>
-              <p className="text-gray-700">
-                評価結果はパーマリンク（URL）として生成されます。
-                このURLを共有することで、他者にあなたのスキルプロファイルを
-                簡単に見てもらうことができます。
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* データの保存について */}
-      <section className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          データの保存について
-        </h2>
-        <p className="text-gray-700 mb-4">
-          アセスメントの途中経過は、ブラウザのLocalStorageに自動的に保存されます。
-          これにより、途中で中断しても、次回アクセス時に続きから評価を再開できます。
-        </p>
-        <p className="text-gray-700 text-sm text-gray-600">
-          ※ LocalStorageのデータはブラウザごとに保存されます。
-          別のブラウザやデバイスでは参照できません。
-          また、ブラウザのキャッシュをクリアすると削除されます。
-        </p>
-      </section>
-
-      {/* 開発者情報 */}
-      <section className="bg-white rounded-lg shadow-md p-8 mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          開発者
-        </h2>
-        <div className="text-gray-700 space-y-2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <ShieldCheck className="h-5 w-5 text-primary" />
+            本アプリケーションの狙い
+          </CardTitle>
+          <CardDescription>
+            宇宙産業に携わる（あるいは志望する）個人のスキル棚卸しと育成計画策定を支援するため、アクセスしづらかった標準資料を誰でも扱えるインタラクティブなインターフェースへ変換しています。
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            <strong>栗林健太郎</strong>
-          </p>
-          <p>
+            元データは
             <a
-              href="https://kentarokuribayashi.com"
+              href="https://www8.cao.go.jp/space/skill/kaisai.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="ml-1 inline-flex items-center gap-1 text-primary hover:text-primary/80"
             >
-              https://kentarokuribayashi.com
+              宇宙スキル標準（試作版）
+              <ExternalLink className="h-3.5 w-3.5" />
             </a>
+            。公開スプレッドシートを解析し、カテゴリ／スキル／評価軸をデータモデル化した上で、診断フロー・結果可視化・ローカル保存・パーマリンク生成を実装しています。
           </p>
-        </div>
-      </section>
+          <div className="grid gap-4 rounded-xl border border-dashed border-border/70 bg-muted/40 p-4 sm:grid-cols-2">
+            <div className="space-y-1">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <Layers className="h-4 w-4 text-primary" />
+                カバレッジ
+              </p>
+              <ul className="space-y-1.5 text-sm">
+                <li>• 94スキルのうち67項目に評価基準を実装</li>
+                <li>• 評価対象カテゴリ：6／8</li>
+                <li>• 評価軸：遂行範囲・自立性・資格・経験年数</li>
+              </ul>
+            </div>
+            <div className="space-y-1">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <FolderCog className="h-4 w-4 text-primary" />
+                付帯機能
+              </p>
+              <ul className="space-y-1.5 text-sm">
+                <li>• 診断途中の自動保存（LocalStorage）</li>
+                <li>• レベル詳細のオンデマンド表示</li>
+                <li>• レーダーチャート／推奨職種の即時算出</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* CTAセクション */}
-      <section className="bg-blue-50 rounded-lg p-8 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          さっそく始めましょう
-        </h2>
-        <p className="text-gray-700 mb-6">
-          自分のスキルを評価して、宇宙産業でのキャリアパスを見つけましょう
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/"
-            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">利用フロー</CardTitle>
+          <CardDescription>診断開始から結果共有まで4ステップで完結します。</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {steps.map((item, index) => (
+            <div key={item.step}>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/5 text-sm font-semibold text-primary">
+                  {item.step}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <h3 className="text-base font-semibold text-foreground">{item.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+                  {item.href && (
+                    <Button variant="link" className="px-0 text-sm" asChild>
+                      <Link href={item.href}>
+                        {item.linkLabel}
+                        <ArrowRight className="ml-1 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+              {index < steps.length - 1 && <Separator className="my-6" />}
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">データの扱い</CardTitle>
+          <CardDescription>
+            診断データはすべてブラウザローカルに保存され、サーバーには送信されません。
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm text-muted-foreground">
+          <p>
+            LocalStorageに自動保存するため、途中離脱しても再開が可能です（ブラウザごとに保存領域が独立）。キャッシュクリアや異なるブラウザではデータが失われる点に注意してください。
+          </p>
+          <p>
+            完了後は評価結果を圧縮し、パーマリンクとして生成します。URLを共有することで、外部の閲覧者も同じ分析ビューを再現できます。
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">開発者</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-1 text-sm text-muted-foreground">
+          <p className="text-base font-semibold text-foreground">栗林健太郎</p>
+          <a
+            href="https://kentarokuribayashi.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-fit items-center gap-1 text-primary hover:text-primary/80"
           >
-            診断を開始する
-          </Link>
-          <Link
-            href="/categories"
-            className="inline-block bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
-          >
-            カテゴリ一覧を見る
-          </Link>
-        </div>
-      </section>
+            kentarokuribayashi.com
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/40 bg-primary/5 text-center">
+        <CardHeader>
+          <CardTitle className="text-xl">さっそく診断を始めましょう</CardTitle>
+          <CardDescription>
+            クイック診断で傾向を掴み、詳細診断でキャリア戦略を具体化できます。
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button size="lg" asChild>
+            <Link href="/quick-assessment">クイック診断へ</Link>
+          </Button>
+          <Button size="lg" variant="outline" asChild>
+            <Link href="/categories">詳細診断を選ぶ</Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
+

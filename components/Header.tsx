@@ -1,269 +1,200 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ChevronDown, MenuIcon } from 'lucide-react';
 
-interface SubMenuItem {
-  label: string;
-  href: string;
-}
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 interface MenuItem {
   label: string;
   href?: string;
-  submenu?: SubMenuItem[];
+  description?: string;
+  submenu?: Array<{ label: string; href: string; description?: string }>;
 }
+
+const menuItems: MenuItem[] = [
+  {
+    label: 'コンテンツ',
+    submenu: [
+      { label: 'スキル一覧', href: '/skills', description: 'カテゴリ横断のスキル定義を俯瞰' },
+      { label: '職種一覧', href: '/roles', description: '宇宙産業の役割と責務を確認' },
+    ],
+  },
+  {
+    label: '診断',
+    submenu: [
+      { label: 'クイック診断', href: '/quick-assessment', description: '数分で傾向を把握' },
+      { label: '詳細診断', href: '/categories', description: 'カテゴリごとに丁寧に自己評価' },
+    ],
+  },
+  {
+    label: '結果',
+    submenu: [
+      { label: 'クイック診断結果', href: '/quick-assessment/results', description: '直近のクイック診断結果を再確認' },
+      { label: '詳細診断結果', href: '/results', description: 'カテゴリ単位の評価結果を可視化' },
+    ],
+  },
+  {
+    label: 'このサイトについて',
+    href: '/about',
+    description: 'コンセプトやデータソースを整理',
+  },
+];
 
 export default function Header() {
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const submenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const menuItems: MenuItem[] = [
-    {
-      label: 'コンテンツ',
-      submenu: [
-        { label: 'スキル一覧', href: '/skills' },
-        { label: '職種一覧', href: '/roles' },
-      ],
-    },
-    {
-      label: '診断',
-      submenu: [
-        { label: 'クイック診断', href: '/quick-assessment' },
-        { label: '詳細診断', href: '/categories' },
-      ],
-    },
-    {
-      label: '結果',
-      submenu: [
-        { label: 'クイック診断結果', href: '/quick-assessment/results' },
-        { label: '詳細診断結果', href: '/results' },
-      ],
-    },
-    { label: 'このサイトについて', href: '/about' },
-  ];
-
-  const handleMouseEnter = (label: string) => {
-    if (submenuTimeoutRef.current) {
-      clearTimeout(submenuTimeoutRef.current);
-    }
-    setOpenSubmenu(label);
+  const isActive = (href?: string) => {
+    if (!href) return false;
+    return pathname === href || pathname?.startsWith(`${href}/`);
   };
 
-  const handleMouseLeave = () => {
-    submenuTimeoutRef.current = setTimeout(() => {
-      setOpenSubmenu(null);
-    }, 200);
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-    setOpenSubmenu(null);
-  };
-
-  const toggleMobileSubmenu = (label: string) => {
-    setOpenSubmenu(openSubmenu === label ? null : label);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (submenuTimeoutRef.current) {
-        clearTimeout(submenuTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Close mobile menu when route changes
-  useEffect(() => {
-    closeMobileMenu();
-  }, [pathname]);
-
-  const isActive = (href?: string, submenu?: SubMenuItem[]) => {
-    if (href) {
-      return pathname === href || pathname?.startsWith(href + '/');
-    }
-    if (submenu) {
-      return submenu.some((item) => pathname === item.href || pathname?.startsWith(item.href + '/'));
+  const isMenuActive = (item: MenuItem) => {
+    if (item.href) return isActive(item.href);
+    if (item.submenu) {
+      return item.submenu.some((subItem) => isActive(subItem.href));
     }
     return false;
   };
 
   return (
-    <header className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-2xl">
-      <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-6">
-        <div className="flex items-center justify-between">
-          {/* Title */}
-          <Link
-            href="/"
-            className="text-xl lg:text-2xl font-bold hover:text-indigo-100 transition-colors leading-tight"
-            onClick={() => closeMobileMenu()}
-          >
-            <span className="inline-block">🚀 宇宙スキル標準</span>
-            <span className="inline-block">アセスメント</span>
-          </Link>
+    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur">
+      <div className="container flex h-16 items-center justify-between gap-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight sm:text-base">
+          <span className="text-xl">🚀</span>
+          <span className="whitespace-nowrap">
+            宇宙スキル標準
+            <span className="ml-1 text-muted-foreground">アセスメント</span>
+          </span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-2">
-            {menuItems.map((item) => (
-              <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => item.submenu && handleMouseEnter(item.label)}
-                onMouseLeave={() => item.submenu && handleMouseLeave()}
-              >
-                {item.href ? (
-                  <Link
-                    href={item.href}
-                    className={`px-3 py-1.5 rounded-lg transition-colors font-medium whitespace-nowrap ${
-                      isActive(item.href)
-                        ? 'bg-white/30 font-semibold'
-                        : 'hover:bg-white/10'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <button
-                    className={`px-3 py-1.5 rounded-lg transition-colors font-medium whitespace-nowrap flex items-center gap-1 ${
-                      isActive(undefined, item.submenu)
-                        ? 'bg-white/30 font-semibold'
-                        : 'hover:bg-white/10'
-                    }`}
-                  >
-                    {item.label}
-                    <svg
-                      className={`w-4 h-4 transition-transform ${
-                        openSubmenu === item.label ? 'rotate-180' : ''
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-                )}
-
-                {/* Desktop Submenu */}
-                {item.submenu && openSubmenu === item.label && (
-                  <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg py-2 min-w-[200px] z-50">
-                    {item.submenu.map((subItem) => (
-                      <Link
-                        key={subItem.href}
-                        href={subItem.href}
-                        className={`block px-4 py-2 transition ${
-                          pathname === subItem.href || pathname?.startsWith(subItem.href + '/')
-                            ? 'bg-purple-50 text-purple-600 font-semibold'
-                            : 'text-gray-700 hover:bg-purple-50'
-                        }`}
-                      >
-                        {subItem.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-
-          {/* Mobile Hamburger Button */}
-          <button
-            className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="メニュー"
-          >
-            {isMobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-2">
-            <nav className="space-y-1">
-              {menuItems.map((item) => (
-                <div key={item.label}>
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      className={`block px-4 py-2 rounded-lg transition-colors font-medium ${
-                        isActive(item.href)
-                          ? 'bg-white/30 font-semibold'
-                          : 'hover:bg-white/10'
-                      }`}
-                      onClick={() => closeMobileMenu()}
+        {/* Desktop Menu */}
+        <nav className="hidden lg:flex lg:items-center lg:gap-2">
+          {menuItems.map((item) => {
+            if (item.submenu) {
+              return (
+                <DropdownMenu key={item.label}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        'gap-1',
+                        isMenuActive(item) && 'bg-muted text-foreground'
+                      )}
                     >
                       {item.label}
-                    </Link>
-                  ) : (
-                    <>
-                      <button
-                        className={`w-full flex items-center justify-between px-4 py-2 rounded-lg transition-colors font-medium ${
-                          isActive(undefined, item.submenu)
-                            ? 'bg-white/30 font-semibold'
-                            : 'hover:bg-white/10'
-                        }`}
-                        onClick={() => toggleMobileSubmenu(item.label)}
-                      >
-                        {item.label}
-                        <svg
-                          className={`w-4 h-4 transition-transform ${
-                            openSubmenu === item.label ? 'rotate-180' : ''
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-[280px] text-left">
+                    {item.submenu.map((subItem) => (
+                      <DropdownMenuItem key={subItem.href} asChild className="justify-start">
+                        <Link
+                          href={subItem.href}
+                          className={cn(
+                            'flex flex-col items-start gap-1 py-3 text-left',
+                            isActive(subItem.href) && 'bg-accent'
+                          )}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
+                          <span className="font-medium">{subItem.label}</span>
+                          {subItem.description && (
+                            <span className="text-xs text-muted-foreground">
+                              {subItem.description}
+                            </span>
+                          )}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              );
+            }
 
-                      {/* Mobile Submenu */}
-                      {item.submenu && openSubmenu === item.label && (
-                        <div className="ml-4 mt-1 space-y-1">
+            return (
+              <Button
+                key={item.label}
+                variant="ghost"
+                className={cn(isActive(item.href) && 'bg-muted text-foreground')}
+                asChild
+              >
+                <Link href={item.href ?? '#'}>{item.label}</Link>
+              </Button>
+            );
+          })}
+        </nav>
+
+        {/* Mobile Menu */}
+        <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden">
+                <MenuIcon className="h-5 w-5" />
+                <span className="sr-only">メニュー</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="flex w-[320px] flex-col gap-6 border-l border-border/60">
+              <SheetHeader>
+                <SheetTitle>ナビゲーション</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4">
+                {menuItems.map((item) => (
+                  <div key={item.label}>
+                    {item.submenu ? (
+                      <div className="space-y-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          {item.label}
+                        </p>
+                        <div className="space-y-1">
                           {item.submenu.map((subItem) => (
-                            <Link
+                            <Button
                               key={subItem.href}
-                              href={subItem.href}
-                              className={`block px-4 py-2 rounded-lg transition-colors text-sm ${
-                                pathname === subItem.href || pathname?.startsWith(subItem.href + '/')
-                                  ? 'bg-white/30 font-semibold'
-                                  : 'hover:bg-white/10'
-                              }`}
-                              onClick={() => closeMobileMenu()}
+                              variant={isActive(subItem.href) ? 'secondary' : 'ghost'}
+                              className="w-full justify-start"
+                              asChild
                             >
-                              {subItem.label}
-                            </Link>
+                              <Link href={subItem.href}>
+                                <div className="flex flex-col items-start">
+                                  <span className="text-sm font-medium">{subItem.label}</span>
+                                  {subItem.description && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {subItem.description}
+                                    </span>
+                                  )}
+                                </div>
+                              </Link>
+                            </Button>
                           ))}
                         </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
-            </nav>
-          </div>
-        )}
+                      </div>
+                    ) : (
+                      <Button
+                        variant={isActive(item.href) ? 'secondary' : 'ghost'}
+                        className="w-full justify-start"
+                        asChild
+                      >
+                        <Link href={item.href ?? '#'}>{item.label}</Link>
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
       </div>
     </header>
   );

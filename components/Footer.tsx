@@ -1,39 +1,42 @@
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-slate-800 via-indigo-900 to-slate-800 text-gray-300 mt-auto">
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-white font-bold text-lg mb-3">データソース</h3>
-            <p className="mb-2">
+    <footer className="mt-auto border-t border-border/60 bg-background/95">
+      <div className="container px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              データソース
+            </p>
+            <div className="space-y-2 text-sm">
               <a
                 href="https://www8.cao.go.jp/space/skill/kaisai.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-300 hover:text-indigo-200 hover:underline"
+                className="inline-flex items-center gap-1 font-medium text-primary transition-colors hover:text-primary/80"
               >
                 内閣府 宇宙スキル標準（試作版）
               </a>
-            </p>
-            <p className="text-sm text-gray-400">
-              本アプリケーションは、内閣府宇宙開発戦略推進事務局が公開している宇宙スキル標準（試作版）を基にしています。
-            </p>
+              <p className="text-muted-foreground">
+                本アプリは内閣府宇宙開発戦略推進事務局が公開した宇宙スキル標準（試作版）をもとに再構成しています。
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-white font-bold text-lg mb-3">開発者</h3>
-            <p className="mb-2">栗林健太郎</p>
-            <a
-              href="https://kentarokuribayashi.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-300 hover:text-indigo-200 hover:underline"
-            >
-              https://kentarokuribayashi.com
-            </a>
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              開発者
+            </p>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <p className="font-semibold text-foreground">栗林健太郎</p>
+              <a
+                href="https://kentarokuribayashi.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary transition-colors hover:text-primary/80"
+              >
+                kentarokuribayashi.com
+              </a>
+            </div>
           </div>
-        </div>
-        <div className="mt-6 pt-6 border-t border-indigo-800 text-center text-sm text-gray-400">
-          <p>&copy; 2025 Space Skill Standard Self-Assessment</p>
         </div>
       </div>
     </footer>

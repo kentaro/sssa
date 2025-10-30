@@ -1,85 +1,66 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
+import QuickAssessmentProgress from '@/components/QuickAssessmentProgress';
+import QuickAssessmentQuestionComponent from '@/components/QuickAssessmentQuestion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { quickAssessmentQuestions } from '@/data/quick-assessment-questions';
 import {
+  clearQuickAssessmentProgress,
   loadQuickAssessmentProgress,
   saveQuickAssessmentProgress,
-  clearQuickAssessmentProgress,
 } from '@/lib/quick-assessment-storage';
-import QuickAssessmentQuestionComponent from '@/components/QuickAssessmentQuestion';
-import QuickAssessmentProgress from '@/components/QuickAssessmentProgress';
 import type { QuickAssessmentAnswer } from '@/lib/types';
 
 export default function QuickAssessmentPage() {
   const router = useRouter();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<QuickAssessmentAnswer[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const isCompletedRef = useRef(false);
 
-  // 初期化: LocalStorageから進捗を読み込み
-  useEffect(() => {
-    // 前回の完了した回答をクリア
-    localStorage.removeItem('quick-assessment-answers');
+  const resumeState = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return { answers: [] as QuickAssessmentAnswer[], index: 0 };
+    }
 
     const progress = loadQuickAssessmentProgress();
     if (progress && progress.answers.length > 0) {
-      // 続きから再開するか確認
-      const shouldResume = confirm(
-        '前回の診断が途中で終了しています。続きから再開しますか？\n\nOK → 続きから再開\nキャンセル → 最初から始める'
+      const shouldResume = window.confirm(
+        '前回の診断が途中です。続きから再開しますか？\n\nOK → 続きから再開\nキャンセル → 最初から'
       );
 
       if (shouldResume) {
-        setAnswers(progress.answers);
-        const nextIndex = progress.answers.length;
-        setCurrentQuestionIndex(nextIndex);
-      } else {
-        clearQuickAssessmentProgress();
+        return { answers: progress.answers, index: progress.answers.length };
       }
+
+      clearQuickAssessmentProgress();
     }
-    setIsLoading(false);
+
+    return { answers: [] as QuickAssessmentAnswer[], index: 0 };
   }, []);
 
-  // 回答が変わったらLocalStorageに保存（完了時は除く）
+  const [answers, setAnswers] = useState<QuickAssessmentAnswer[]>(resumeState.answers);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(resumeState.index);
+
   useEffect(() => {
-    if (!isLoading && answers.length > 0 && !isCompletedRef.current) {
+    if (answers.length > 0 && !isCompletedRef.current) {
       saveQuickAssessmentProgress(answers, currentQuestionIndex);
     }
-  }, [answers, currentQuestionIndex, isLoading]);
+  }, [answers, currentQuestionIndex]);
 
-  // 全問完了を検知して結果ページへ遷移
   useEffect(() => {
     if (answers.length === quickAssessmentQuestions.length && !isCompletedRef.current) {
-      // 完了フラグを立てて自動保存を防ぐ
       isCompletedRef.current = true;
-      // 進捗をクリア
       clearQuickAssessmentProgress();
-      // 回答をLocalStorageに保存
       localStorage.setItem('quick-assessment-answers', JSON.stringify(answers));
-      // 結果ページへ遷移
       router.push('/quick-assessment/results');
     }
   }, [answers, router]);
 
-  // キーボード操作
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        handleAnswer('left');
-      } else if (e.key === 'ArrowRight') {
-        handleAnswer('right');
-      } else if (e.key === 'ArrowDown') {
-        handleAnswer('neutral');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentQuestionIndex, answers]);
-
-  const handleAnswer = (choice: 'left' | 'right' | 'neutral') => {
+  const handleAnswer = useCallback(
+    (choice: 'left' | 'right' | 'neutral') => {
     const currentQuestion = quickAssessmentQuestions[currentQuestionIndex];
     if (!currentQuestion) return;
 
@@ -88,102 +69,93 @@ export default function QuickAssessmentPage() {
       choice,
     };
 
-    const newAnswers = [...answers, newAnswer];
+      setAnswers((prev) => [...prev, newAnswer]);
 
-    // 回答を保存
-    setAnswers(newAnswers);
-
-    // 次の質問へ（最後の質問でない場合のみ）
     if (currentQuestionIndex < quickAssessmentQuestions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex((index) => index + 1);
     }
-  };
+    },
+    [currentQuestionIndex]
+  );
 
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-gray-600">読み込み中...</div>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        handleAnswer('left');
+      } else if (event.key === 'ArrowRight') {
+        handleAnswer('right');
+      } else if (event.key === 'ArrowDown') {
+        handleAnswer('neutral');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleAnswer]);
 
   const currentQuestion = quickAssessmentQuestions[currentQuestionIndex];
-  const currentSection = currentQuestion?.section || '';
+  const currentSection = currentQuestion?.section ?? '';
   const totalQuestions = quickAssessmentQuestions.length;
 
-  // セクション切り替えの検出
-  const isNewSection =
-    currentQuestionIndex > 0 &&
-    quickAssessmentQuestions[currentQuestionIndex - 1]?.section !== currentSection;
-
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* ヘッダー */}
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="mx-auto max-w-5xl space-y-8">
+      <div className="space-y-3 text-center">
+        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Quick Assessment</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           クイック診断
         </h1>
-        <p className="text-gray-600">
-          24問の質問に答えて、あなたに向いている職種を見つけましょう
+        <p className="text-sm text-muted-foreground">
+          24問の質問に答えて、向いているカテゴリと職種のヒントを得ましょう。
         </p>
       </div>
 
-      {/* 進捗バー */}
       <QuickAssessmentProgress
         current={currentQuestionIndex + 1}
         total={totalQuestions}
         section={currentSection}
       />
 
-      {/* セクション切り替え時のメッセージ */}
-      {isNewSection && (
-        <div className="mb-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded">
-          <p className="text-indigo-800 font-semibold">
-            📍 セクション {currentQuestion.sectionNumber}: {currentSection}
-          </p>
-        </div>
-      )}
-
-      {/* 質問 */}
       {currentQuestion && (
-        <QuickAssessmentQuestionComponent
-          question={currentQuestion}
-          onAnswer={handleAnswer}
-        />
+        <QuickAssessmentQuestionComponent question={currentQuestion} onAnswer={handleAnswer} />
       )}
 
-      {/* 戻るボタン（最初の質問以外） */}
-      {currentQuestionIndex > 0 && (
-        <div className="mt-8 text-center">
-          <button
-            onClick={() => {
-              // 最後の回答を削除して前の質問に戻る
-              setAnswers(answers.slice(0, -1));
-              setCurrentQuestionIndex(currentQuestionIndex - 1);
-            }}
-            className="text-gray-600 hover:text-gray-800 transition underline"
-          >
-            ← 前の質問に戻る
-          </button>
-        </div>
-      )}
-
-      {/* 診断を終了ボタン */}
-      <div className="mt-8 text-center">
-        <button
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => {
-            if (confirm('診断を終了しますか？進捗は保存されません。')) {
-              clearQuickAssessmentProgress();
-              router.push('/');
+            if (currentQuestionIndex > 0) {
+              setAnswers((prev) => prev.slice(0, -1));
+              setCurrentQuestionIndex((index) => Math.max(index - 1, 0));
             }
           }}
-          className="text-sm text-gray-500 hover:text-gray-700 transition"
+          disabled={currentQuestionIndex === 0}
+        >
+          前の質問に戻る
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground"
+          onClick={() => {
+            clearQuickAssessmentProgress();
+            router.push('/');
+          }}
         >
           診断を終了
-        </button>
+        </Button>
+      </div>
+
+      <div className="flex justify-end">
+        <Link
+          href="/quick-assessment/results"
+          className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+        >
+          過去の結果を確認する
+        </Link>
       </div>
     </div>
   );
 }
+

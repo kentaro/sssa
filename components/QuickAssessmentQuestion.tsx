@@ -1,3 +1,8 @@
+import { ArrowLeft, ArrowRight, Circle } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
 import type { QuickAssessmentQuestion } from '@/lib/types';
 
 interface QuickAssessmentQuestionProps {
@@ -5,59 +10,83 @@ interface QuickAssessmentQuestionProps {
   onAnswer: (choice: 'left' | 'right' | 'neutral') => void;
 }
 
-export default function QuickAssessmentQuestionComponent({
-  question,
-  onAnswer,
-}: QuickAssessmentQuestionProps) {
+export default function QuickAssessmentQuestionComponent({ question, onAnswer }: QuickAssessmentQuestionProps) {
   return (
-    <div className="animate-fadeIn">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        {/* 左の選択肢 */}
-        <button
-          onClick={() => onAnswer('left')}
-          className="group bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-2xl hover:scale-105 transition-all duration-200 border-2 border-transparent hover:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-200"
-        >
-          <div className="text-5xl md:text-6xl mb-4 group-hover:scale-110 transition-transform">
-            {question.leftOption.emoji}
-          </div>
-          <p className="text-base md:text-lg font-semibold text-gray-800 leading-relaxed">
-            {question.leftOption.text}
-          </p>
-        </button>
-
-        {/* 真ん中の選択肢（どちらでもない） */}
-        <button
-          onClick={() => onAnswer('neutral')}
-          className="group bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-2xl hover:scale-105 transition-all duration-200 border-2 border-transparent hover:border-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-200"
-        >
-          <div className="text-4xl md:text-5xl mb-4 group-hover:scale-110 transition-transform">
-            🤷
-          </div>
-          <p className="text-base md:text-lg font-semibold text-gray-600 leading-relaxed">
-            どちらでもない
-          </p>
-        </button>
-
-        {/* 右の選択肢 */}
-        <button
-          onClick={() => onAnswer('right')}
-          className="group bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-2xl hover:scale-105 transition-all duration-200 border-2 border-transparent hover:border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-200"
-        >
-          <div className="text-5xl md:text-6xl mb-4 group-hover:scale-110 transition-transform">
-            {question.rightOption.emoji}
-          </div>
-          <p className="text-base md:text-lg font-semibold text-gray-800 leading-relaxed">
-            {question.rightOption.text}
-          </p>
-        </button>
+    <Card className="border-border/70 shadow-md">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold text-foreground">
+          {question.section}
+        </CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          左右いずれかを選択するか、どちらでもなければ中央の「中立」を選択してください。
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <ChoiceCard
+          variant="left"
+          title={question.leftOption.text}
+          description={question.leftOption.text}
+          emoji={question.leftOption.emoji}
+          onSelect={() => onAnswer('left')}
+        />
+        <ChoiceCard
+          variant="neutral"
+          title="どちらでもない"
+          description="どちらにも大きな差がない、あるいは判断できない場合はこちら"
+          emoji="🤷"
+          onSelect={() => onAnswer('neutral')}
+        />
+        <ChoiceCard
+          variant="right"
+          title={question.rightOption.text}
+          description={question.rightOption.text}
+          emoji={question.rightOption.emoji}
+          onSelect={() => onAnswer('right')}
+        />
+      </CardContent>
+      <div className="hidden justify-center gap-8 pb-4 text-xs text-muted-foreground md:flex">
+        <span className="flex items-center gap-1">
+          <ArrowLeft className="h-3.5 w-3.5" /> 左キー
+        </span>
+        <span className="flex items-center gap-1">
+          <Circle className="h-3.5 w-3.5" /> 下キー
+        </span>
+        <span className="flex items-center gap-1">
+          <ArrowRight className="h-3.5 w-3.5" /> 右キー
+        </span>
       </div>
+    </Card>
+  );
+}
 
-      {/* キーボードヒント（デスクトップのみ表示） */}
-      <div className="hidden md:flex justify-center items-center gap-6 mt-6 text-sm text-gray-500">
-        <span>← 左キー</span>
-        <span>↓ 真ん中キー</span>
-        <span>→ 右キー</span>
+interface ChoiceCardProps {
+  variant: 'left' | 'right' | 'neutral';
+  title: string;
+  description: string;
+  emoji: string;
+  onSelect: () => void;
+}
+
+function ChoiceCard({ variant, title, description, emoji, onSelect }: ChoiceCardProps) {
+  const isNeutral = variant === 'neutral';
+
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card/70 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <div className="flex flex-1 flex-col gap-3 p-6 text-left">
+        <span className="text-4xl">{emoji}</span>
+        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+        <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+      </div>
+      <div className="border-t border-border/70 bg-muted/40 p-4">
+        <Button
+          onClick={onSelect}
+          variant={isNeutral ? 'outline' : 'default'}
+          className="w-full"
+        >
+          {isNeutral ? '選択する' : `${variant === 'left' ? '左' : '右'}を選ぶ`}
+        </Button>
       </div>
     </div>
   );
 }
+

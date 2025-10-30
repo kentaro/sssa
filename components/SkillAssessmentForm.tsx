@@ -1,7 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import type { Skill, SkillLevel, SkillAssessment } from '@/lib/types';
+import { useEffect, useMemo, useState } from 'react';
+import { Info, NotebookPen } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import type { Skill, SkillAssessment, SkillLevel } from '@/lib/types';
 
 interface SkillAssessmentFormProps {
   skill: Skill;
@@ -11,6 +18,8 @@ interface SkillAssessmentFormProps {
   onAssessmentChange: (assessment: SkillAssessment) => void;
 }
 
+const LEVELS = [0, 1, 2, 3, 4, 5] as const;
+
 export default function SkillAssessmentForm({
   skill,
   skillLevels,
@@ -19,163 +28,154 @@ export default function SkillAssessmentForm({
   onAssessmentChange,
 }: SkillAssessmentFormProps) {
   const [assessment, setAssessment] = useState<SkillAssessment>(initialAssessment);
-  const [expandedAxis, setExpandedAxis] = useState<number | null>(null);
+  const [expandedAxes, setExpandedAxes] = useState<Set<string>>(new Set());
 
-  // スキルが変わったときにassessmentをリセット
+  // initialAssessmentが変更されたら内部状態を更新
   useEffect(() => {
     setAssessment(initialAssessment);
-    setExpandedAxis(null);
-  }, [skill.number, initialAssessment]);
+  }, [initialAssessment, skill.number]);
+
+  const levelsByAxis = useMemo(() => {
+    return skillLevels.reduce<Record<string, SkillLevel>>((acc, level) => {
+      acc[level.evaluation_axis] = level;
+      return acc;
+    }, {});
+  }, [skillLevels]);
 
   const handleLevelChange = (axisNumber: number, level: number) => {
-    const newAssessment = {
-      ...assessment,
-      [axisNumber]: level,
-    };
-    setAssessment(newAssessment);
-    onAssessmentChange(newAssessment);
+    const next = { ...assessment, [axisNumber]: level };
+    setAssessment(next);
+    onAssessmentChange(next);
   };
 
   const handleSetAllToZero = () => {
-    const newAssessment: SkillAssessment = {};
-    evaluationAxes.forEach(axis => {
-      newAssessment[axis.number] = 0;
+    const next: SkillAssessment = {};
+    evaluationAxes.forEach((axis) => {
+      next[axis.number] = 0;
     });
-    setAssessment(newAssessment);
-    onAssessmentChange(newAssessment);
-  };
-
-  const toggleAxisExpansion = (axisNumber: number) => {
-    setExpandedAxis(expandedAxis === axisNumber ? null : axisNumber);
+    setAssessment(next);
+    onAssessmentChange(next);
+    toast.success('すべての評価軸をレベル0に設定しました');
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      {/* スキル情報 */}
-      <div className="mb-6 pb-6 border-b border-gray-200">
-        <div className="flex items-start gap-4 mb-4">
-          <div className="flex-shrink-0 w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center font-bold">
-            {skill.number}
+    <Card className="border-border/80 shadow-md">
+      <CardHeader className="space-y-4">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <Badge variant="secondary" className="gap-2 pr-3 text-xs">
+              <NotebookPen className="h-3.5 w-3.5" />
+              スキル {skill.number}
+            </Badge>
+            <Button variant="destructive" size="sm" onClick={handleSetAllToZero} className="shrink-0">
+              このスキルは未経験
+            </Button>
           </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              {skill.name}
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+          <div className="space-y-1">
+            <CardTitle className="text-xl font-semibold tracking-tight">{skill.name}</CardTitle>
+            <CardDescription className="text-sm leading-relaxed text-muted-foreground">
               {skill.description}
-            </p>
+            </CardDescription>
           </div>
         </div>
-
-        {/* すべてLv.0に設定ボタン */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleSetAllToZero}
-            className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            このスキルは経験なし（すべてLv.0に設定）
-          </button>
-        </div>
-      </div>
-
-      {/* 評価軸ごとの評価 */}
-      <div className="space-y-6">
+      </CardHeader>
+      <CardContent className="space-y-6">
         {evaluationAxes.map((axis) => {
-          const skillLevel = skillLevels.find(
-            (level) => level.evaluation_axis === axis.evaluation_axis
-          );
+          const axisLevel = levelsByAxis[axis.evaluation_axis];
           const selectedLevel = assessment[axis.number];
-          const isExpanded = expandedAxis === axis.number;
+          const accordionValue = axis.number.toString();
 
           return (
-            <div key={axis.number} className="border-2 border-gray-300 rounded-lg p-6 bg-white">
-              <div className="mb-5">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-bold text-gray-900 text-lg">
-                    {axis.evaluation_axis}
-                  </h4>
-                  {skillLevel && (
-                    <button
-                      onClick={() => toggleAxisExpansion(axis.number)}
-                      className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-indigo-50 transition"
+            <div
+              key={axis.number}
+              className="rounded-xl border border-border/70 bg-card/60 p-5 shadow-sm"
+            >
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+                      Evaluation Axis
+                    </p>
+                    <h3 className="text-lg font-semibold text-foreground">{axis.evaluation_axis}</h3>
+                  </div>
+                  {axisLevel && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setExpandedAxes((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(accordionValue)) {
+                            next.delete(accordionValue);
+                          } else {
+                            next.add(accordionValue);
+                          }
+                          return next;
+                        });
+                      }}
+                      className="flex-shrink-0 rounded-full bg-muted/40 px-3 py-1 text-xs"
                     >
-                      {isExpanded ? '詳細を閉じる' : 'レベル詳細を見る'}
-                      <svg
-                        className={`w-4 h-4 transition-transform ${
-                          isExpanded ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </button>
+                      レベル詳細を{expandedAxes.has(accordionValue) ? '非表示' : '表示'}
+                    </Button>
                   )}
                 </div>
-
-                {/* レベル詳細説明（展開時） */}
-                {isExpanded && skillLevel && (
-                  <div className="bg-indigo-50 rounded-lg p-4 mb-4 space-y-3 text-sm border border-indigo-200">
-                    {Object.entries(skillLevel.levels).map(([level, description]) => (
-                      <div key={level} className="flex gap-3">
-                        <span className="flex-shrink-0 font-bold text-indigo-700 bg-white px-2 py-1 rounded">
+                {axisLevel && expandedAxes.has(accordionValue) && (
+                  <div className="space-y-2 rounded-lg border border-border/60 bg-muted/40 p-4 text-xs leading-relaxed text-muted-foreground">
+                    {Object.entries(axisLevel.levels).map(([level, description]) => (
+                      <div key={level} className="flex items-start gap-3">
+                        <span className="flex h-6 w-10 items-center justify-center rounded-full border border-dashed border-border text-[11px] font-medium text-muted-foreground">
                           Lv{level}
                         </span>
-                        <span className="text-gray-800">{description}</span>
+                        <span>{description}</span>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* レベル選択 */}
-              <div className="grid grid-cols-6 gap-2 sm:gap-3">
-                {[0, 1, 2, 3, 4, 5].map((level) => (
-                  <button
-                    key={level}
-                    onClick={() => handleLevelChange(axis.number, level)}
-                    className={`py-3 sm:py-4 px-1 sm:px-2 rounded-xl border-2 transition-all font-bold text-center ${
-                      selectedLevel === level
-                        ? level === 0
-                          ? 'border-gray-500 bg-gray-500 text-white shadow-lg transform scale-105'
-                          : 'border-indigo-600 bg-indigo-600 text-white shadow-lg transform scale-105'
-                        : level === 0
-                        ? 'border-gray-300 bg-white hover:border-gray-400 text-gray-700 hover:bg-gray-100'
-                        : 'border-gray-300 bg-white hover:border-indigo-400 text-gray-700 hover:text-indigo-700 hover:bg-indigo-50'
-                    }`}
-                  >
-                    <div className="text-xs mb-1 opacity-75">Level</div>
-                    <div className="text-xl sm:text-2xl">{level}</div>
-                  </button>
-                ))}
+              <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+                {LEVELS.map((level) => {
+                  const isActive = selectedLevel === level;
+                  const isZero = level === 0;
+
+                  return (
+                    <Button
+                      key={level}
+                      type="button"
+                      variant={isActive ? 'default' : isZero ? 'outline' : 'secondary'}
+                      className={cn(
+                        'h-auto flex-col gap-1 py-4 text-sm font-semibold transition-all',
+                        isZero && !isActive && 'border-dashed border-border/80 text-muted-foreground',
+                        isActive && 'shadow-lg'
+                      )}
+                      onClick={() => handleLevelChange(axis.number, level)}
+                    >
+                      <span className={cn(
+                        "text-[11px] uppercase tracking-wide",
+                        isActive ? "text-white/90" : "text-muted-foreground/70"
+                      )}>
+                        Level
+                      </span>
+                      <span className="text-lg font-bold">{level}</span>
+                    </Button>
+                  );
+                })}
               </div>
 
-              {/* 選択されたレベルの説明 */}
-              {selectedLevel !== undefined && selectedLevel !== null && skillLevel?.levels[selectedLevel] && (
-                <div className={`mt-4 p-4 rounded-lg text-sm text-gray-800 border ${
-                  selectedLevel === 0
-                    ? 'bg-gray-50 border-gray-300'
-                    : 'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200'
-                }`}>
-                  <span className={`font-bold ${selectedLevel === 0 ? 'text-gray-700' : 'text-indigo-700'}`}>
-                    選択中 (Lv{selectedLevel}):
-                  </span>{' '}
-                  {skillLevel.levels[selectedLevel]}
+              {selectedLevel !== undefined && axisLevel?.levels[selectedLevel] && (
+                <div className="mt-4 flex items-start gap-3 rounded-lg border border-border/70 bg-muted/30 p-4 text-sm text-muted-foreground">
+                  <Info className="mt-0.5 h-4 w-4 text-primary" />
+                  <p>
+                    <span className="font-semibold text-foreground">選択中 (Lv{selectedLevel})：</span>
+                    {axisLevel.levels[selectedLevel]}
+                  </p>
                 </div>
               )}
             </div>
           );
         })}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
+

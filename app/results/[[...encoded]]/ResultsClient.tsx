@@ -1,407 +1,384 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { loadAssessmentData } from '@/lib/storage';
-import { decodeAssessmentResult, encodeAssessmentResult, createAssessmentResult, compressAssessmentResult } from '@/lib/permalink';
-import { calculateAllCategorySummaries, getTopCategories } from '@/lib/assessment-utils';
+import {
+  Copy,
+  Loader2,
+  Share2,
+  Sparkles,
+  TriangleAlert,
+} from 'lucide-react';
+import { toast } from 'sonner';
+
 import CategoryRadarChart from '@/components/CategoryRadarChart';
-import type { AssessmentResult, CategorySummary, SpaceSkillStandard, Role } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import type { AssessmentResult, CategorySummary, SpaceSkillStandard } from '@/lib/types';
+import {
+  calculateAllCategorySummaries,
+  getTopCategories,
+} from '@/lib/assessment-utils';
+import { compressAssessmentResult, createAssessmentResult, decodeAssessmentResult, encodeAssessmentResult } from '@/lib/permalink';
+import { loadAssessmentData } from '@/lib/storage';
 
 interface ResultsClientProps {
-  encodedParam?: string;
   data: SpaceSkillStandard;
 }
 
-export default function ResultsClient({ encodedParam, data }: ResultsClientProps) {
+const SKILL_TO_ROLE: Record<string, string[]> = {
+  'プログラム創造・組成': ['全体統括職'],
+  'プロジェクトマネジメント': ['全体統括職'],
+  '基盤技術': ['ソフトウェア系エンジニア', 'データ処理系エンジニア'],
+  '設計・解析': [
+    '構造系エンジニア',
+    '推進系エンジニア',
+    '電気系エンジニア',
+    '通信系エンジニア',
+    '熱制御系エンジニア',
+    '制御系エンジニア',
+    '飛行解析エンジニア',
+    'データ処理系エンジニア',
+    'ソフトウェア系エンジニア',
+  ],
+  '試験': ['試験エンジニア', '品質保証・品質管理エンジニア'],
+  '製造・加工': ['宇宙輸送機・人工衛星製造職'],
+  '打上げ・衛星運用': [
+    '打上げ管理（宇宙輸送機飛行安全、射場安全、地域の保安）',
+    '射場・地上試験設備設計・管理',
+  ],
+  'コーポレート': ['コーポレート・ビジネス職'],
+};
+
+const CATEGORY_SLUG: Record<string, string> = {
+  'プログラム創造・組成': 'program-creation',
+  'プロジェクトマネジメント': 'project-management',
+  '基盤技術': 'foundation-technology',
+  '設計・解析': 'design-analysis',
+  '試験': 'testing',
+  '製造・加工': 'manufacturing',
+  '打上げ・衛星運用': 'launch-operations',
+  'コーポレート': 'corporate',
+};
+
+export default function ResultsClient({ data }: ResultsClientProps) {
   const [result, setResult] = useState<AssessmentResult | null>(null);
   const [summaries, setSummaries] = useState<CategorySummary[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [permalink, setPermalink] = useState('');
-  const [canShare, setCanShare] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let assessmentResult: AssessmentResult | null = null;
 
-    // ハッシュがある場合は共有URLとして扱い、ハッシュのデータを優先
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.substring(1); // '#'を除去
-      if (hash) {
-        assessmentResult = decodeAssessmentResult(hash);
-      }
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      assessmentResult = decodeAssessmentResult(hash);
     }
 
-    // ハッシュがない場合のみ、LocalStorageから読み込む（自分の評価結果）
-    if (!assessmentResult && typeof window !== 'undefined') {
+    if (!assessmentResult) {
       const storedData = loadAssessmentData();
       if (Object.keys(storedData.assessments).length > 0) {
         assessmentResult = createAssessmentResult(storedData.assessments);
       }
     }
 
-    if (assessmentResult) {
-      setResult(assessmentResult);
-
-      // サマリーを計算
-      const calculatedSummaries = calculateAllCategorySummaries(
-        data,
-        assessmentResult.assessments
-      );
-      setSummaries(calculatedSummaries);
-
-      // パーマリンク生成（圧縮版）
-      if (typeof window !== 'undefined') {
-        const compressed = compressAssessmentResult(assessmentResult);
-        const encoded = encodeAssessmentResult(compressed);
-        const basePath = process.env.NODE_ENV === 'production' ? '/sssa' : '';
-        const url = `${window.location.origin}${basePath}/results#${encoded}`;
-        setPermalink(url);
-      }
+    if (!assessmentResult) {
+      setResult(null);
+      setSummaries([]);
+      setPermalink('');
+      setIsLoading(false);
+      return;
     }
 
+    const calculatedSummaries = calculateAllCategorySummaries(
+      data,
+      assessmentResult.assessments
+    );
+
+    const compressed = compressAssessmentResult(assessmentResult);
+    const encoded = encodeAssessmentResult(compressed);
+    const url = `${window.location.origin}${window.location.pathname}#${encoded}`;
+
+    setResult(assessmentResult);
+    setSummaries(calculatedSummaries);
+    setPermalink(url);
     setIsLoading(false);
-  }, [encodedParam, data]);
+  }, [data]);
 
-  // Web Share API対応チェック
+  const [canShare, setCanShare] = useState(false);
+
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'share' in navigator) {
-      setCanShare(true);
-    }
+    setCanShare(typeof navigator !== 'undefined' && 'share' in navigator);
   }, []);
 
-  const handleCopyPermalink = async () => {
-    if (!permalink || summaries.length === 0) return;
+  const topCategories = useMemo(() => getTopCategories(summaries, 3), [summaries]);
 
-    // Web Share API対応の場合
+  const relatedRoles = useMemo(() => {
+    return topCategories.map((summary) => {
+      const categories = SKILL_TO_ROLE[summary.category] ?? [];
+      const roles = data.roles.filter((role) =>
+        categories.includes(role.category.replace(/\n/g, '').trim())
+      );
+
+      const maxRoles = summary.averageScore >= 4 ? 5 : summary.averageScore >= 3 ? 3 : 2;
+      return {
+        category: summary.category,
+        score: summary.averageScore,
+        roles: roles.slice(0, maxRoles),
+      };
+    });
+  }, [data.roles, topCategories]);
+
+  const handleShare = async () => {
+    if (!permalink || !result) {
+      toast.error('共有リンクを生成できませんでした');
+      return;
+    }
+
+    const topNames = topCategories
+      .filter((c) => c.averageScore > 0)
+      .map((c) => `「${c.category}」`)
+      .join('、');
+    const shareText = topNames
+      ? `🚀 宇宙スキル標準で詳細診断を完了！私の強み: ${topNames}`
+      : '🚀 宇宙スキル標準で詳細診断を完了！';
+
     if (canShare && navigator.share) {
       try {
-        // 評価の高いカテゴリトップ3を取得
-        const topCategories = summaries
-          .filter(s => s.averageScore > 0)
-          .sort((a, b) => b.averageScore - a.averageScore)
-          .slice(0, 3)
-          .map(s => s.category);
-
-        const shareText = topCategories.length > 0
-          ? `🚀 宇宙スキル標準で詳細診断を完了！\n\n私の強みは...\n「${topCategories.join('」\n「')}」\n\n✨ あなたも宇宙業界での適性を詳しく診断しませんか？`
-          : '🚀 宇宙スキル標準で詳細診断を完了！\n\n✨ あなたも宇宙業界での適性を診断してみませんか？';
-
-        await navigator.share({
-          title: '宇宙スキル標準アセスメント',
-          text: shareText,
-          url: permalink,
-        });
+        await navigator.share({ title: '宇宙スキル標準アセスメント', text: shareText, url: permalink });
       } catch (error) {
-        // ユーザーがキャンセルした場合など
         if ((error as Error).name !== 'AbortError') {
-          console.error('Share failed:', error);
+          toast.error('共有に失敗しました');
         }
       }
-    } else {
-      // Web Share API非対応の場合はクリップボードにコピー
-      try {
-        // 評価の高いカテゴリトップ3を取得
-        const topCategories = summaries
-          .filter(s => s.averageScore > 0)
-          .sort((a, b) => b.averageScore - a.averageScore)
-          .slice(0, 3)
-          .map(s => s.category);
+      return;
+    }
 
-        const copyText = topCategories.length > 0
-          ? `🚀 宇宙スキル標準で詳細診断を完了！\n\n私の強みは...\n「${topCategories.join('」\n「')}」\n\n✨ あなたも宇宙業界での適性を詳しく診断しませんか？\n\n${permalink}`
-          : `🚀 宇宙スキル標準で詳細診断を完了！\n\n✨ あなたも宇宙業界での適性を診断してみませんか？\n\n${permalink}`;
-
-        await navigator.clipboard.writeText(copyText);
-        alert('結果をクリップボードにコピーしました！');
-      } catch (error) {
-        console.error('Failed to copy permalink:', error);
-        alert('コピーに失敗しました');
-      }
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n\n${permalink}`);
+      toast.success('結果のURLをコピーしました');
+    } catch (error) {
+      console.error(error);
+      toast.error('コピーに失敗しました');
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-gray-600">読み込み中...</div>
-      </div>
+      <Card className="mx-auto flex min-h-[320px] max-w-3xl items-center justify-center">
+        <CardContent className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          結果を計算中…
+        </CardContent>
+      </Card>
     );
   }
 
   if (!result || summaries.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-yellow-800 mb-2">
-            評価データがありません
-          </h2>
-          <p className="text-yellow-700 mb-4">
-            まだアセスメントを実施していないか、URLが無効です。
-          </p>
-          <Link
-            href="/skills"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            スキル一覧からアセスメントを開始
-          </Link>
-        </div>
-      </div>
+      <Card className="mx-auto max-w-3xl border-amber-200 bg-amber-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-amber-900">
+            <TriangleAlert className="h-5 w-5" />
+            評価データが見つかりません
+          </CardTitle>
+          <CardDescription className="text-amber-800">
+            まだ詳細診断を実施していないか、共有リンクが無効です。
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          <Button asChild>
+            <Link href="/categories">詳細診断を始める</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/quick-assessment">クイック診断に戻る</Link>
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
-  const topCategories = getTopCategories(summaries, 3);
-
-  // スキルカテゴリからロールカテゴリへのマッピング
-  const getRelatedRoleCategoriesForSkillCategory = (skillCategory: string): string[] => {
-    const normalized = skillCategory.replace(/\n/g, '').trim();
-
-    // スキルカテゴリとロールカテゴリのマッピング
-    const mapping: { [key: string]: string[] } = {
-      'プログラム創造・組成': ['全体統括職'],
-      'プロジェクトマネジメント': ['全体統括職'],
-      '基盤技術': ['ソフトウェア系エンジニア', 'データ処理系エンジニア'],
-      '設計・解析': [
-        '構造系エンジニア',
-        '推進系エンジニア',
-        '電気系エンジニア',
-        '通信系エンジニア',
-        '熱制御系エンジニア',
-        '制御系エンジニア',
-        '飛行解析エンジニア',
-        'データ処理系エンジニア',
-        'ソフトウェア系エンジニア',
-      ],
-      '試験': ['試験エンジニア', '品質保証・品質管理エンジニア'],
-      '製造・加工': ['宇宙輸送機・人工衛星製造職'],
-      '打上げ・衛星運用': [
-        '打上げ管理（宇宙輸送機飛行安全、射場安全、地域の保安）',
-        '射場・地上試験設備設計・管理',
-      ],
-      'コーポレート': ['コーポレート・ビジネス職'],
-    };
-
-    return mapping[normalized] || [];
-  };
-
-  // カテゴリに関連するロールを取得（スコアに応じて上位のみ表示）
-  const getRelatedRolesForCategory = (skillCategory: string, categoryScore: number): Role[] => {
-    // スコアが2.0未満の場合は推奨しない
-    if (categoryScore < 2.0) {
-      return [];
-    }
-
-    // スキルカテゴリに対応するロールカテゴリを取得
-    const roleCategories = getRelatedRoleCategoriesForSkillCategory(skillCategory);
-
-    // 対応するロールカテゴリのロールをすべて取得
-    const relatedRoles = data.roles.filter((role) => {
-      const roleCategory = role.category.replace(/\n/g, '').trim();
-      return roleCategories.includes(roleCategory);
-    });
-
-    // スコアに応じて表示数を決定
-    // スコア4.0以上: 最大5件、3.0-3.9: 最大3件、2.0-2.9: 最大2件
-    const maxRoles = categoryScore >= 4.0 ? 5 : categoryScore >= 3.0 ? 3 : 2;
-
-    // ロール番号順（データの定義順）で上位のみ返す
-    return relatedRoles.slice(0, maxRoles);
-  };
-
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          アセスメント結果
-        </h1>
-        <p className="text-gray-600">
-          評価日時: {new Date(result.timestamp).toLocaleString('ja-JP')}
-        </p>
-      </div>
-
-      {/* カテゴリ別サマリー */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          カテゴリ別サマリー
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {summaries.map((summary) => {
-            const isEvaluated = summary.assessedSkillCount > 0;
-
-            return (
-              <div
-                key={summary.category}
-                className={`rounded-lg shadow-md p-6 ${
-                  isEvaluated ? 'bg-white' : 'bg-gray-50 border-2 border-dashed border-gray-300'
-                }`}
-              >
-                <h3 className="font-bold text-gray-900 mb-2">{summary.category}</h3>
-                {isEvaluated ? (
-                  <>
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-3xl font-bold text-indigo-600">
-                        {summary.averageScore.toFixed(1)}
-                      </span>
-                      <span className="text-gray-600">/ 5.0</span>
-                    </div>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <p>
-                        評価済み: {summary.assessedSkillCount} / {summary.skillCount}スキル
-                      </p>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-indigo-600 h-2 rounded-full transition-all"
-                          style={{ width: `${summary.completionRate}%` }}
-                        />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-3xl font-bold text-gray-400">
-                        未評価
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      <p>{summary.skillCount}スキル</p>
-                      <p className="mt-2 text-xs">このカテゴリはまだ評価されていません</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            );
-          })}
+    <div className="space-y-10">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div className="space-y-2">
+          <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.25em]">
+            Assessment Result
+          </Badge>
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              アセスメント結果
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              評価日時: {new Date(result.timestamp).toLocaleString('ja-JP')}
+            </p>
+          </div>
         </div>
-      </div>
+        <Button variant="outline" onClick={handleShare} className="gap-2">
+          {canShare ? <Share2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {canShare ? '共有する' : 'URLをコピー'}
+        </Button>
+      </header>
 
-      {/* レーダーチャート */}
-      <div className="mb-8">
-        <CategoryRadarChart summaries={summaries} />
-      </div>
+      <Card className="border-border/70 shadow-sm">
+        <CardHeader className="space-y-2">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Sparkles className="h-5 w-5 text-primary" />
+            評価サマリー
+          </CardTitle>
+          <CardDescription>
+            各カテゴリの平均スコアと評価済みスキル数をまとめています。スコアは5段階で表示されます。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {summaries.map((summary) => {
+              const isEvaluated = summary.assessedSkillCount > 0;
+              const completion = Math.round(summary.completionRate);
 
-      {/* 推奨職種 */}
-      {topCategories.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            推奨される職種
-          </h2>
-          <p className="text-gray-600 mb-4">
-            評価の高いカテゴリに基づいて、以下の職種が推奨されます。
-            <span className="block text-sm text-gray-500 mt-1">
-              ※ スコアが2.0未満のカテゴリは表示されません
-            </span>
-          </p>
+              return (
+                <Card
+                  key={summary.category}
+                  className="border border-border/60 bg-card/80 shadow-sm"
+                >
+                  <CardHeader className="space-y-2">
+                    <CardTitle className="text-base font-semibold text-foreground">
+                      {summary.category}
+                    </CardTitle>
+                    <CardDescription className="text-xs text-muted-foreground">
+                      {summary.assessedSkillCount} / {summary.skillCount} スキル評価
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-semibold text-primary">
+                        {isEvaluated ? summary.averageScore.toFixed(1) : '—'}
+                      </span>
+                      <span className="text-sm text-muted-foreground">/ 5.0</span>
+                    </div>
+                    <Progress value={isEvaluated ? completion : 0} />
+                    <p className="text-xs text-muted-foreground">
+                      完了率 {completion}%
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        disabled={!CATEGORY_SLUG[summary.category]}
+                      >
+                        <Link href={`/assessment/${CATEGORY_SLUG[summary.category] ?? ''}`}>
+                          詳細診断を続ける
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs text-muted-foreground"
+                      >
+                        <Link href={`/categories`}>カテゴリに戻る</Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
-          {topCategories.map((category) => {
-            const roles = getRelatedRolesForCategory(category.category, category.averageScore);
+      <Card className="border-border/70 shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">カテゴリレーダーチャート</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            各カテゴリの平均スコアをレーダーチャートで可視化しています。
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CategoryRadarChart summaries={summaries} />
+        </CardContent>
+      </Card>
 
-            return (
-              <div key={category.category} className="mb-6 last:mb-0">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    {category.category}
+      {relatedRoles.some((entry) => entry.roles.length > 0) && (
+        <Card className="border-border/70 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold">推奨される職種</CardTitle>
+            <CardDescription className="text-sm text-muted-foreground">
+              評価が高かったカテゴリに基づき、関連する職種を提案します。スコアが2.0未満のカテゴリは対象外です。
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {relatedRoles.map(({ category, score, roles }) =>
+              roles.length > 0 ? (
+                <div key={category} className="space-y-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="rounded-full border-dashed px-3 py-1 text-xs">
+                      {category}
+                    </Badge>
+                    <span className="text-sm font-semibold text-primary">
+                      平均スコア {score.toFixed(1)}
+                    </span>
                   </div>
-                  <span className="text-blue-600 font-bold">
-                    平均スコア: {category.averageScore.toFixed(1)}
-                  </span>
-                </div>
-
-                {roles.length > 0 ? (
-                  <div className="space-y-3 pl-4 border-l-4 border-blue-200">
-                    {roles.map((role, index) => (
-                      <div key={index} className="bg-gray-50 rounded-lg p-4">
-                        <h4 className="font-bold text-gray-900 mb-2">
-                          {role.name}
-                        </h4>
-                        {role.description && (
-                          <p className="text-sm text-gray-700 mb-2">
-                            {role.description}
-                          </p>
-                        )}
-                      </div>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {roles.map((role) => (
+                      <Card key={role.number} className="border border-border/60 bg-muted/20 shadow-none">
+                        <CardHeader className="space-y-1">
+                          <CardTitle className="flex items-baseline justify-between text-sm font-semibold">
+                            <span>{role.name}</span>
+                            <Badge variant="secondary" className="rounded-full px-2 py-0.5 text-[10px]">
+                              #{role.number}
+                            </Badge>
+                          </CardTitle>
+                          {role.description && (
+                            <CardDescription className="text-xs leading-relaxed text-muted-foreground">
+                              {role.description}
+                            </CardDescription>
+                          )}
+                        </CardHeader>
+                      </Card>
                     ))}
                   </div>
-                ) : (
-                  <p className="text-gray-500 text-sm pl-4">
-                    このカテゴリに関連するロールが見つかりません
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                </div>
+              ) : null
+            )}
+          </CardContent>
+        </Card>
       )}
 
-      {/* 共有セクション */}
-      <div className="bg-blue-50 rounded-lg p-6 mb-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">結果を共有</h2>
-        {!canShare && (
-          <>
-            <p className="text-gray-700 mb-4">
-              以下のURLで、この評価結果を他者と共有できます。
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={permalink}
-                readOnly
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm font-mono"
-              />
-              <button
-                onClick={handleCopyPermalink}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-                コピー
-              </button>
-            </div>
-          </>
-        )}
-        {canShare && (
-          <>
-            <p className="text-gray-700 mb-4">
-              評価結果を共有しましょう。
-            </p>
-            <button
-              onClick={handleCopyPermalink}
-              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                />
-              </svg>
-              共有
-            </button>
-          </>
-        )}
-      </div>
+      <Card className="border-border/70 bg-muted/40">
+        <CardContent className="flex justify-center py-6">
+          <Button variant="default" onClick={handleShare} className="gap-2">
+            {canShare ? (
+              <>
+                <Share2 className="h-4 w-4" />
+                結果を共有
+              </>
+            ) : (
+              <>
+                <Copy className="h-4 w-4" />
+                URLをコピーして共有する
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
 
-      {/* アクションボタン */}
-      <div className="flex justify-center gap-4">
-        <Link
-          href="/skills"
-          className="bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
-        >
-          スキル一覧に戻る
-        </Link>
-        <Link
-          href="/"
-          className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-        >
-          トップページ
-        </Link>
+      <div className="flex flex-wrap justify-center gap-3">
+        <Button asChild variant="outline">
+          <Link href="/skills">
+            スキル一覧へ戻る
+          </Link>
+        </Button>
+        <Button asChild>
+          <Link href="/">
+            トップページへ
+          </Link>
+        </Button>
       </div>
     </div>
   );
 }
+

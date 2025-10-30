@@ -71,6 +71,11 @@ export function encodeAssessmentResult(result: AssessmentResult): string {
  */
 export function decodeAssessmentResult(encoded: string): AssessmentResult | null {
   try {
+    // 空文字列チェック
+    if (!encoded || encoded.trim() === '') {
+      return null;
+    }
+
     // URLセーフな形式から標準のBase64に戻す
     let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
 
@@ -101,9 +106,9 @@ export function decodeAssessmentResult(encoded: string): AssessmentResult | null
 /**
  * 現在のアセスメントデータからAssessmentResultを作成
  */
-export function createAssessmentResult(assessments: {
-  [category: string]: any;
-}): AssessmentResult {
+export function createAssessmentResult(
+  assessments: AssessmentResult['assessments']
+): AssessmentResult {
   return {
     version: RESULT_VERSION,
     timestamp: new Date().toISOString(),
@@ -117,7 +122,7 @@ export function createAssessmentResult(assessments: {
  */
 export function generatePermalinkUrl(
   baseUrl: string,
-  assessments: { [category: string]: any }
+  assessments: AssessmentResult['assessments']
 ): string {
   const result = createAssessmentResult(assessments);
   const encoded = encodeAssessmentResult(result);
@@ -144,12 +149,12 @@ export function compressAssessmentResult(result: AssessmentResult): AssessmentRe
   };
 
   Object.entries(result.assessments).forEach(([category, categoryAssessment]) => {
-    const compressedCategory: any = {};
+    const compressedCategory: AssessmentResult['assessments'][string] = {};
     let hasData = false;
 
     Object.entries(categoryAssessment).forEach(([skillNumber, skillAssessment]) => {
       if (Object.keys(skillAssessment).length > 0) {
-        compressedCategory[skillNumber] = skillAssessment;
+        compressedCategory[parseInt(skillNumber)] = skillAssessment;
         hasData = true;
       }
     });

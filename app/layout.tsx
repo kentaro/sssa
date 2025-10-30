@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Header from "@/components/Header";
+
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AppToaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,15 +29,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50`}
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          `${geistSans.variable} ${geistMono.variable}`
+        )}
       >
-        <Header />
-        <main className="flex-1 container mx-auto px-6 py-12">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(124,58,237,0.16)_0,transparent_55%)]" />
+            <Header />
+            <main className="flex-1">
+              <div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
+                {children}
+              </div>
+            </main>
+            <Footer />
+            <AppToaster />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
