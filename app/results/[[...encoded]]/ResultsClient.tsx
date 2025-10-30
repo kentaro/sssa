@@ -116,19 +116,21 @@ export default function ResultsClient({ data }: ResultsClientProps) {
   const topCategories = useMemo(() => getTopCategories(summaries, 3), [summaries]);
 
   const relatedRoles = useMemo(() => {
-    return topCategories.map((summary) => {
-      const categories = SKILL_TO_ROLE[summary.category] ?? [];
-      const roles = data.roles.filter((role) =>
-        categories.includes(role.category.replace(/\n/g, '').trim())
-      );
+    return topCategories
+      .filter((summary) => summary.averageScore >= 2.0)
+      .map((summary) => {
+        const categories = SKILL_TO_ROLE[summary.category] ?? [];
+        const roles = data.roles.filter((role) =>
+          categories.includes(role.category.replace(/\n/g, '').trim())
+        );
 
-      const maxRoles = summary.averageScore >= 4 ? 5 : summary.averageScore >= 3 ? 3 : 2;
-      return {
-        category: summary.category,
-        score: summary.averageScore,
-        roles: roles.slice(0, maxRoles),
-      };
-    });
+        const maxRoles = summary.averageScore >= 4 ? 5 : summary.averageScore >= 3 ? 3 : 2;
+        return {
+          category: summary.category,
+          score: summary.averageScore,
+          roles: roles.slice(0, maxRoles),
+        };
+      });
   }, [data.roles, topCategories]);
 
   const handleShare = async () => {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, MenuIcon } from 'lucide-react';
@@ -58,6 +59,7 @@ const menuItems: MenuItem[] = [
 
 export default function Header() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isActive = (href?: string) => {
     if (!href) return false;
@@ -72,15 +74,18 @@ export default function Header() {
     return false;
   };
 
+  const handleMobileLinkClick = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-tight sm:text-base">
-          <span className="text-xl">🚀</span>
+        <Link href="/" className="flex items-center gap-2.5 text-sm font-bold tracking-tight sm:text-base">
+          <span className="text-2xl">🚀</span>
           <span className="whitespace-nowrap">
             宇宙スキル標準
-            <span className="ml-1 text-muted-foreground">アセスメント</span>
           </span>
         </Link>
 
@@ -140,7 +145,7 @@ export default function Header() {
         </nav>
 
         {/* Mobile Menu */}
-        <Sheet>
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
                 <MenuIcon className="h-5 w-5" />
@@ -167,7 +172,7 @@ export default function Header() {
                               className="w-full justify-start"
                               asChild
                             >
-                              <Link href={subItem.href}>
+                              <Link href={subItem.href} onClick={handleMobileLinkClick}>
                                 <div className="flex flex-col items-start">
                                   <span className="text-sm font-medium">{subItem.label}</span>
                                   {subItem.description && (
@@ -187,7 +192,7 @@ export default function Header() {
                         className="w-full justify-start"
                         asChild
                       >
-                        <Link href={item.href ?? '#'}>{item.label}</Link>
+                        <Link href={item.href ?? '#'} onClick={handleMobileLinkClick}>{item.label}</Link>
                       </Button>
                     )}
                   </div>
