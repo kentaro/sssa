@@ -26,10 +26,18 @@ interface SkillsListClientProps {
 }
 
 export default function SkillsListClient({ categoriesData }: SkillsListClientProps) {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const toggleCategory = (category: string) => {
-    setExpandedCategory(expandedCategory === category ? null : category);
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -45,7 +53,7 @@ export default function SkillsListClient({ categoriesData }: SkillsListClientPro
 
       <div className="space-y-4">
         {categoriesData.map(({ category, skills }) => {
-          const isExpanded = expandedCategory === category;
+          const isExpanded = expandedCategories.has(category);
           const icon = getCategoryIcon(category);
 
           return (

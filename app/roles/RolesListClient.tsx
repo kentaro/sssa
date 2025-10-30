@@ -8,10 +8,18 @@ interface RolesListClientProps {
 }
 
 export default function RolesListClient({ rolesByCategory }: RolesListClientProps) {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const toggleCategory = (category: string) => {
-    setExpandedCategory(expandedCategory === category ? null : category);
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
   };
 
   // カテゴリをソート（各カテゴリの最初の職種番号順）
@@ -34,7 +42,7 @@ export default function RolesListClient({ rolesByCategory }: RolesListClientProp
 
       <div className="space-y-4">
         {sortedCategories.map(([category, roles]) => {
-          const isExpanded = expandedCategory === category;
+          const isExpanded = expandedCategories.has(category);
           const normalizedCategory = category.replace(/\n/g, ' ');
 
           return (
