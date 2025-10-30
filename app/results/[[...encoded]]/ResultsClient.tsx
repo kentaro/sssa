@@ -139,13 +139,16 @@ export default function ResultsClient({ data }: ResultsClientProps) {
       return;
     }
 
-    const topNames = topCategories
+    const medals = ['🥇', '🥈', '🥉'];
+    const topThree = topCategories
       .filter((c) => c.averageScore > 0)
-      .map((c) => `「${c.category}」`)
-      .join('、');
-    const shareText = topNames
-      ? `🚀 宇宙スキル標準で詳細診断を完了！私の強み: ${topNames}`
-      : '🚀 宇宙スキル標準で詳細診断を完了！';
+      .slice(0, 3)
+      .map((c, index) => `${medals[index]} ${index + 1}位「${c.category}」(${c.averageScore.toFixed(1)})`)
+      .join('\n');
+
+    const shareText = topThree
+      ? `🚀 宇宙スキル標準で詳細診断を完了しました！\n\n【私の強みカテゴリTOP3】\n${topThree}\n\nあなたも宇宙業界でのスキルを診断してみませんか？`
+      : '🚀 宇宙スキル標準で詳細診断を完了しました！';
 
     if (canShare && navigator.share) {
       try {

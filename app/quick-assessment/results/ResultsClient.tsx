@@ -131,13 +131,15 @@ function ResultsContent({ roles }: ResultsClientProps) {
       return;
     }
 
-    const roleList = result.topRoles
-      .slice(0, 3)
-      .map((entry, index) => `${index + 1}位「${entry.role.name}」`)
-      .join('、');
+    const medals = ['🥇', '🥈', '🥉'];
+    const topThree = result.topRoles.slice(0, 3);
+    const roleList = topThree
+      .map((entry, index) => `${medals[index]} ${index + 1}位「${entry.role.name}」`)
+      .join('\n');
+
     const message = roleList
-      ? `🚀 宇宙業界適性診断の結果が出ました！私に向いている職種は ${roleList}`
-      : '🚀 宇宙業界適性診断の結果が出ました！';
+      ? `🚀 宇宙業界適性診断の結果が出ました！\n\n【私に向いている職種TOP3】\n${roleList}\n\nあなたも診断してみませんか？`
+      : '🚀 宇宙業界適性診断を完了しました！';
 
     if (canShare && navigator.share) {
       try {
