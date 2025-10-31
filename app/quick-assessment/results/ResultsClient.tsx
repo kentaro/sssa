@@ -161,15 +161,15 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
 
     const message = roleList
       ? isKidsMode
-        ? `🚀 宇宙のおしごと診断の結果が出たよ！\n\n【自分に合っているおしごとの種類TOP3】\n${roleList}\n\nあなたも診断してみない？`
+        ? `🚀 宇宙のしごと診断の結果が出たよ！\n\n【自分に合っているしごとの種類TOP3】\n${roleList}\n\nあなたも診断してみない？`
         : `🚀 宇宙業界適性診断の結果が出ました！\n\n【私に向いている職種TOP3】\n${roleList}\n\nあなたも診断してみませんか？`
       : isKidsMode
-      ? '🚀 宇宙のおしごと診断が終わったよ！'
+      ? '🚀 宇宙のしごと診断が終わったよ！'
       : '🚀 宇宙業界適性診断を完了しました！';
 
     if (canShare && navigator.share) {
       try {
-        await navigator.share({ title: isKidsMode ? '宇宙のおしごと診断' : '宇宙スキル標準アセスメント', text: message, url: shareUrl });
+        await navigator.share({ title: isKidsMode ? '宇宙のしごと診断' : '宇宙スキル標準アセスメント', text: message, url: shareUrl });
         return;
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
@@ -212,7 +212,7 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
       <Card className="mx-auto flex min-h-[320px] max-w-3xl items-center justify-center">
         <CardContent className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          {isKidsMode ? 'おしごと診断の結果を計算中…' : '診断結果を計算中…'}
+          {isKidsMode ? '宇宙のしごと診断の結果を計算中…' : '診断結果を計算中…'}
         </CardContent>
       </Card>
     );
@@ -223,17 +223,17 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
       <Card className="mx-auto max-w-3xl border border-border/70 bg-muted/40 shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
-            {isKidsMode ? 'おしごと診断の結果が見つかりません' : '診断結果が見つかりません'}
+            {isKidsMode ? '宇宙のしごと診断の結果が見つかりません' : '診断結果が見つかりません'}
           </CardTitle>
           <CardDescription>
             {isKidsMode
-              ? '診断を終えていないか、保存されている答えがなくなっています。もう一度かんたん宇宙おしごと診断をやってみてね。'
+              ? '診断を終えていないか、保存されている答えがなくなっています。もう一度かんたん宇宙のしごと診断をやってみてね。'
               : '診断を完了していないか、保存されている回答が失われています。再度クイック診断を実施してください。'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙おしごと診断に戻る' : 'クイック診断に戻る'}</Link>
+            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙のしごと診断に戻る' : 'クイック診断に戻る'}</Link>
           </Button>
           <Button variant="outline" asChild>
             <Link href="/">トップページへ</Link>
@@ -251,11 +251,11 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
         </Badge>
         <div className="space-y-2">
           <h1 className="flex items-center justify-center gap-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            <Trophy className="h-8 w-8 text-primary" /> {isKidsMode ? 'おしごと診断の結果' : '診断結果'}
+            <Trophy className="h-8 w-8 text-primary" /> {isKidsMode ? '宇宙のしごと診断の結果' : '診断結果'}
           </h1>
           <p className="text-sm text-muted-foreground">
             {isKidsMode
-              ? '自分に合っている宇宙のおしごとの種類の上位候補を紹介するよ！'
+              ? '自分に合っている宇宙のしごとの種類の上位候補を紹介するよ！'
               : 'あなたに向いている職種の上位候補を表示しています。詳細診断で深掘りしましょう。'}
           </p>
         </div>
@@ -334,15 +334,15 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
       {isKidsMode && (
         <Card className="border-primary/40 bg-primary/5">
           <CardHeader className="text-center">
-            <CardTitle className="text-lg font-semibold">もっと宇宙のおしごとを知りたい？</CardTitle>
+            <CardTitle className="text-lg font-semibold">もっと宇宙のしごとを知りたい？</CardTitle>
             <CardDescription>
-              他にもたくさんの宇宙のおしごとがあるよ！どんなおしごとがあるか見てみよう。
+              他にもたくさんの宇宙のしごとがあるよ！どんなしごとがあるか見てみよう。
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
             <Button asChild size="lg">
               <Link href="/roles">
-                お仕事の種類一覧を見る
+                しごとの種類一覧を見る
               </Link>
             </Button>
           </CardContent>
@@ -376,7 +376,7 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
         {isKidsMode ? (
           <Button asChild>
             <Link href="/roles">
-              他のおしごとも見てみよう
+              他のしごとも見てみよう
             </Link>
           </Button>
         ) : (

@@ -120,10 +120,10 @@ export default function RolesListClient({ adultRolesByCategory, kidsContent }: R
     <PageContainer>
       <PageHeader
         badge="Role Catalogue"
-        title={isKidsMode ? 'お仕事の種類一覧' : '職種一覧'}
+        title={isKidsMode ? 'しごとの種類一覧' : '職種一覧'}
         description={
           isKidsMode
-            ? `宇宙のおしごとの勉強リストで決められた${totalRoles}種類のおしごとを見ることができます。`
+            ? `宇宙のしごとの勉強リストで決められた${totalRoles}種類のしごとを見ることができます。`
             : `宇宙スキル標準で定義された${totalRoles}職種をカテゴリ別に閲覧できます。`
         }
       />

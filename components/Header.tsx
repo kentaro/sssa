@@ -60,16 +60,16 @@ const adultMenuItems: MenuItem[] = [
 
 const kidsMenuItems: MenuItem[] = [
   {
-    label: '宇宙のおしごとを見る',
+    label: '宇宙のしごとを見る',
     submenu: [
-      { label: 'できること一覧', href: '/skills', description: '宇宙のおしごとに必要な力を一覧で確認' },
-      { label: 'お仕事の種類一覧', href: '/roles', description: 'どんなおしごとがあるか見てみよう' },
+      { label: 'できること一覧', href: '/skills', description: '宇宙のしごとに必要な力を一覧で確認' },
+      { label: 'しごとの種類一覧', href: '/roles', description: 'どんなしごとがあるか見てみよう' },
     ],
   },
   {
     label: '診断をする',
     href: '/quick-assessment',
-    description: '自分に合ったおしごとを探そう',
+    description: '自分に合ったしごとを探そう',
   },
   {
     label: '診断結果を見る',
@@ -150,7 +150,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2.5 text-sm font-bold tracking-tight sm:text-base">
           <span className="text-2xl">🚀</span>
           <span className="whitespace-nowrap">
-            {isKidsMode ? '宇宙のおしごと' : '宇宙スキル標準'}
+            {isKidsMode ? '宇宙のしごと' : '宇宙スキル標準'}
           </span>
         </Link>
 

@@ -18,7 +18,7 @@ const steps = [
     description:
       "トップページからクイック診断または詳細診断を選びます。クイック診断は約5分、詳細診断はカテゴリ単位で丁寧に評価します。",
     descriptionKids:
-      "トップページからかんたん宇宙おしごと診断を選びます。診断は約5分で終わります。",
+      "トップページからかんたん宇宙のしごと診断を選びます。診断は約5分で終わります。",
     href: "/",
     linkLabel: "トップページへ",
   },
@@ -39,7 +39,7 @@ const steps = [
     description:
       "各スキルについて4つの評価軸を6段階（Lv0〜Lv5）で判定。レベル詳細を確認しながら、自分の現在地に最も近いレベルを選択します。",
     descriptionKids:
-      "24問の質問に答えて、自分に合っている宇宙のおしごとの種類を見つけます。",
+      "24問の質問に答えて、自分に合っている宇宙のしごとの種類を見つけます。",
   },
   {
     step: "4",
@@ -48,7 +48,7 @@ const steps = [
     description:
       "診断結果はレーダーチャートや推奨職種と共に整形。パーマリンクを生成して社内外で共有できます。",
     descriptionKids:
-      "診断の結果は、おすすめのおしごとの種類と一緒に見せます。リンクを作ってみんなに見せることができます。",
+      "診断の結果は、おすすめのしごとの種類と一緒に見せます。リンクを作ってみんなに見せることができます。",
   },
 ];
 
@@ -68,7 +68,7 @@ export default function AboutPage() {
         badge="Project Overview"
         title={isKidsMode ? 'このWebアプリについて' : '宇宙スキル標準アセスメントについて'}
         description={isKidsMode
-          ? '内閣府宇宙開発戦略推進事務局が公開している宇宙のおしごとの勉強リスト（試作版）をWebで使える診断体験に作り直しました。Excelの情報構造をそのままに、使いやすさ・見やすさ・みんなに見せることをよくしています。'
+          ? '内閣府宇宙開発戦略推進事務局が公開している宇宙のしごとの勉強リスト（試作版）をWebで使える診断体験に作り直しました。Excelの情報構造をそのままに、使いやすさ・見やすさ・みんなに見せることをよくしています。'
           : '内閣府宇宙開発戦略推進事務局が公開している宇宙スキル標準（試作版）をWebコンポーザブルな診断体験に再設計しました。Excelの情報構造を忠実に反映しつつ、操作性・視覚性・共有性を高めています。'
         }
       />
@@ -81,7 +81,7 @@ export default function AboutPage() {
           </CardTitle>
           <CardDescription>
             {isKidsMode ? (
-              <>宇宙のおしごとをやりたい（またはやりたいと思っている）人のできることを整理して、勉強の計画を立てるのを手伝うため、使いにくかった資料を誰でも使えるインターフェースに変えています。</>
+              <>宇宙のしごとをやりたい（またはやりたいと思っている）人のできることを整理して、勉強の計画を立てるのを手伝うため、使いにくかった資料を誰でも使えるインターフェースに変えています。</>
             ) : (
               <>宇宙産業に携わる（あるいは志望する）個人のスキル棚卸しと育成計画策定を支援するため、アクセスしづらかった標準資料を誰でも扱えるインタラクティブなインターフェースへ変換しています。</>
             )}
@@ -96,7 +96,7 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className="ml-1 inline-flex items-center gap-1 text-primary hover:text-primary/80"
             >
-              {isKidsMode ? '宇宙のおしごとの勉強リスト（試作版）' : '宇宙スキル標準（試作版）'}
+              {isKidsMode ? '宇宙のしごとの勉強リスト（試作版）' : '宇宙スキル標準（試作版）'}
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
             。{isKidsMode ? (
@@ -225,7 +225,7 @@ export default function AboutPage() {
           </CardTitle>
           <CardDescription>
             {isKidsMode ? (
-              <>かんたん宇宙おしごと診断でどんなおしごとが自分に合っているか見つけよう！</>
+              <>かんたん宇宙のしごと診断でどんなしごとが自分に合っているか見つけよう！</>
             ) : (
               <>クイック診断で傾向を掴み、詳細診断でキャリア戦略を具体化できます。</>
             )}
@@ -234,7 +234,7 @@ export default function AboutPage() {
         <CardContent className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button size="lg" asChild>
             <Link href="/quick-assessment">
-              {isKidsMode ? 'おしごと診断へ' : 'クイック診断へ'}
+              {isKidsMode ? 'しごと診断へ' : 'クイック診断へ'}
             </Link>
           </Button>
           {!isKidsMode && (

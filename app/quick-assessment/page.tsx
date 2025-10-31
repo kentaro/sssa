@@ -108,11 +108,11 @@ export default function QuickAssessmentPage() {
           Quick Assessment
         </div>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-          {isKidsMode ? 'かんたん宇宙おしごと診断' : 'クイック診断'}
+          {isKidsMode ? 'かんたん宇宙のしごと診断' : 'クイック診断'}
         </h1>
         <p className="text-sm text-muted-foreground">
           {isKidsMode
-            ? '24問の質問に答えて、どんな宇宙のおしごとが自分に合っているか診断しよう！'
+            ? '24問の質問に答えて、どんな宇宙のしごとが自分に合っているか診断しよう！'
             : '24問の質問に答えて、向いているカテゴリと職種のヒントを得ましょう。'}
         </p>
       </div>

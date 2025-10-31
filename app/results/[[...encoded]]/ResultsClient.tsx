@@ -253,15 +253,15 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
 
     const shareText = topThree
       ? isKidsMode
-        ? `🚀 宇宙のおしごと診断を終えたよ！\n\n【自分が強い種類TOP3】\n${topThree}\n\nあなたも宇宙のおしごと診断をしてみない？`
+        ? `🚀 宇宙のしごと診断を終えたよ！\n\n【自分が強い種類TOP3】\n${topThree}\n\nあなたも宇宙のしごと診断をしてみない？`
         : `🚀 宇宙スキル標準で詳細診断を完了しました！\n\n【私の強みカテゴリTOP3】\n${topThree}\n\nあなたも宇宙業界でのスキルを診断してみませんか？`
       : isKidsMode
-      ? '🚀 宇宙のおしごと診断を終えたよ！'
+      ? '🚀 宇宙のしごと診断を終えたよ！'
       : '🚀 宇宙スキル標準で詳細診断を完了しました！';
 
     if (canShare && navigator.share) {
       try {
-        await navigator.share({ title: isKidsMode ? '宇宙のおしごと診断' : '宇宙スキル標準アセスメント', text: shareText, url: permalink });
+        await navigator.share({ title: isKidsMode ? '宇宙のしごと診断' : '宇宙スキル標準アセスメント', text: shareText, url: permalink });
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
           toast.error(isKidsMode ? 'みんなに見せることができませんでした' : '共有に失敗しました');
@@ -311,7 +311,7 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
             </Button>
           )}
           <Button variant="outline" asChild>
-            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙おしごと診断に戻る' : 'クイック診断に戻る'}</Link>
+            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙のしごと診断に戻る' : 'クイック診断に戻る'}</Link>
           </Button>
         </CardContent>
       </Card>
@@ -327,7 +327,7 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
           </Badge>
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              {isKidsMode ? 'おしごと診断の結果' : 'アセスメント結果'}
+              {isKidsMode ? '宇宙のしごと診断の結果' : 'アセスメント結果'}
             </h1>
             <p className="text-sm text-muted-foreground">
               {isKidsMode ? '診断した日時' : '評価日時'}: {new Date(result.timestamp).toLocaleString('ja-JP')}
@@ -432,11 +432,11 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
         <Card className="border-border/70 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
-              {isKidsMode ? 'おすすめのおしごとの種類' : '推奨される職種'}
+              {isKidsMode ? 'おすすめのしごとの種類' : '推奨される職種'}
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
               {isKidsMode
-                ? '診断スコアが高かった種類に基づいて、関係するおしごとの種類を提案します。スコアが2.0未満の種類は対象外です。'
+                ? '診断スコアが高かった種類に基づいて、関係するしごとの種類を提案します。スコアが2.0未満の種類は対象外です。'
                 : '評価が高かったカテゴリに基づき、関連する職種を提案します。スコアが2.0未満のカテゴリは対象外です。'}
             </CardDescription>
           </CardHeader>

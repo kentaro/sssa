@@ -573,7 +573,7 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 19,
     section: '業務フェーズ・役割',
-    kidsSection: 'どんなお仕事をしたい？',
+    kidsSection: 'どんなしごとをしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '構想・企画段階から関わる',
@@ -603,7 +603,7 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 20,
     section: '業務フェーズ・役割',
-    kidsSection: 'どんなお仕事をしたい？',
+    kidsSection: 'どんなしごとをしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '研究開発・新技術にチャレンジ',
@@ -637,7 +637,7 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 21,
     section: '業務フェーズ・役割',
-    kidsSection: 'どんなお仕事をしたい？',
+    kidsSection: 'どんなしごとをしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '顧客折衝・要件定義',
@@ -670,7 +670,7 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 22,
     section: '業務フェーズ・役割',
-    kidsSection: 'どんなお仕事をしたい？',
+    kidsSection: 'どんなしごとをしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '複数プロジェクトを横断',
@@ -701,7 +701,7 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 23,
     section: '業務フェーズ・役割',
-    kidsSection: 'どんなお仕事をしたい？',
+    kidsSection: 'どんなしごとをしたい？',
     sectionNumber: 3,
     leftOption: {
       text: 'ルールや基準に厳格',
@@ -731,7 +731,7 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 24,
     section: '業務フェーズ・役割',
-    kidsSection: 'どんなお仕事をしたい？',
+    kidsSection: 'どんなしごとをしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '長期的な戦略を描く',

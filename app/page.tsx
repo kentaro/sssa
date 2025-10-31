@@ -13,9 +13,9 @@ const featureList = [
   {
     icon: <Gauge className="h-7 w-7" />,
     title: 'クイック診断',
-    titleKids: 'かんたん宇宙おしごと診断',
+    titleKids: 'かんたん宇宙のしごと診断',
     description: '24問でスキル傾向を素早く把握し、取り組むべきカテゴリを推薦',
-    descriptionKids: '24問に答えて、宇宙のおしごとで自分に合う種類を見つけよう！',
+    descriptionKids: '24問に答えて、宇宙のしごとで自分に合う種類を見つけよう！',
     href: '/quick-assessment',
     meta: '所要時間：約5分',
     metaKids: '時間：約5分',
@@ -23,7 +23,7 @@ const featureList = [
   {
     icon: <Layers className="h-7 w-7" />,
     title: '詳細診断',
-    titleKids: 'じっくり宇宙おしごと診断',
+    titleKids: 'じっくり宇宙のしごと診断',
     description: 'カテゴリごとに評価軸を見ながら丁寧にセルフアセスメント',
     descriptionKids: '種類ごとのポイントを見ながら、じっくり自分の力を確かめよう',
     href: '/categories',
@@ -163,7 +163,7 @@ export default function Home() {
               <ModeChoice
                 icon="🎈"
                 title="子供向けで見る"
-                description="やさしい言葉と例え話で宇宙のおしごとを知りたいお子さま向け"
+                description="やさしい言葉と例え話で宇宙のしごとを知りたいお子さま向け"
                 onSelect={() => handleSelectMode('kids')}
               />
             </CardContent>
@@ -183,7 +183,7 @@ export default function Home() {
                 <>
                   <span className="inline-block">🚀</span>{' '}
                   <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-                    宇宙のおしごとを探そう！
+                    宇宙のしごとを探そう！
                   </span>
                 </>
               ) : (
@@ -196,7 +196,7 @@ export default function Home() {
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground/80 sm:text-xl">
               {isKidsMode ? (
-                <>宇宙のおしごとで必要なできることを順番に整理して、今の自分のことと次の一歩をはっきりさせます✨</>
+                <>宇宙のしごとで必要なできることを順番に整理して、今の自分のことと次の一歩をはっきりさせます✨</>
               ) : (
                 <>宇宙産業で求められるスキルセットを体系的に整理し、あなたの現在地と次の一歩を明確化します。</>
               )}
@@ -205,7 +205,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" className="h-12 px-8 text-base font-medium shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30" asChild>
               <Link href="/quick-assessment">
-                {isKidsMode ? '✨ おしごと診断をスタート！' : 'クイック診断をスタート'}
+                {isKidsMode ? '✨ しごと診断をスタート！' : 'クイック診断をスタート'}
               </Link>
             </Button>
             {!isKidsMode && (

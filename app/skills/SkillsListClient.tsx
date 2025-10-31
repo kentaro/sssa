@@ -90,7 +90,7 @@ export default function SkillsListClient({ adultCategories, kidsCategories }: Sk
         title={isKidsMode ? 'できること一覧' : 'スキル一覧'}
         description={
           isKidsMode
-            ? `宇宙のおしごとの勉強リストで決められた${totalSkills}個のできることを種類別に整理しています。`
+            ? `宇宙のしごとの勉強リストで決められた${totalSkills}個のできることを種類別に整理しています。`
             : `宇宙スキル標準に定義された${totalSkills}スキルをカテゴリ別に整理しています。`
         }
       />
