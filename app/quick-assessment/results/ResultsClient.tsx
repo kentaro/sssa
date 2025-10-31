@@ -331,6 +331,24 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
         })}
       </div>
 
+      {isKidsMode && (
+        <Card className="border-primary/40 bg-primary/5">
+          <CardHeader className="text-center">
+            <CardTitle className="text-lg font-semibold">もっと宇宙のおしごとを知りたい？</CardTitle>
+            <CardDescription>
+              他にもたくさんの宇宙のおしごとがあるよ！どんなおしごとがあるか見てみよう。
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button asChild size="lg">
+              <Link href="/roles">
+                お仕事の種類一覧を見る
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="border-border/70 bg-muted/40">
         <CardContent className="flex justify-center py-6">
           <Button variant="default" onClick={handleShare} className="gap-2">
@@ -355,7 +373,13 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
             トップページへ
           </Link>
         </Button>
-        {!isKidsMode && (
+        {isKidsMode ? (
+          <Button asChild>
+            <Link href="/roles">
+              他のおしごとも見てみよう
+            </Link>
+          </Button>
+        ) : (
           <Button asChild>
             <Link href="/categories">
               詳細診断に進む
