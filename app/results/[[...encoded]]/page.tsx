@@ -1,4 +1,5 @@
 import { loadSpaceSkillStandard } from '@/lib/data-loader';
+import { loadKidsSpaceContent } from '@/lib/kids-data-loader';
 import ResultsClient from './ResultsClient';
 
 interface ResultsPageProps {
@@ -15,6 +16,7 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
   const encodedParam = resolvedParams.encoded?.[0];
 
   const data = loadSpaceSkillStandard();
+  const kidsContent = loadKidsSpaceContent();
 
-  return <ResultsClient key={encodedParam ?? 'default'} data={data} />;
+  return <ResultsClient key={encodedParam ?? 'default'} data={data} kidsContent={kidsContent} />;
 }

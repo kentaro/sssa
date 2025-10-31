@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 import QuickAssessmentProgress from '@/components/QuickAssessmentProgress';
 import QuickAssessmentQuestionComponent from '@/components/QuickAssessmentQuestion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageContainer } from '@/components/PageContainer';
+import { useKidsMode } from '@/lib/kids-mode-context';
 import { quickAssessmentQuestions } from '@/data/quick-assessment-questions';
 import {
   clearQuickAssessmentProgress,
@@ -19,6 +20,7 @@ import type { QuickAssessmentAnswer } from '@/lib/types';
 export default function QuickAssessmentPage() {
   const router = useRouter();
   const isCompletedRef = useRef(false);
+  const { isKidsMode } = useKidsMode();
 
   const resumeState = useMemo(() => {
     if (typeof window === 'undefined') {
@@ -28,7 +30,9 @@ export default function QuickAssessmentPage() {
     const progress = loadQuickAssessmentProgress();
     if (progress && progress.answers.length > 0) {
       const shouldResume = window.confirm(
-        '前回の診断が途中です。続きから再開しますか？\n\nOK → 続きから再開\nキャンセル → 最初から'
+        isKidsMode
+          ? '前回の診断が途中です。続きから始めますか？\n\nOK → 続きから始める\nキャンセル → 最初から'
+          : '前回の診断が途中です。続きから再開しますか？\n\nOK → 続きから再開\nキャンセル → 最初から'
       );
 
       if (shouldResume) {
@@ -39,7 +43,7 @@ export default function QuickAssessmentPage() {
     }
 
     return { answers: [] as QuickAssessmentAnswer[], index: 0 };
-  }, []);
+  }, [isKidsMode]);
 
   const [answers, setAnswers] = useState<QuickAssessmentAnswer[]>(resumeState.answers);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(resumeState.index);
@@ -61,19 +65,19 @@ export default function QuickAssessmentPage() {
 
   const handleAnswer = useCallback(
     (choice: 'left' | 'right' | 'neutral') => {
-    const currentQuestion = quickAssessmentQuestions[currentQuestionIndex];
-    if (!currentQuestion) return;
+      const currentQuestion = quickAssessmentQuestions[currentQuestionIndex];
+      if (!currentQuestion) return;
 
-    const newAnswer: QuickAssessmentAnswer = {
-      questionId: currentQuestion.id,
-      choice,
-    };
+      const newAnswer: QuickAssessmentAnswer = {
+        questionId: currentQuestion.id,
+        choice,
+      };
 
       setAnswers((prev) => [...prev, newAnswer]);
 
-    if (currentQuestionIndex < quickAssessmentQuestions.length - 1) {
-      setCurrentQuestionIndex((index) => index + 1);
-    }
+      if (currentQuestionIndex < quickAssessmentQuestions.length - 1) {
+        setCurrentQuestionIndex((index) => index + 1);
+      }
     },
     [currentQuestionIndex]
   );
@@ -98,14 +102,18 @@ export default function QuickAssessmentPage() {
   const totalQuestions = quickAssessmentQuestions.length;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <PageContainer maxWidth="narrow">
       <div className="space-y-3 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Quick Assessment</p>
+        <div className="inline-block rounded-full bg-secondary px-3 py-1 text-xs uppercase tracking-wider text-secondary-foreground">
+          Quick Assessment
+        </div>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-          クイック診断
+          {isKidsMode ? 'かんたん宇宙おしごと診断' : 'クイック診断'}
         </h1>
         <p className="text-sm text-muted-foreground">
-          24問の質問に答えて、向いているカテゴリと職種のヒントを得ましょう。
+          {isKidsMode
+            ? '24問の質問に答えて、どんな宇宙のおしごとが自分に合っているか診断しよう！'
+            : '24問の質問に答えて、向いているカテゴリと職種のヒントを得ましょう。'}
         </p>
       </div>
 
@@ -113,10 +121,11 @@ export default function QuickAssessmentPage() {
         current={currentQuestionIndex + 1}
         total={totalQuestions}
         section={currentSection}
+        kidsSection={currentQuestion?.kidsSection}
       />
 
       {currentQuestion && (
-        <QuickAssessmentQuestionComponent question={currentQuestion} onAnswer={handleAnswer} />
+        <QuickAssessmentQuestionComponent question={currentQuestion} onAnswer={handleAnswer} isKidsMode={isKidsMode} />
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -131,7 +140,7 @@ export default function QuickAssessmentPage() {
           }}
           disabled={currentQuestionIndex === 0}
         >
-          前の質問に戻る
+          {isKidsMode ? '前の質問に戻る' : '前の質問に戻る'}
         </Button>
 
         <Button
@@ -143,7 +152,7 @@ export default function QuickAssessmentPage() {
             router.push('/');
           }}
         >
-          診断を終了
+          {isKidsMode ? '診断を終了' : '診断を終了'}
         </Button>
       </div>
 
@@ -152,10 +161,9 @@ export default function QuickAssessmentPage() {
           href="/quick-assessment/results"
           className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
         >
-          過去の結果を確認する
+          {isKidsMode ? '前の結果を見る' : '過去の結果を確認する'}
         </Link>
       </div>
-    </div>
+    </PageContainer>
   );
 }
-

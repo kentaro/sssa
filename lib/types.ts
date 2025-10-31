@@ -163,8 +163,11 @@ export interface AssessmentResult {
 // クイック診断の選択肢
 export interface QuickAssessmentOption {
   text: string;
+  description?: string;
   emoji: string;
   weights: { [roleCategory: string]: number };
+  kidsText?: string;
+  kidsDescription?: string;
 }
 
 // クイック診断の質問
@@ -174,6 +177,7 @@ export interface QuickAssessmentQuestion {
   sectionNumber: number;
   leftOption: QuickAssessmentOption;
   rightOption: QuickAssessmentOption;
+  kidsSection?: string;
 }
 
 // クイック診断の回答
@@ -191,4 +195,41 @@ export interface QuickAssessmentResult {
   }>;
   answers: QuickAssessmentAnswer[];
   timestamp: string;
+}
+
+// ----------------------------
+// キッズモード用データ型
+// ----------------------------
+
+export interface KidsMetadata {
+  title: string;
+  source: string;
+  description: string;
+  last_updated: string;
+}
+
+export interface KidsSkill {
+  number: number;
+  name: string;
+  description: string;
+}
+
+export interface KidsCategory {
+  id: string;
+  name: string;
+  description: string;
+  skills: KidsSkill[];
+}
+
+export interface KidsRole {
+  number: number;
+  category_id: string;
+  name: string;
+  description: string;
+}
+
+export interface KidsSpaceContent {
+  metadata: KidsMetadata;
+  categories: KidsCategory[];
+  roles: KidsRole[];
 }

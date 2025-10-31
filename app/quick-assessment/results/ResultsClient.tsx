@@ -13,13 +13,16 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { PageContainer } from '@/components/PageContainer';
 import { quickAssessmentQuestions } from '@/data/quick-assessment-questions';
+import { useKidsMode } from '@/lib/kids-mode-context';
 import {
   calculateRoleScores,
   decodeQuickResult,
   encodeQuickResult,
 } from '@/lib/quick-assessment-scoring';
 import type {
+  KidsSpaceContent,
   QuickAssessmentAnswer,
   QuickAssessmentResult,
   Role,
@@ -27,6 +30,7 @@ import type {
 
 interface ResultsClientProps {
   roles: Role[];
+  kidsContent: KidsSpaceContent;
 }
 
 const ROLE_TO_CATEGORY: Record<string, string> = {
@@ -116,69 +120,99 @@ function useQuickAssessmentResult(roles: Role[]) {
   return { result, shareUrl, isLoading };
 }
 
-function ResultsContent({ roles }: ResultsClientProps) {
+function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
   const { result, shareUrl, isLoading } = useQuickAssessmentResult(roles);
+  const { isKidsMode } = useKidsMode();
+  const canShare = typeof navigator !== 'undefined' && 'share' in navigator;
 
-  const [canShare, setCanShare] = useState(false);
+  const kidsRoleMap = useMemo(() => {
+    const map = new Map<number, { name: string; description: string; categoryId: string }>();
+    kidsContent.roles.forEach((role) => {
+      map.set(role.number, { name: role.name, description: role.description, categoryId: role.category_id });
+    });
+    return map;
+  }, [kidsContent.roles]);
 
-  useEffect(() => {
-    setCanShare(typeof navigator !== 'undefined' && 'share' in navigator);
-  }, []);
+  const kidsCategoryMap = useMemo(() => {
+    const map = new Map<string, string>();
+    kidsContent.categories.forEach((category) => {
+      map.set(category.id, category.name);
+    });
+    return map;
+  }, [kidsContent.categories]);
 
   const handleShare = async () => {
     if (!shareUrl || !result) {
-      toast.error('共有リンクを生成できませんでした');
+      toast.error(isKidsMode ? 'リンクを作れませんでした' : '共有リンクを生成できませんでした');
       return;
     }
 
     const medals = ['🥇', '🥈', '🥉'];
     const topThree = result.topRoles.slice(0, 3);
+    const formatRoleName = (role: Role) => {
+      if (!isKidsMode) {
+        return role.name;
+      }
+      return kidsRoleMap.get(role.number)?.name ?? role.name;
+    };
     const roleList = topThree
-      .map((entry, index) => `${medals[index]} ${index + 1}位「${entry.role.name}」`)
+      .map((entry, index) => `${medals[index]} ${index + 1}位「${formatRoleName(entry.role)}」`)
       .join('\n');
 
     const message = roleList
-      ? `🚀 宇宙業界適性診断の結果が出ました！\n\n【私に向いている職種TOP3】\n${roleList}\n\nあなたも診断してみませんか？`
+      ? isKidsMode
+        ? `🚀 宇宙のおしごと診断の結果が出たよ！\n\n【自分に合っているおしごとの種類TOP3】\n${roleList}\n\nあなたも診断してみない？`
+        : `🚀 宇宙業界適性診断の結果が出ました！\n\n【私に向いている職種TOP3】\n${roleList}\n\nあなたも診断してみませんか？`
+      : isKidsMode
+      ? '🚀 宇宙のおしごと診断が終わったよ！'
       : '🚀 宇宙業界適性診断を完了しました！';
 
     if (canShare && navigator.share) {
       try {
-        await navigator.share({ title: '宇宙スキル標準アセスメント', text: message, url: shareUrl });
+        await navigator.share({ title: isKidsMode ? '宇宙のおしごと診断' : '宇宙スキル標準アセスメント', text: message, url: shareUrl });
         return;
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
-          toast.error('共有に失敗しました');
+          toast.error(isKidsMode ? 'みんなに見せることができませんでした' : '共有に失敗しました');
         }
       }
     }
 
     try {
       await navigator.clipboard.writeText(`${message}\n\n${shareUrl}`);
-      toast.success('結果のURLをコピーしました');
+      toast.success(isKidsMode ? '結果のリンクをコピーしたよ！' : '結果のURLをコピーしました');
     } catch {
-      toast.error('コピーに失敗しました');
+      toast.error(isKidsMode ? 'コピーできませんでした' : 'コピーに失敗しました');
     }
   };
 
   const categorizedRoles = useMemo(() => {
     if (!result) return [];
     return result.topRoles.map((entry, index) => {
-      const category = ROLE_TO_CATEGORY[entry.role.category.replace(/\n/g, '').trim()] ?? 'カテゴリ不明';
+      const normalizedCategory = entry.role.category.replace(/\n/g, '').trim();
+      const category = ROLE_TO_CATEGORY[normalizedCategory] ?? 'カテゴリ不明';
+      const categorySlug = CATEGORY_SLUG[category];
+      const kidsRole = kidsRoleMap.get(entry.role.number);
+      const kidsCategoryName = categorySlug ? kidsCategoryMap.get(categorySlug) : undefined;
+
       return {
         rank: index + 1,
         role: entry.role,
+        kidsRole,
         percentage: entry.percentage,
         category,
+        categorySlug,
+        kidsCategoryName,
       };
     });
-  }, [result]);
+  }, [kidsCategoryMap, kidsRoleMap, result]);
 
   if (isLoading) {
     return (
       <Card className="mx-auto flex min-h-[320px] max-w-3xl items-center justify-center">
         <CardContent className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          診断結果を計算中…
+          {isKidsMode ? 'おしごと診断の結果を計算中…' : '診断結果を計算中…'}
         </CardContent>
       </Card>
     );
@@ -188,14 +222,18 @@ function ResultsContent({ roles }: ResultsClientProps) {
     return (
       <Card className="mx-auto max-w-3xl border border-border/70 bg-muted/40 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">診断結果が見つかりません</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            {isKidsMode ? 'おしごと診断の結果が見つかりません' : '診断結果が見つかりません'}
+          </CardTitle>
           <CardDescription>
-            診断を完了していないか、保存されている回答が失われています。再度クイック診断を実施してください。
+            {isKidsMode
+              ? '診断を終えていないか、保存されている答えがなくなっています。もう一度かんたん宇宙おしごと診断をやってみてね。'
+              : '診断を完了していないか、保存されている回答が失われています。再度クイック診断を実施してください。'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link href="/quick-assessment">クイック診断に戻る</Link>
+            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙おしごと診断に戻る' : 'クイック診断に戻る'}</Link>
           </Button>
           <Button variant="outline" asChild>
             <Link href="/">トップページへ</Link>
@@ -206,27 +244,35 @@ function ResultsContent({ roles }: ResultsClientProps) {
   }
 
   return (
-    <div className="space-y-10">
+    <PageContainer>
       <header className="space-y-3 text-center">
-        <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.3em]">
+        <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-wider">
           Quick Assessment
         </Badge>
         <div className="space-y-2">
           <h1 className="flex items-center justify-center gap-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            <Trophy className="h-8 w-8 text-primary" /> 診断結果
+            <Trophy className="h-8 w-8 text-primary" /> {isKidsMode ? 'おしごと診断の結果' : '診断結果'}
           </h1>
           <p className="text-sm text-muted-foreground">
-            あなたに向いている職種の上位候補を表示しています。詳細診断で深掘りしましょう。
+            {isKidsMode
+              ? '自分に合っている宇宙のおしごとの種類の上位候補を紹介するよ！'
+              : 'あなたに向いている職種の上位候補を表示しています。詳細診断で深掘りしましょう。'}
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
           <Button onClick={handleShare} className="gap-2">
             {canShare ? <Share2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            {canShare ? '結果を共有' : '結果URLをコピー'}
+            {isKidsMode
+              ? canShare
+                ? '結果をみんなに見せる'
+                : '結果のリンクをコピー'
+              : canShare
+              ? '結果を共有'
+              : '結果URLをコピー'}
           </Button>
           <Button variant="outline" asChild>
             <Link href="/quick-assessment">
-              もう一度診断する
+              {isKidsMode ? 'もう一度診断する' : 'もう一度診断する'}
             </Link>
           </Button>
         </div>
@@ -234,8 +280,11 @@ function ResultsContent({ roles }: ResultsClientProps) {
 
       <div className="grid gap-6">
         {categorizedRoles.slice(0, 3).map((entry) => {
-          const slug = CATEGORY_SLUG[entry.category];
+          const slug = entry.categorySlug;
           const percentage = entry.percentage > 0 ? `${entry.percentage}%` : null;
+          const displayName = isKidsMode ? (entry.kidsRole?.name ?? entry.role.name) : entry.role.name;
+          const displayCategory = isKidsMode ? (entry.kidsCategoryName ?? entry.category) : entry.category;
+          const displayDescription = isKidsMode ? entry.kidsRole?.description : entry.role.description;
 
           return (
             <Card key={entry.role.number} className="border border-border/60 shadow-md">
@@ -245,35 +294,37 @@ function ResultsContent({ roles }: ResultsClientProps) {
                     #{entry.rank}
                   </Badge>
                   <CardTitle className="text-xl font-semibold text-foreground">
-                    {entry.role.name}
+                    {displayName}
                   </CardTitle>
                   <CardDescription className="text-sm text-muted-foreground">
-                    カテゴリ: {entry.category}
+                    {isKidsMode ? '種類' : 'カテゴリ'}: {displayCategory}
                   </CardDescription>
                 </div>
                 {percentage && (
                   <div className="text-right">
                     <p className="text-3xl font-semibold text-primary">{percentage}</p>
-                    <p className="text-xs text-muted-foreground">適合度</p>
+                    <p className="text-xs text-muted-foreground">{isKidsMode ? '合っている度' : '適合度'}</p>
                   </div>
                 )}
               </CardHeader>
               <CardContent className="space-y-4">
-                {entry.role.description && (
+                {displayDescription && (
                   <p className="text-sm leading-relaxed text-muted-foreground">
-                    {entry.role.description}
+                    {displayDescription}
                   </p>
                 )}
-                <div className="flex flex-wrap gap-3">
-                  {slug ? (
-                    <Button asChild>
-                      <Link href={`/assessment/${slug}`}>関連カテゴリを詳細診断</Link>
+                {!isKidsMode && (
+                  <div className="flex flex-wrap gap-3">
+                    {slug ? (
+                      <Button asChild>
+                        <Link href={`/assessment/${slug}`}>関連カテゴリを詳細診断</Link>
+                      </Button>
+                    ) : null}
+                    <Button asChild variant="outline">
+                      <Link href="/categories">カテゴリ一覧を見る</Link>
                     </Button>
-                  ) : null}
-                  <Button asChild variant="outline">
-                    <Link href="/categories">カテゴリ一覧を見る</Link>
-                  </Button>
-                </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           );
@@ -286,12 +337,12 @@ function ResultsContent({ roles }: ResultsClientProps) {
             {canShare ? (
               <>
                 <Share2 className="h-4 w-4" />
-                結果を共有
+                {isKidsMode ? '結果をみんなに見せる' : '結果を共有'}
               </>
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                URLをコピーして共有する
+                {isKidsMode ? 'リンクをコピーしてみんなに見せる' : 'URLをコピーして共有する'}
               </>
             )}
           </Button>
@@ -304,17 +355,19 @@ function ResultsContent({ roles }: ResultsClientProps) {
             トップページへ
           </Link>
         </Button>
-        <Button asChild>
-          <Link href="/categories">
-            詳細診断に進む
-          </Link>
-        </Button>
+        {!isKidsMode && (
+          <Button asChild>
+            <Link href="/categories">
+              詳細診断に進む
+            </Link>
+          </Button>
+        )}
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
-export default function ResultsClient({ roles }: ResultsClientProps) {
+export default function ResultsClient({ roles, kidsContent }: ResultsClientProps) {
   return (
     <Suspense
       fallback={
@@ -326,8 +379,7 @@ export default function ResultsClient({ roles }: ResultsClientProps) {
         </Card>
       }
     >
-      <ResultsContent roles={roles} />
+      <ResultsContent roles={roles} kidsContent={kidsContent} />
     </Suspense>
   );
 }
-

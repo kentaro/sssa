@@ -12,6 +12,31 @@ function normalizeCategory(category: string): string {
   return category.replace(/\n/g, '').trim();
 }
 
+type NormalizedWeight = Array<[string, number]>;
+
+function normalizeOptionWeights(option: QuickAssessmentQuestion['leftOption']): NormalizedWeight {
+  const entries = Object.entries(option.weights ?? {});
+  const total = entries.reduce((sum, [, weight]) => sum + weight, 0);
+  if (total <= 0) {
+    return [];
+  }
+  return entries.map(([category, weight]) => [normalizeCategory(category), weight / total]);
+}
+
+function buildCategoryExposureMap(questions: QuickAssessmentQuestion[]): Map<string, number> {
+  const exposure = new Map<string, number>();
+
+  questions.forEach((question) => {
+    [question.leftOption, question.rightOption].forEach((option) => {
+      normalizeOptionWeights(option).forEach(([category, weight]) => {
+        exposure.set(category, (exposure.get(category) ?? 0) + weight);
+      });
+    });
+  });
+
+  return exposure;
+}
+
 /**
  * クイック診断の回答からロールスコアを計算する
  */
@@ -20,6 +45,22 @@ export function calculateRoleScores(
   questions: QuickAssessmentQuestion[],
   roles: Role[]
 ): QuickAssessmentResult {
+  const categoryExposure = buildCategoryExposureMap(questions);
+  const maxExposure = Math.max(...(categoryExposure.size ? Array.from(categoryExposure.values()) : [1]), 1);
+
+  const applyOptionWeights = (
+    normalizedWeights: NormalizedWeight,
+    multiplier: number,
+    categoryScores: { [category: string]: number }
+  ) => {
+    normalizedWeights.forEach(([category, weight]) => {
+      const exposure = categoryExposure.get(category) ?? maxExposure;
+      const exposureAdjustment = maxExposure / exposure;
+
+      categoryScores[category] = (categoryScores[category] ?? 0) + weight * multiplier * exposureAdjustment;
+    });
+  };
+
   // 各ロールカテゴリのスコアを集計（正規化されたカテゴリ名で）
   const categoryScores: { [category: string]: number } = {};
 
@@ -27,8 +68,10 @@ export function calculateRoleScores(
     const question = questions.find(q => q.id === answer.questionId);
     if (!question) return;
 
-    // "どちらでもない"は加点しない
     if (answer.choice === 'neutral') {
+      // 「どちらでもない」は左右の選択肢を50%ずつ加点
+      applyOptionWeights(normalizeOptionWeights(question.leftOption), 0.5, categoryScores);
+      applyOptionWeights(normalizeOptionWeights(question.rightOption), 0.5, categoryScores);
       return;
     }
 
@@ -36,30 +79,27 @@ export function calculateRoleScores(
       ? question.leftOption
       : question.rightOption;
 
-    // 選択肢の重み付けをカテゴリスコアに加算（正規化してから）
-    Object.entries(option.weights).forEach(([category, weight]) => {
-      const normalizedCategory = normalizeCategory(category);
-      categoryScores[normalizedCategory] = (categoryScores[normalizedCategory] || 0) + weight;
-    });
+    applyOptionWeights(normalizeOptionWeights(option), 1, categoryScores);
   });
 
   // カテゴリスコアをロールスコアに変換
-  // 各カテゴリ内のロールに均等にスコアを分配（ロール数による不利を調整）
   const roleScores: { [roleNumber: number]: number } = {};
+  const rolesByCategory: Record<string, Role[]> = {};
 
   roles.forEach((role) => {
     const normalizedRoleCategory = normalizeCategory(role.category);
-    const categoryScore = categoryScores[normalizedRoleCategory] || 0;
-    // カテゴリ内のロール数を取得（正規化したカテゴリ名で）
-    const rolesInCategory = roles.filter(r => normalizeCategory(r.category) === normalizedRoleCategory).length;
+    if (!rolesByCategory[normalizedRoleCategory]) {
+      rolesByCategory[normalizedRoleCategory] = [];
+    }
+    rolesByCategory[normalizedRoleCategory].push(role);
+  });
 
-    // ロール数による不利を緩和する調整係数
-    // 1ロール: 係数1.0, 3ロール: 係数1.64, 9ロール: 係数2.69
-    // これによりロール数が多いカテゴリの不利が軽減される
-    const adjustmentFactor = Math.pow(rolesInCategory, 0.45);
+  roles.forEach((role) => {
+    const normalizedRoleCategory = normalizeCategory(role.category);
+    const categoryScore = categoryScores[normalizedRoleCategory] ?? 0;
+    const rolesInCategory = rolesByCategory[normalizedRoleCategory]?.length ?? 1;
 
-    // スコアを均等分配し、調整係数を適用
-    roleScores[role.number] = (categoryScore / rolesInCategory) * adjustmentFactor;
+    roleScores[role.number] = categoryScore / rolesInCategory;
   });
 
   // スコアでソートしてトップ3を取得

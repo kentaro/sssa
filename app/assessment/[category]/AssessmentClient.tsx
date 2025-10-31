@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { useKidsMode } from '@/lib/kids-mode-context';
 import { getCategoryAssessment, saveCategoryAssessment, saveSkillAssessment } from '@/lib/storage';
 import type {
   CategoryAssessment,
@@ -36,6 +37,13 @@ export default function AssessmentClient({
   evaluationAxes,
 }: AssessmentClientProps) {
   const router = useRouter();
+  const { isKidsMode } = useKidsMode();
+
+  useEffect(() => {
+    if (isKidsMode) {
+      router.push('/');
+    }
+  }, [isKidsMode, router]);
 
   const [categoryAssessment, setCategoryAssessment] = useState<CategoryAssessment>({});
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);

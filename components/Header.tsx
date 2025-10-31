@@ -20,6 +20,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { useKidsMode } from '@/lib/kids-mode-context';
 
 interface MenuItem {
   label: string;
@@ -28,7 +29,7 @@ interface MenuItem {
   submenu?: Array<{ label: string; href: string; description?: string }>;
 }
 
-const menuItems: MenuItem[] = [
+const adultMenuItems: MenuItem[] = [
   {
     label: 'コンテンツ',
     submenu: [
@@ -57,9 +58,71 @@ const menuItems: MenuItem[] = [
   },
 ];
 
+const kidsMenuItems: MenuItem[] = [
+  {
+    label: '宇宙のおしごとを見る',
+    submenu: [
+      { label: 'できること一覧', href: '/skills', description: '宇宙のおしごとに必要な力を一覧で確認' },
+      { label: 'お仕事の種類一覧', href: '/roles', description: 'どんなおしごとがあるか見てみよう' },
+    ],
+  },
+  {
+    label: '診断をする',
+    href: '/quick-assessment',
+    description: '自分に合ったおしごとを探そう',
+  },
+  {
+    label: '診断結果を見る',
+    href: '/quick-assessment/results',
+    description: '診断の結果をもう一度見る',
+  },
+  {
+    label: 'このアプリについて',
+    href: '/about',
+    description: 'アプリの紹介',
+  },
+];
+
+function ModeToggle({
+  isKidsMode,
+  setMode,
+  className,
+}: {
+  isKidsMode: boolean;
+  setMode: (mode: 'adult' | 'kids') => void;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-1 rounded-full border border-border/70 bg-muted/60 p-1',
+        className
+      )}
+    >
+      <Button
+        size="sm"
+        variant={isKidsMode ? 'ghost' : 'secondary'}
+        className="h-8 px-3 text-xs font-medium"
+        onClick={() => setMode('adult')}
+      >
+        通常モード
+      </Button>
+      <Button
+        size="sm"
+        variant={isKidsMode ? 'secondary' : 'ghost'}
+        className="h-8 px-3 text-xs font-medium"
+        onClick={() => setMode('kids')}
+      >
+        子供向け
+      </Button>
+    </div>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isKidsMode, setMode } = useKidsMode();
 
   const isActive = (href?: string) => {
     if (!href) return false;
@@ -78,6 +141,8 @@ export default function Header() {
     setMobileMenuOpen(false);
   };
 
+  const menuItemsToRender = isKidsMode ? kidsMenuItems : adultMenuItems;
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between gap-4">
@@ -85,13 +150,13 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2.5 text-sm font-bold tracking-tight sm:text-base">
           <span className="text-2xl">🚀</span>
           <span className="whitespace-nowrap">
-            宇宙スキル標準
+            {isKidsMode ? '宇宙のおしごと' : '宇宙スキル標準'}
           </span>
         </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex lg:items-center lg:gap-2">
-          {menuItems.map((item) => {
+          {menuItemsToRender.map((item) => {
             if (item.submenu) {
               return (
                 <DropdownMenu key={item.label}>
@@ -144,20 +209,41 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Mobile Menu */}
-        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-2">
+          {/* Kids Mode Toggle Button */}
+          <ModeToggle isKidsMode={isKidsMode} setMode={setMode} className="hidden lg:flex" />
+
+          {/* Mobile quick toggle */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="lg:hidden gap-2 px-3 text-xs font-medium"
+            onClick={() => setMode(isKidsMode ? 'adult' : 'kids')}
+          >
+            <span className="text-lg" aria-hidden>
+              {isKidsMode ? '🎈' : '👶'}
+            </span>
+            <span>{isKidsMode ? '子供向け' : '通常'}モード</span>
+          </Button>
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
                 <MenuIcon className="h-5 w-5" />
                 <span className="sr-only">メニュー</span>
               </Button>
-            </SheetTrigger>
+          </SheetTrigger>
             <SheetContent side="right" className="flex w-[320px] flex-col gap-6 border-l border-border/60">
               <SheetHeader>
-                <SheetTitle>ナビゲーション</SheetTitle>
+                <div className="flex items-center justify-between gap-3">
+                  <SheetTitle>ナビゲーション</SheetTitle>
+                  <ModeToggle isKidsMode={isKidsMode} setMode={setMode} />
+                </div>
               </SheetHeader>
               <nav className="flex flex-col gap-4">
-                {menuItems.map((item) => (
+        {menuItemsToRender.map((item) => (
                   <div key={item.label}>
                     {item.submenu ? (
                       <div className="space-y-2">
@@ -200,6 +286,7 @@ export default function Header() {
               </nav>
             </SheetContent>
           </Sheet>
+        </div>
       </div>
     </header>
   );

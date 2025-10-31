@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Info, NotebookPen } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -27,13 +27,8 @@ export default function SkillAssessmentForm({
   initialAssessment = {},
   onAssessmentChange,
 }: SkillAssessmentFormProps) {
-  const [assessment, setAssessment] = useState<SkillAssessment>(initialAssessment);
+  const [assessment, setAssessment] = useState<SkillAssessment>(() => ({ ...initialAssessment }));
   const [expandedAxes, setExpandedAxes] = useState<Set<string>>(new Set());
-
-  // initialAssessmentが変更されたら内部状態を更新
-  useEffect(() => {
-    setAssessment(initialAssessment);
-  }, [initialAssessment, skill.number]);
 
   const levelsByAxis = useMemo(() => {
     return skillLevels.reduce<Record<string, SkillLevel>>((acc, level) => {
@@ -178,4 +173,3 @@ export default function SkillAssessmentForm({
     </Card>
   );
 }
-

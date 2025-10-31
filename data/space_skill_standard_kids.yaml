@@ -1,0 +1,479 @@
+metadata:
+  title: 宇宙のおしごとチェック（キッズ版）
+  source: 内閣府「宇宙スキル標準（試作版）」をもとに子ども向けに翻訳
+  description: 宇宙で働くおしごとを子どもにもわかりやすい言葉に言い換えたデータセットです。
+  last_updated: '2024-05-01'
+
+categories:
+  - id: program-creation
+    name: 作戦を考えるチーム
+    description: 宇宙の計画を立てたり、新しいサービスを思いついたりする頭脳チームです。
+    skills:
+      - number: 1
+        name: 宇宙のニュースを集める
+        description: 世界や宇宙で起きていることを調べて、みんなにわかりやすくまとめる力です。
+      - number: 2
+        name: ワクワクする予定をつくる
+        description: たくさんの人と相談しながら、宇宙プロジェクトの進め方を決める力です。
+      - number: 3
+        name: 全体の作りかたを描く
+        description: ロケットやサービスのアイデアを広い目で見て、どんな仕組みにするか考える力です。
+  - id: project-management
+    name: 進め方をまとめるチーム
+    description: みんなの予定やお金、情報を整理して、計画をちゃんと進めるチームです。
+    skills:
+      - number: 4
+        name: みんなの作業をまとめる
+        description: たくさんの仕事をつなげて、目標に向かって進むように調整する力です。
+      - number: 5
+        name: やることの範囲を決める
+        description: 何をするか、しないかをはっきり決めて、迷わずに動けるようにする力です。
+      - number: 6
+        name: 時間を守って進める
+        description: 予定表を作って、みんなが時間通りに終われるように助ける力です。
+      - number: 7
+        name: お金の使い道を考える
+        description: 使えるお金をよく考え、無駄なく計画どおりに使えるようにする力です。
+      - number: 8
+        name: できばえを見守る
+        description: 作ったものの質をチェックして、安全で良いものに仕上げる力です。
+      - number: 9
+        name: 人と道具を集める
+        description: 必要な人や道具をそろえて、チームが力いっぱい働けるようにする力です。
+      - number: 10
+        name: 情報をつなげる
+        description: 大切な知らせをみんなに届くように工夫し、情報を共有する力です。
+      - number: 11
+        name: 心配ごとを見つける
+        description: 起こりそうなトラブルを早めに見つけ、対策を考える力です。
+      - number: 12
+        name: 必要なものをそろえる
+        description: どこから何を手に入れるかを決め、必要なものをちゃんと用意する力です。
+      - number: 13
+        name: 関わる人と仲良くする
+        description: 一緒に働く人たちの気持ちを知り、協力し合える関係を作る力です。
+  - id: foundation-technology
+    name: 基礎の技術チーム
+    description: ソフトウェアやデータなど、宇宙プロジェクトを支える土台を作るチームです。
+    skills:
+      - number: 14
+        name: 全体の仕組みをつなぐ
+        description: いろいろな部品やチームの仕事がうまくつながるように考える力です。
+      - number: 15
+        name: コンピューターで模型を作る
+        description: コンピューターの中に仮想のモデルを作って、動き方を試す力です。
+      - number: 16
+        name: ソフトの作り方を設計する
+        description: 宇宙で使うソフトを安全に作るためのルールや段取りを決める力です。
+      - number: 17
+        name: プログラムを書く
+        description: 機械が思いどおりに動くように、命令をコードにして伝える力です。
+      - number: 18
+        name: AIで学ばせる
+        description: たくさんのデータを使って、AIが賢くなるように育てる力です。
+      - number: 19
+        name: データからヒントを探す
+        description: 集めた情報を整理して、役立つ発見や答えを見つける力です。
+      - number: 20
+        name: 電波の約束を守る
+        description: ほかのチームと電波がけんかしないように、周波数を調整する力です。
+  - id: design-analysis
+    name: 設計と研究のチーム
+    description: ロケットや衛星が正しく動くように、形や仕組みを考えて確かめるチームです。
+    skills:
+      - number: 21
+        name: 丈夫な形を考える
+        description: 宇宙で壊れないように、材料や形を選んで強さを確かめる力です。
+      - number: 22
+        name: 動く仕組みを作る
+        description: ドアやアームなどがなめらかに動くように、仕掛けを考える力です。
+      - number: 23
+        name: 熱の流れを調整する
+        description: 暑すぎたり寒すぎたりしないように、温度のバランスをとる力です。
+      - number: 24
+        name: 空気の力を読む
+        description: 風や空気の流れがロケットにどうあたるかを想像して設計する力です。
+      - number: 25
+        name: 液体の流れを整える
+        description: 燃料などの液体がスムーズに流れるように、道筋を考える力です。
+      - number: 26
+        name: 電気で進む力を考える
+        description: 電気の力で動くエンジンを設計し、どれくらいの力が出るか調べる力です。
+      - number: 27
+        name: 固体燃料のエンジンを考える
+        description: 固体の燃料を使ったエンジンが安全に動くように設計する力です。
+      - number: 28
+        name: 液体燃料のエンジンを考える
+        description: 液体の燃料を使うエンジンの中身を計算し、強さをチェックする力です。
+      - number: 29
+        name: 配線や配管をまとめる
+        description: たくさんあるケーブルやチューブを、じゃまにならないように配置する力です。
+      - number: 30
+        name: 電子回路を作る
+        description: 電気の通り道を図にして、機械が動くように回路を組み立てる力です。
+      - number: 31
+        name: データの道を作る
+        description: コンピューター同士が正しく話せるように、ネットワークを設計する力です。
+      - number: 32
+        name: 飛び方を指示する
+        description: ロケットがどの方向へ動くかをコントロールする仕組みを作る力です。
+      - number: 33
+        name: 向きを整える
+        description: 宇宙機の向きがずれないように、姿勢を保つ方法を考える力です。
+      - number: 34
+        name: 太陽の光で電気を作る
+        description: 太陽電池の力を計算して、十分な電気が作れるように考える力です。
+      - number: 35
+        name: 電磁の影響を防ぐ
+        description: 電気のノイズがほかの機械にじゃましないように守る力です。
+      - number: 36
+        name: コンピューターの中身を作る
+        description: 宇宙機のコンピューターがきちんと働くように設計する力です。
+      - number: 37
+        name: 部品のつなぎ目を合わせる
+        description: いろいろな部品がぴったりはまるように、形や位置を調整する力です。
+      - number: 38
+        name: 電気のつなぎ方を合わせる
+        description: 異なる機械どうしでも電気が正しくつながるように整える力です。
+      - number: 39
+        name: ぴったりの材料を選ぶ
+        description: 宇宙で使うのに最適な材料を探し、試して決める力です。
+      - number: 40
+        name: 長く使えるようにする
+        description: 何年も安心して使えるように、こわれにくい仕組みを考える力です。
+      - number: 41
+        name: 安全な使い方を考える
+        description: 人や物を守るために、危ないことが起きないように設計する力です。
+      - number: 42
+        name: 直しやすさを考える
+        description: こわれたときにすぐ直せるように、仕組みを工夫する力です。
+      - number: 43
+        name: お手入れのしやすさを考える
+        description: 使ったあとにお手入れや点検がしやすいように設計する力です。
+      - number: 44
+        name: 軌道を描く
+        description: 衛星や探査機がどんな道を進むか、宇宙の地図を描く力です。
+      - number: 45
+        name: 宇宙で道案内をする
+        description: 宇宙機が迷わないように、位置や進む方向を決める力です。
+      - number: 46
+        name: 宇宙の環境を組み込む
+        description: 宇宙の温度や光、放射線などの条件を設計に入れて考える力です。
+  - id: testing
+    name: テストをするチーム
+    description: 作ったものが安全に動くかどうか、何度も実験して確かめるチームです。
+    skills:
+      - number: 47
+        name: ちゃんと動くか試す
+        description: 作った機械が思った通りに動くか、細かくチェックする力です。
+      - number: 48
+        name: 燃える力を試す
+        description: エンジンが燃えるときのようすを観察し、安全かどうか確かめる力です。
+      - number: 49
+        name: 圧力に耐えられるか試す
+        description: 強い圧力をかけても壊れないかどうか、しっかり調べる力です。
+      - number: 50
+        name: 衝撃にがまんできるか試す
+        description: 打ち上げなどの衝撃に負けないか、思い切り揺らして確かめる力です。
+      - number: 51
+        name: 揺れや音を調べる
+        description: 大きな音や振動があっても平気かどうか、テストする力です。
+      - number: 52
+        name: 温度のテストをする
+        description: とても暑い場所や寒い場所でも動けるか、温度を変えて試す力です。
+      - number: 53
+        name: 電磁の影響をチェックする
+        description: 電気のノイズが他の機械を困らせないかを確かめる力です。
+      - number: 54
+        name: 放射線に耐えられるか試す
+        description: 宇宙の強い光や放射線でもこわれないか確かめる力です。
+  - id: manufacturing
+    name: 作って組み立てるチーム
+    description: 部品を作ったり組み立てたりして、ロケットや機械を完成させるチームです。
+    skills:
+      - number: 55
+        name: 大きな組み合わせを仕上げる
+        description: たくさんの部品を順番に組み合わせて、大きな機械を完成させる力です。
+      - number: 56
+        name: 部品を組み立てる
+        description: 指示どおりに部品を組み立てて、正しく動く形にする力です。
+      - number: 57
+        name: はんだでつなぐ
+        description: 小さな電子部品をはんだでくっつけ、しっかり電気が通るようにする力です。
+      - number: 58
+        name: たくさんの線を束ねる
+        description: ケーブルをきれいにまとめて、必要な場所につなぐ力です。
+      - number: 59
+        name: 3Dプリンターで部品を作る
+        description: 金属の3Dプリンターを使って、ぴったりサイズの部品を作る力です。
+      - number: 60
+        name: 接着剤で貼りつける
+        description: 適した接着剤を選んで、部品をがっちりくっつける力です。
+      - number: 61
+        name: 塗って守る
+        description: 部品を傷やさびから守るために、きれいに塗装する力です。
+      - number: 62
+        name: ネジ穴を強くする
+        description: ネジがしっかり止まるように、金具を埋め込んで補強する力です。
+      - number: 63
+        name: リベットで止める
+        description: リベットを使って部品を固定し、丈夫にする力です。
+      - number: 64
+        name: ネジをしっかり締める
+        description: 適切な力でネジを締めて、ゆるまないようにする力です。
+      - number: 65
+        name: ネジがゆるまないようにする
+        description: 接着剤や特別なネジを使って、長く固定できるようにする力です。
+      - number: 66
+        name: 金具をかしめる
+        description: 金具をぎゅっとつぶして、強いつながりを作る力です。
+      - number: 67
+        name: 静電気から部品を守る
+        description: 静電気で壊れないように、特別な手袋や道具で部品を扱う力です。
+  - id: launch-operations
+    name: 打ち上げと運用のチーム
+    description: ロケットの打ち上げや衛星の見守りなど、現場で支えるチームです。
+    skills:
+      - number: 68
+        name: 打ち上げ場所を指揮する
+        description: 打ち上げの現場でみんなの動きをまとめ、予定どおりに進める力です。
+      - number: 69
+        name: 打ち上げ場所の安全を守る
+        description: 危ないことが起きないように、ルールや安全を見張る力です。
+      - number: 70
+        name: とても冷たい燃料を扱う
+        description: マイナスの世界の燃料を安全に保管し、機械に入れる力です。
+      - number: 71
+        name: 飛んでいる間の安全を守る
+        description: ロケットが飛んでいるときに、周りに危険がないか見守る力です。
+      - number: 72
+        name: 宇宙からのメッセージを見守る
+        description: 衛星と通信し、正しく動いているか確かめる力です。
+      - number: 73
+        name: 大きな機械を動かす
+        description: クレーンなどの重機を操作して、重たいものを運ぶ力です。
+      - number: 74
+        name: 電気設備を見守る
+        description: 発電機やケーブルなどの電気設備を点検し、トラブルを防ぐ力です。
+      - number: 75
+        name: 機械設備を整える
+        description: ポンプや配管などの機械を点検し、いつでも使えるようにする力です。
+      - number: 76
+        name: 空のようすを読みとる
+        description: 風や雲の動きを調べて、打ち上げにぴったりなタイミングを判断する力です。
+  - id: corporate
+    name: 会社を支えるチーム
+    description: お金や人、ルールを管理して、会社全体を支えるチームです。
+    skills:
+      - number: 77
+        name: ルールをチェックする
+        description: 国の決まりを調べて、会社が正しく動いているか確認する力です。
+      - number: 78
+        name: 輸出のルールを守る
+        description: 国から出すものに特別な許可が必要かどうかを見分け、手続きする力です。
+      - number: 79
+        name: 外国語で伝える
+        description: 海外の人とコミュニケーションを取り、正しく気持ちを伝える力です。
+      - number: 80
+        name: 技術をわかりやすく話す
+        description: むずかしい技術をお客さんにやさしく説明し、相談に乗る力です。
+      - number: 81
+        name: 契約の手続きをする
+        description: 約束の内容を確認して、書類を整え、みんなが安心できるようにする力です。
+      - number: 82
+        name: アイデアを守る
+        description: 発明やロゴなどの大切なアイデアを守るために、権利の手続きをする力です。
+      - number: 83
+        name: 共通のルールを整える
+        description: みんなが同じやり方で仕事できるように、決まりをまとめる力です。
+      - number: 84
+        name: 会社の決まりを整える
+        description: 正しいルールで会社が動いているか、チェックして直す力です。
+      - number: 85
+        name: お金の計画を支える
+        description: 使うお金と使えるお金を比べて、バランスよく管理する力です。
+      - number: 86
+        name: 税金の手続きをする
+        description: 税金の書類を作り、期限までに提出する力です。
+      - number: 87
+        name: お金の記録をつける
+        description: 会社のお金がどこから来てどこへ行ったか、正しく記録する力です。
+      - number: 88
+        name: 外国とのお金のやりとり
+        description: ちがう国のお金のルールを理解して、安全に取引する力です。
+      - number: 89
+        name: 資金を集める
+        description: プロジェクトに必要なお金を集める方法を考えて実行する力です。
+      - number: 90
+        name: 社内システムを支える
+        description: 会社で使うコンピューターシステムを作ったり、直したりする力です。
+      - number: 91
+        name: データを守る
+        description: 大事な情報がもれないように、守る仕組みを整える力です。
+      - number: 92
+        name: 仲間を見つける
+        description: 会社にぴったりの人を見つけて、面接や手続きをサポートする力です。
+      - number: 93
+        name: みんなの活躍を支える
+        description: それぞれの強みを見つけて、ぴったりの仕事に配置する力です。
+      - number: 94
+        name: 学びをサポートする
+        description: 働く人たちがもっと上手になるように、勉強の計画を考える力です。
+
+roles:
+  - number: 1
+    category_id: program-creation
+    name: 作戦デザイナー
+    description: 宇宙で何をするか目標を決めて、衛星やロケットでどんなサービスを作るか考えるリーダーです。
+  - number: 2
+    category_id: program-creation
+    name: プロジェクトまとめ役
+    description: チームのスケジュールや作業を見守って、みんなが力を合わせてゴールに向かえるように指示を出す人です。
+  - number: 3
+    category_id: program-creation
+    name: システム設計リーダー
+    description: ロケットや衛星のすべての部品がうまく働くように、全体の設計をまとめて各チームに伝える人です。
+  - number: 4
+    category_id: design-analysis
+    name: 構造のプランナー
+    description: ロケットや衛星の骨組みが宇宙の厳しい環境に耐えられるか計算して、強さの条件を決める人です。
+  - number: 5
+    category_id: design-analysis
+    name: 構造のデザイナー
+    description: プランナーの計算をもとに、実際にロケットの骨組みの詳しい設計図を描く人です。
+  - number: 6
+    category_id: design-analysis
+    name: 推進システムプランナー
+    description: ロケットを宇宙まで運ぶエンジンが、どれくらいの力で燃料を燃やすか計算して決める人です。
+  - number: 7
+    category_id: design-analysis
+    name: 推進エンジンデザイナー
+    description: ロケットエンジンの細かい部品の設計図を描いて、実際に火をつけてテストする人です。
+  - number: 8
+    category_id: design-analysis
+    name: 電気システムプランナー
+    description: 人工衛星やロケットの中で電気がどこにどれだけ必要か計算して、電気の配り方を決める人です。
+  - number: 9
+    category_id: design-analysis
+    name: 電源デザイナー
+    description: 宇宙で太陽の光を電気に変えるパネルやバッテリーを設計して、実際に動くかテストする人です。
+  - number: 10
+    category_id: design-analysis
+    name: 電気配線エンジニア
+    description: 衛星の中のコンピューターやカメラなど、いろいろな機械をつなぐ電気の配線を設計する人です。
+  - number: 11
+    category_id: design-analysis
+    name: 通信システムプランナー
+    description: 宇宙にいる衛星と地上の基地が電波で話せるように、アンテナや通信の計画を立てる人です。
+  - number: 12
+    category_id: design-analysis
+    name: 無線通信エンジニア
+    description: 衛星に取り付けるアンテナや無線機の設計をして、ちゃんと電波が届くか実験する人です。
+  - number: 13
+    category_id: design-analysis
+    name: 熱制御プランナー
+    description: 宇宙の暑さ（太陽の光）や寒さから機械を守るため、断熱材やヒーターの計画を立てる人です。
+  - number: 14
+    category_id: design-analysis
+    name: 熱設計エンジニア
+    description: 衛星が熱くなりすぎたり冷えすぎたりしないように、温度を調整する装置を設計してテストする人です。
+  - number: 15
+    category_id: design-analysis
+    name: 制御システムプランナー
+    description: 衛星やロケットが正しい方向を向いたり、決めた軌道を飛んだりするように、制御の計画を立てる人です。
+  - number: 16
+    category_id: design-analysis
+    name: 姿勢制御エンジニア
+    description: 衛星がくるくる回らないように姿勢を保つための、ジャイロや小さなロケット噴射装置を設計する人です。
+  - number: 17
+    category_id: design-analysis
+    name: 飛行解析エンジニア
+    description: ロケットや衛星が空や宇宙でどんな軌道を飛ぶかコンピューターで計算して、安全を確かめる人です。
+  - number: 18
+    category_id: foundation-technology
+    name: データシステム設計者
+    description: 人工衛星が撮った写真やデータを地上に送って、コンピューターで整理する仕組みを作る人です。
+  - number: 19
+    category_id: foundation-technology
+    name: 組み込みハードエンジニア
+    description: ロケットや衛星の中で使う、小さなコンピューターの電子回路の基板を設計する人です。
+  - number: 20
+    category_id: foundation-technology
+    name: ソフト設計エンジニア
+    description: 宇宙船やロケットがちゃんと動くように、コンピューターのプログラムの設計図を作る人です。
+  - number: 21
+    category_id: foundation-technology
+    name: 組み込みソフトエンジニア
+    description: ロケットや人工衛星の中の小さなコンピューターに、命令を伝えるプログラムを作る人です。
+  - number: 22
+    category_id: testing
+    name: 試験設備エンジニア
+    description: ロケットや衛星をテストするための振動台や真空室などの大きな実験装置を管理する人です。
+  - number: 23
+    category_id: testing
+    name: 品質チェックエンジニア
+    description: ロケットの部品や衛星が正しく作られているか、傷や不具合がないか細かくチェックする人です。
+  - number: 24
+    category_id: launch-operations
+    name: 飛行安全エンジニア
+    description: ロケットが飛んでいる間、飛行機や町に危険がないか見張って、問題があれば緊急停止ボタンを押す人です。
+  - number: 25
+    category_id: launch-operations
+    name: 射場安全リーダー
+    description: 打ち上げ場所で爆発や事故が起きないように安全ルールを作って、みんなが守っているか見守る人です。
+  - number: 26
+    category_id: launch-operations
+    name: 管制システムエンジニア
+    description: 打ち上げの時にロケットと地上の管制室が無線で話せるように、通信システムを作る人です。
+  - number: 27
+    category_id: launch-operations
+    name: 施設設備エンジニア
+    description: ロケット発射台や燃料タンクなど、打ち上げに必要な大きな設備を作ったり、安全に動くかチェックする人です。
+  - number: 28
+    category_id: manufacturing
+    name: 生産ラインエンジニア
+    description: ロケットの部品を組み立てる工場の流れ作業を設計して、もっと早く作れるように改善する人です。
+  - number: 29
+    category_id: manufacturing
+    name: 製造ラインリーダー
+    description: 工場の現場でみんなが安全に作業できるように見守って、困ったことがあれば助ける責任者です。
+  - number: 30
+    category_id: manufacturing
+    name: 製造技術エンジニア
+    description: ロケットの部品を作るための機械や道具を選んで、作り方の手順を考える人です。
+  - number: 31
+    category_id: corporate
+    name: ルール相談係
+    description: 会社が他の会社と契約を結ぶときに、法律に違反していないかチェックして書類を作る人です。
+  - number: 32
+    category_id: corporate
+    name: 人のサポート係
+    description: 新しく働く人を面接して採用したり、給料や休みの手続きをする人事の人です。
+  - number: 33
+    category_id: corporate
+    name: お金管理係
+    description: 会社がいくらお金を使って、いくら稼いだか記録して、お金の計画を立てる経理の人です。
+  - number: 34
+    category_id: corporate
+    name: 調達と在庫の係
+    description: ロケットを作るのに必要な部品を注文して買ったり、倉庫で部品の数を管理する人です。
+  - number: 35
+    category_id: corporate
+    name: システムサポーター
+    description: 会社の人が使うコンピューターやソフトウェアの設定をしたり、壊れたときに直す人です。
+  - number: 36
+    category_id: corporate
+    name: 技術営業さん
+    description: お客さんにロケットや衛星の技術を説明して、どんなサービスが必要か相談に乗る営業の人です。
+  - number: 37
+    category_id: corporate
+    name: 事業プランナー
+    description: 会社がこれから何を作るか、どこにお金をかけるか、新しいビジネスを考える人です。
+  - number: 38
+    category_id: corporate
+    name: 広報・マーケの係
+    description: 会社のロケットやサービスの良いところをニュースやSNSで紹介して、みんなに知ってもらう人です。
+  - number: 39
+    category_id: corporate
+    name: セキュリティ守り隊
+    description: 会社の大事な設計図やデータがハッカーに盗まれないように、コンピューターを守る人です。

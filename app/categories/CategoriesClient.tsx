@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo } from 'react';
 import {
   Activity,
   ArchiveIcon,
@@ -16,7 +17,10 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageContainer } from '@/components/PageContainer';
+import { PageHeader } from '@/components/PageHeader';
 import { cn } from '@/lib/utils';
+import { useKidsMode } from '@/lib/kids-mode-context';
 import { getCategoryAssessment } from '@/lib/storage';
 import type { EvaluationAxis, Skill } from '@/lib/types';
 
@@ -54,6 +58,15 @@ interface CategoriesClientProps {
 }
 
 export default function CategoriesClient({ categoriesData, evaluationAxes }: CategoriesClientProps) {
+  const router = useRouter();
+  const { isKidsMode } = useKidsMode();
+
+  useEffect(() => {
+    if (isKidsMode) {
+      router.push('/');
+    }
+  }, [isKidsMode, router]);
+
   const assessableCount = useMemo(
     () => categoriesData.filter(({ category }) => !NON_ASSESSABLE.has(category)).length,
     [categoriesData]
@@ -83,25 +96,17 @@ export default function CategoriesClient({ categoriesData, evaluationAxes }: Cat
   }, [categoriesData, evaluationAxes]);
 
   return (
-    <div className="space-y-10">
-      <div className="space-y-2">
-        <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.25em]">
-          Category Assessment
-        </Badge>
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">カテゴリから選択</h1>
-            <p className="text-sm text-muted-foreground">
-              評価したいカテゴリを選んで詳細診断へ進みます。{assessableCount}カテゴリで評価指標を収録しています。
-            </p>
-          </div>
+    <PageContainer>
+      <PageHeader
+        badge="Category Assessment"
+        title="カテゴリから選択"
+        description={`評価したいカテゴリを選んで詳細診断へ進みます。${assessableCount}カテゴリで評価指標を収録しています。`}
+        actions={
           <Button asChild variant="outline" size="sm">
-            <Link href="/">
-              トップに戻る
-            </Link>
+            <Link href="/">トップに戻る</Link>
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {categoriesData.map(({ category, categorySlug, skills }) => {
@@ -167,7 +172,7 @@ export default function CategoriesClient({ categoriesData, evaluationAxes }: Cat
           );
         })}
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

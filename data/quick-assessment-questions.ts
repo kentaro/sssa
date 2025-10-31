@@ -27,9 +27,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 1,
     section: '働き方の志向',
+    kidsSection: 'どんな働き方が好き？',
     sectionNumber: 1,
     leftOption: {
       text: 'チーム全体を統括・調整する',
+      description: 'チーム全体を俯瞰し、関係者を調整しながらプロジェクトを前に進める働き方を好みます。',
+      kidsText: 'みんなで協力して進める',
+      kidsDescription: 'みんなで協力して進める、リーダーみたいな役割。みんなが困らないように計画を立てたり、意見を聞いたりするよ。',
       emoji: '👥',
       weights: {
         '全体統括職': 3,
@@ -39,6 +43,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '専門分野を深く追求する',
+      description: '特定分野に集中し、専門性を磨き続けて高い技術力を発揮することにやりがいを感じます。',
+      kidsText: 'ひとつのことをじっくり勉強する',
+      kidsDescription: 'ひとつのことをじっくり勉強して、その道のプロになる。例えば、ロケットのエンジンだけを何年も研究するような感じだよ。',
       emoji: '🔬',
       weights: {
         '構造系エンジニア': 2,
@@ -54,9 +61,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 2,
     section: '働き方の志向',
+    kidsSection: 'どんな働き方が好き？',
     sectionNumber: 1,
     leftOption: {
       text: '多くの人と話して調整する',
+      description: '多様な関係者と対話し、双方の合意形成や調整をリードする役割に適性があります。',
+      kidsText: 'たくさんの人とお話しして進める',
+      kidsDescription: 'たくさんの人とお話しして進める。会議でみんなの意見を聞いて、みんなが納得できるように調整するよ。',
       emoji: '🗣️',
       weights: {
         '全体統括職': 3,
@@ -66,6 +77,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '黙々と集中して作業する',
+      description: '静かな環境で深く集中し、自分のペースで着実に成果を積み上げる働き方がフィットします。',
+      kidsText: '静かに集中してやる',
+      kidsDescription: '静かに集中してやる。一人でじっくり考えるのが好き。図書館で勉強するような感じだよ。',
       emoji: '🤫',
       weights: {
         'ソフトウェア系エンジニア': 2,
@@ -83,9 +97,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 3,
     section: '働き方の志向',
+    kidsSection: 'どんな働き方が好き？',
     sectionNumber: 1,
     leftOption: {
       text: '計画やスケジュールを管理',
+      kidsText: 'スケジュールを決めて進める',
+      kidsDescription: 'スケジュールを決めて進める。いつまでに何をやるか計画を立てて、みんなが予定通りに進められるようにするよ。',
+      description: '期限やリソースを整理し、計画に沿って進捗をコントロールする役割に強みがあります。',
       emoji: '📅',
       weights: {
         '全体統括職': 3,
@@ -95,6 +113,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '手を動かして実装・製作',
+      description: '実際に手を動かし、ものづくりや実装を通じて成果を形にすることにモチベーションを感じます。',
+      kidsText: '手を動かして実際に作る',
+      kidsDescription: '手を動かして実際に作る。設計図を見ながら、部品を組み立てたり、プログラムを書いたりするよ。',
       emoji: '🔧',
       weights: {
         'ソフトウェア系エンジニア': 2,
@@ -108,41 +129,46 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 4,
     section: '働き方の志向',
+    kidsSection: 'どんな働き方が好き？',
     sectionNumber: 1,
     leftOption: {
       text: '全体像・システム構成を考える',
+      description: 'システム全体の構造や依存関係を設計し、最適なバランスを探ることを得意とします。',
+      kidsText: '全体を考える',
+      kidsDescription: '全体を考える。大きな絵を描くように、全体がどうなっているか、どうつながっているかを考えるよ。',
       emoji: '🎯',
       weights: {
         '全体統括職': 3,
         'ソフトウェア系エンジニア': 2,
         'データ処理系エンジニア': 2,
         '制御系エンジニア': 2,
-        '構造系エンジニア': 2,
-        '推進系エンジニア': 2,
-        '熱制御系エンジニア': 2,
-        '電気系エンジニア': 2,
-        '通信系エンジニア': 2,
       }
     },
     rightOption: {
       text: '細部の詳細設計を詰める',
+      description: '細部まで仕様を詰め、確実性の高い設計に作り込む緻密さを強みとします。',
+      kidsText: '細かいところをしっかり考える',
+      kidsDescription: '細かいところをしっかり考える。小さな部分も大切にして、完璧に近づけるようにするよ。',
       emoji: '🔍',
       weights: {
-        '構造系エンジニア': 2,
-        '推進系エンジニア': 2,
+        '構造系エンジニア': 3,
+        '推進系エンジニア': 3,
         '熱制御系エンジニア': 2,
         '電気系エンジニア': 2,
         '通信系エンジニア': 2,
-        '制御系エンジニア': 2,
       }
     }
   },
   {
     id: 5,
     section: '働き方の志向',
+    kidsSection: 'どんな働き方が好き？',
     sectionNumber: 1,
     leftOption: {
       text: '新しいアイデアを考え出す',
+      description: '新規性のあるコンセプトを考案し、ゼロから価値をつくる取り組みを楽しめます。',
+      kidsText: '新しいことを考える',
+      kidsDescription: '新しいことを考える。今まで誰もやったことがないような、面白いアイデアを考え出すよ。',
       emoji: '💡',
       weights: {
         '全体統括職': 3,
@@ -151,6 +177,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '既存のものを改善・最適化',
+      description: '既存の仕組みを観察し、改善や最適化によって性能を高めることにやりがいを感じます。',
+      kidsText: '今あるものを良くする',
+      kidsDescription: '今あるものを良くする。今のやり方を少し変えて、もっと良くする方法を考えるよ。',
       emoji: '⚙️',
       weights: {
         'ソフトウェア系エンジニア': 2,
@@ -164,9 +193,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 6,
     section: '働き方の志向',
+    kidsSection: 'どんな働き方が好き？',
     sectionNumber: 1,
     leftOption: {
       text: 'リスクや品質を管理する',
+      description: '品質や安全性を確保するため、リスクを洗い出して管理する役割を重視します。',
+      kidsText: '安全で良いものにする',
+      kidsDescription: '安全で良いものにする。壊れないか、安全か、ちゃんと動くかを確認して、良いものを作るよ。',
       emoji: '✅',
       weights: {
         '品質保証・品質管理エンジニア': 4,
@@ -176,6 +209,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '性能や機能を追求する',
+      description: '性能向上や機能拡張に挑戦し、より高いレベルの成果を追求することを好みます。',
+      kidsText: 'もっと良くする',
+      kidsDescription: 'もっと良くする。今よりもっと速く、もっと強く、もっと便利にするために工夫するよ。',
       emoji: '🚀',
       weights: {
         '構造系エンジニア': 2,
@@ -192,9 +228,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 7,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: 'ソフトウェア・プログラミング',
+      description: 'ソフトウェア開発やプログラミングを通じて価値を生み出す領域に興味があります。',
+      kidsText: 'プログラムを作る',
+      kidsDescription: 'プログラムを作る。コンピューターに「こう動いてね」と命令を書いて、宇宙船を動かすプログラムを作るよ。',
       emoji: '💻',
       weights: {
         'ソフトウェア系エンジニア': 5,
@@ -204,6 +244,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: 'ハードウェア・物理システム',
+      description: '物理的な機構やハードウェアの設計・製作に関わる領域に魅力を感じます。',
+      kidsText: '実際のものを作る',
+      kidsDescription: '実際のものを作る。ロケットの部品や、機械の仕組みを考えて、実際に触れるものを作るよ。',
       emoji: '🔩',
       weights: {
         '構造系エンジニア': 2,
@@ -218,18 +261,25 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 8,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: 'データ分析・アルゴリズム',
+      description: 'データやアルゴリズムを活用し、洞察や意思決定を導く活動に強みがあります。',
+      kidsText: 'データを見て考える',
+      kidsDescription: 'データを見て考える。宇宙から送られてくるたくさんの数字や情報を見て、何がわかるか考えるよ。',
       emoji: '📊',
       weights: {
         'データ処理系エンジニア': 5,
         'ソフトウェア系エンジニア': 2,
-        '飛行解析エンジニア': 2,
+        '制御系エンジニア': 1,
       }
     },
     rightOption: {
       text: '制御・軌道計算',
+      description: '制御理論や軌道計算など、ダイナミクスを扱う分析・設計に関心があります。',
+      kidsText: 'どう動くか計算する',
+      kidsDescription: 'どう動くか計算する。ロケットがどう飛ぶか、どこに行くかを計算して、正しいコースを決めるよ。',
       emoji: '🛰️',
       weights: {
         '制御系エンジニア': 5,
@@ -240,9 +290,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 9,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '構造・強度・材料力学',
+      description: '構造解析や材料選定を通じて、強度や信頼性を担保する設計に携わりたいと考えています。',
+      kidsText: '壊れないように設計する',
+      kidsDescription: '壊れないように設計する。ロケットが壊れないように、どんな材料を使うか、どんな形にするかを考えるよ。',
       emoji: '🏗️',
       weights: {
         '構造系エンジニア': 5,
@@ -250,6 +304,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: 'エネルギー・推進・燃焼',
+      description: '推進系や燃焼技術など、エネルギー変換を扱う領域に挑戦したいと感じています。',
+      kidsText: '飛ばすための力を考える',
+      kidsDescription: '飛ばすための力を考える。ロケットが飛ぶために必要な燃料や、エンジンの仕組みを考えるよ。',
       emoji: '🔥',
       weights: {
         '推進系エンジニア': 5,
@@ -259,9 +316,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 10,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '温度・熱の流れ',
+      description: '熱設計や熱制御によって、機器の適切な温度管理を行う分野に興味があります。',
+      kidsText: '温度を考える',
+      kidsDescription: '温度を考える。宇宙はとても暑かったり寒かったりするから、宇宙船が壊れないように温度を調整するよ。',
       emoji: '🌡️',
       weights: {
         '熱制御系エンジニア': 5,
@@ -269,6 +330,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '電気・電力・回路',
+      description: '電源設計や電力制御など、電気系統の構築・最適化に関わりたいと思います。',
+      kidsText: '電気を考える',
+      kidsDescription: '電気を考える。宇宙船の中の電気がちゃんと流れるように、電気の回路を設計するよ。',
       emoji: '⚡',
       weights: {
         '電気系エンジニア': 5,
@@ -278,9 +342,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 11,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '通信・電波・アンテナ',
+      description: '通信システムや電波設計を通じて、宇宙と地上をつなぐ役割を担いたいと考えます。',
+      kidsText: '通信を考える',
+      kidsDescription: '通信を考える。宇宙から地球にメッセージを送るために、電波やアンテナの仕組みを考えるよ。',
       emoji: '📡',
       weights: {
         '通信系エンジニア': 5,
@@ -288,6 +356,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '姿勢制御・軌道制御',
+      description: '姿勢制御や航法システムなど、精密な制御を支える技術に興味があります。',
+      kidsText: '正しい方向に飛ばす',
+      kidsDescription: '正しい方向に飛ばす。ロケットが右に曲がったり、左に曲がったりしないように、正しい方向に飛ばすよ。',
       emoji: '🎮',
       weights: {
         '制御系エンジニア': 5,
@@ -298,9 +369,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 12,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '実際にモノを作る・組み立てる',
+      description: '組立や製造工程に携わり、製品を確実に形にする実作業が得意です。',
+      kidsText: '実際に作る・組み立てる',
+      kidsDescription: '実際に作る・組み立てる。設計図を見ながら、部品を組み立てて、実際にロケットを作るよ。',
       emoji: '🔨',
       weights: {
         '宇宙輸送機・人工衛星製造職': 5,
@@ -308,6 +383,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '図面や仕様書を作成する',
+      description: '図面化や仕様整理など、設計情報をドキュメントとしてまとめる業務に強みがあります。',
+      kidsText: '設計図や説明書を作る',
+      kidsDescription: '設計図や説明書を作る。どうやって作るか、どんな材料を使うかを書いたり、図を描いたりするよ。',
       emoji: '📐',
       weights: {
         '構造系エンジニア': 2,
@@ -321,9 +399,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 13,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '実験・試験で検証する',
+      description: '試験計画を立て、実験を通じて性能や安全性を確認する役割にやりがいを感じます。',
+      kidsText: '実験して確かめる',
+      kidsDescription: '実験して確かめる。作ったものがちゃんと動くか、壊れないかを実験して確認するよ。',
       emoji: '🧪',
       weights: {
         '試験エンジニア': 4,
@@ -332,6 +414,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '計算・シミュレーションで予測',
+      description: 'シミュレーションや解析によって事前に挙動を予測し、設計に反映する業務を好みます。',
+      kidsText: '計算して予測する',
+      kidsDescription: '計算して予測する。コンピューターを使って、どうなるか予測する。実際に作る前に、うまくいくか調べるよ。',
       emoji: '💹',
       weights: {
         '飛行解析エンジニア': 3,
@@ -345,28 +430,41 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 14,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '法律・契約・知財を扱う',
+      description: '法務・契約・知的財産など、制度やルール面から事業を支える領域に関心があります。',
+      kidsText: '法律や契約を考える',
+      kidsDescription: '法律や契約を考える。会社同士の約束や、法律に従って、正しく進められるようにするよ。',
       emoji: '⚖️',
       weights: {
-        'コーポレート・ビジネス職': 5,
+        'コーポレート・ビジネス職': 4,
+        '品質保証・品質管理エンジニア': 2,
       }
     },
     rightOption: {
       text: '人事・組織・採用を扱う',
+      description: '人材の採用や組織づくりを通じて、チームを育てる活動に携わりたいと考えています。',
+      kidsText: '人のことを考える',
+      kidsDescription: '人のことを考える。一緒に働く人を選んだり、みんなが働きやすいように組織を作ったりするよ。',
       emoji: '👔',
       weights: {
-        'コーポレート・ビジネス職': 5,
+        'コーポレート・ビジネス職': 4,
+        '全体統括職': 2,
       }
     }
   },
   {
     id: 15,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '財務・予算を管理する',
+      description: '予算策定や資金管理を通じて、プロジェクトの経営面を支えることに興味があります。',
+      kidsText: 'お金のことを考える',
+      kidsDescription: 'お金のことを考える。プロジェクトにいくらお金を使うか、どう使うかを計画して管理するよ。',
       emoji: '💰',
       weights: {
         'コーポレート・ビジネス職': 5,
@@ -375,6 +473,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '事業戦略・企画を立てる',
+      description: '事業戦略や企画立案を担い、長期的な方向性を描く役割を目指しています。',
+      kidsText: '計画を立てる',
+      kidsDescription: '計画を立てる。会社がどうやって成長するか、どんな新しいことをするかを考えるよ。',
       emoji: '📈',
       weights: {
         '全体統括職': 4,
@@ -385,9 +486,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 16,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '地上設備・施設を設計管理',
+      description: '発射場や試験設備など、地上インフラの設計・維持管理を担当する仕事に関心があります。',
+      kidsText: '地上の設備を考える',
+      kidsDescription: '地上の設備を考える。ロケットを打ち上げる場所や、実験に使う大きな機械を作ったり、管理したりするよ。',
       emoji: '🏭',
       weights: {
         '射場・地上試験設備設計・管理': 5,
@@ -395,6 +500,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '打上げ運用・安全管理',
+      description: '打上げ運用や安全管理を通じて、ミッションの成功を現場から支えたいと思います。',
+      kidsText: '打ち上げの安全を考える',
+      kidsDescription: '打ち上げの安全を考える。ロケットを打ち上げるときに、みんなが安全に過ごせるように管理するよ。',
       emoji: '🚨',
       weights: {
         '打上げ管理\n（宇宙輸送機飛行安全、\n射場安全、地域の保安）': 5,
@@ -404,9 +512,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 17,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '物事がどう動くか考える',
+      description: 'システムの挙動やプロセスの流れを分析し、最適な動きを設計することを得意とします。',
+      kidsText: 'どう動くか考える',
+      kidsDescription: 'どう動くか考える。ロケットがどう飛ぶか、どう曲がるかを考えて、うまく動くようにするよ。',
       emoji: '🌀',
       weights: {
         '制御系エンジニア': 3,
@@ -416,6 +528,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '物がどう壊れるか考える',
+      description: '故障モードやリスクを予測し、壊れにくさを高める設計・運用を重視します。',
+      kidsText: 'どう壊れるか考える',
+      kidsDescription: 'どう壊れるか考える。ロケットが壊れないように、どこが弱いか、どうしたら壊れないかを考えるよ。',
       emoji: '💥',
       weights: {
         '構造系エンジニア': 3,
@@ -427,9 +542,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 18,
     section: '思考・技術の方向性',
+    kidsSection: 'どんなことを学びたい？',
     sectionNumber: 2,
     leftOption: {
       text: '論理的に分解・手順化する',
+      description: '複雑な課題を論理的に分解し、実行手順やプロセスとして整理するのが得意です。',
+      kidsText: '順番に考える',
+      kidsDescription: '順番に考える。大きな問題を小さく分けて、一つずつ順番に解決していくよ。',
       emoji: '🧩',
       weights: {
         'ソフトウェア系エンジニア': 3,
@@ -439,6 +558,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: 'データから傾向を見つける',
+      description: '大量のデータから傾向や法則を見つけ、改善や戦略に活かすことに関心があります。',
+      kidsText: 'データから見つける',
+      kidsDescription: 'データから見つける。たくさんの数字や情報を見て、パターンや規則を見つけるよ。',
       emoji: '📉',
       weights: {
         'データ処理系エンジニア': 4,
@@ -451,9 +573,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 19,
     section: '業務フェーズ・役割',
+    kidsSection: 'どんなお仕事をしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '構想・企画段階から関わる',
+      description: 'プロジェクトの初期段階から参画し、構想や要求をまとめるフェーズに魅力を感じます。',
+      kidsText: '最初から関わる',
+      kidsDescription: '最初から関わる。プロジェクトが始まった最初から、どんなものを作るか考えて、計画を立てるよ。',
       emoji: '🌅',
       weights: {
         '全体統括職': 3,
@@ -462,6 +588,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '実装・製造段階から関わる',
+      description: '具体化が進む実装や製造フェーズで力を発揮し、成果物を完成させるプロセスに貢献したいです。',
+      kidsText: '作る段階から関わる',
+      kidsDescription: '作る段階から関わる。計画ができてから、実際に作る段階から関わって、ものを作るよ。',
       emoji: '🏭',
       weights: {
         '宇宙輸送機・人工衛星製造職': 3,
@@ -474,9 +603,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 20,
     section: '業務フェーズ・役割',
+    kidsSection: 'どんなお仕事をしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '研究開発・新技術にチャレンジ',
+      description: '新技術の研究開発に挑み、未知の課題を解決することにモチベーションを感じます。',
+      kidsText: '新しいことにチャレンジ',
+      kidsDescription: '新しいことにチャレンジ。今まで誰もやったことがないような、新しい技術や方法を試してみるよ。',
       emoji: '🔬',
       weights: {
         '全体統括職': 2,
@@ -490,6 +623,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '確立された技術で確実に',
+      description: '確立されている技術を活用し、安定した成果を着実に積み上げる役割に安心感を覚えます。',
+      kidsText: 'わかっている技術で確実に',
+      kidsDescription: 'わかっている技術で確実に。今まで何度も使ってきた、確実にうまくいく方法を使って、安全に作るよ。',
       emoji: '🛡️',
       weights: {
         '宇宙輸送機・人工衛星製造職': 3,
@@ -501,9 +637,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 21,
     section: '業務フェーズ・役割',
+    kidsSection: 'どんなお仕事をしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '顧客折衝・要件定義',
+      description: '顧客や関係者と対話し、要求を整理して仕様に落とし込む業務に適性があります。',
+      kidsText: 'お客さんと話す',
+      kidsDescription: 'お客さんと話す。お客さんが何をしてほしいか聞いて、それをまとめて、みんなに伝えるよ。',
       emoji: '🤝',
       weights: {
         '全体統括職': 3,
@@ -512,6 +652,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '技術的課題の解決',
+      description: '発生する技術課題に向き合い、原因分析と解決策の実装で貢献したいと考えています。',
+      kidsText: '技術の問題を解決する',
+      kidsDescription: '技術の問題を解決する。「うまく動かないな」という問題を見つけて、どうしたら動くようになるか考えるよ。',
       emoji: '🛠️',
       weights: {
         'ソフトウェア系エンジニア': 2,
@@ -527,9 +670,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 22,
     section: '業務フェーズ・役割',
+    kidsSection: 'どんなお仕事をしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '複数プロジェクトを横断',
+      description: '複数案件をまたぎながら全体を俯瞰し、横断的に調整・支援する役割が向いています。',
+      kidsText: 'いくつものプロジェクトに関わる',
+      kidsDescription: 'いくつものプロジェクトに関わる。いろいろなプロジェクトを同時に進めて、それぞれで必要なことをするよ。',
       emoji: '🔀',
       weights: {
         '全体統括職': 3,
@@ -539,6 +686,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '一つのプロジェクトに専念',
+      description: '一つのプロジェクトに深く入り込み、集中して成果を出すスタイルがフィットします。',
+      kidsText: 'ひとつのプロジェクトに集中',
+      kidsDescription: 'ひとつのプロジェクトに集中。ひとつのプロジェクトだけに集中して、それを完璧にするよ。',
       emoji: '🎯',
       weights: {
         '構造系エンジニア': 2,
@@ -551,9 +701,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 23,
     section: '業務フェーズ・役割',
+    kidsSection: 'どんなお仕事をしたい？',
     sectionNumber: 3,
     leftOption: {
       text: 'ルールや基準に厳格',
+      description: '規格やルールを守りながら堅実に進め、コンプライアンスを重視する姿勢があります。',
+      kidsText: 'ルールをしっかり守る',
+      kidsDescription: 'ルールをしっかり守る。決められたルールや基準をきちんと守って、確実に進めるよ。',
       emoji: '📋',
       weights: {
         '品質保証・品質管理エンジニア': 4,
@@ -563,6 +717,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '柔軟に臨機応変に',
+      description: '状況変化に合わせて手段を柔軟に切り替え、スピード感のある対応を得意とします。',
+      kidsText: '臨機応変にやる',
+      kidsDescription: '臨機応変にやる。状況に応じて、やり方を変えながら、うまく進めるよ。',
       emoji: '🌊',
       weights: {
         '全体統括職': 2,
@@ -574,9 +731,13 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
   {
     id: 24,
     section: '業務フェーズ・役割',
+    kidsSection: 'どんなお仕事をしたい？',
     sectionNumber: 3,
     leftOption: {
       text: '長期的な戦略を描く',
+      description: '長期的な視点で戦略を設計し、中・長期のゴールに向けて組織を導くことに興味があります。',
+      kidsText: '長い期間の計画を立てる',
+      kidsDescription: '長い期間の計画を立てる。5年後、10年後のことを考えて、長い期間の計画を立てるよ。',
       emoji: '🗺️',
       weights: {
         '全体統括職': 3,
@@ -585,6 +746,9 @@ export const quickAssessmentQuestions: QuickAssessmentQuestion[] = [
     },
     rightOption: {
       text: '短期的な成果を出す',
+      description: '短期間で成果を出すことに価値を置き、スピード重視で結果を残すことが得意です。',
+      kidsText: '早く結果を出す',
+      kidsDescription: '早く結果を出す。すぐに結果が出るように、短い期間で目標を達成するよ。',
       emoji: '⚡',
       weights: {
         'ソフトウェア系エンジニア': 2,

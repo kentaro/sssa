@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppToaster } from "@/components/ui/sonner";
+import { KidsModeProvider } from "@/lib/kids-mode-context";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -37,17 +38,19 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(124,58,237,0.16)_0,transparent_55%)]" />
-            <Header />
-            <main className="flex-1">
-              <div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
-                {children}
-              </div>
-            </main>
-            <Footer />
-            <AppToaster />
-          </div>
+          <KidsModeProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(124,58,237,0.16)_0,transparent_55%)]" />
+              <Header />
+              <main className="flex-1">
+                <div className="container mx-auto px-4 py-10 sm:px-6 lg:px-8">
+                  {children}
+                </div>
+              </main>
+              <Footer />
+              <AppToaster />
+            </div>
+          </KidsModeProvider>
         </ThemeProvider>
       </body>
     </html>
