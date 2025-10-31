@@ -21,7 +21,7 @@ export default function QuickAssessmentQuestionComponent({ question, onAnswer }:
           左右いずれかを選択するか、どちらでもなければ中央の「中立」を選択してください。
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <CardContent className="grid grid-cols-3 gap-2 sm:gap-4">
         <ChoiceCard
           variant="left"
           title={question.leftOption.text}
@@ -72,12 +72,12 @@ function ChoiceCard({ variant, title, description, emoji, onSelect }: ChoiceCard
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card/70 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-      <div className="flex flex-1 flex-col gap-3 p-6 text-left">
-        <span className="text-4xl">{emoji}</span>
-        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-        <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+      <div className="flex flex-1 flex-col gap-2 sm:gap-3 p-3 sm:p-6 text-left">
+        <span className="text-2xl sm:text-4xl">{emoji}</span>
+        <h3 className="text-sm sm:text-lg font-semibold text-foreground min-h-[2.5rem] sm:min-h-[3rem]">{title}</h3>
+        <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{description}</p>
       </div>
-      <div className="border-t border-border/70 bg-muted/40 p-4">
+      <div className="border-t border-border/70 bg-muted/40 p-2 sm:p-4">
         <Button
           onClick={onSelect}
           variant={isNeutral ? 'outline' : 'default'}
