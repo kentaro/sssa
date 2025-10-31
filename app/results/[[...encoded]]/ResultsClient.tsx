@@ -311,7 +311,7 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
             </Button>
           )}
           <Button variant="outline" asChild>
-            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙のしごと診断に戻る' : 'クイック診断に戻る'}</Link>
+            <Link href="/quick-assessment">{isKidsMode ? '宇宙のしごと診断に戻る' : 'クイック診断に戻る'}</Link>
           </Button>
         </CardContent>
       </Card>

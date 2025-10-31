@@ -13,7 +13,7 @@ const featureList = [
   {
     icon: <Gauge className="h-7 w-7" />,
     title: 'クイック診断',
-    titleKids: 'かんたん宇宙のしごと診断',
+    titleKids: '宇宙のしごと診断',
     description: '24問でスキル傾向を素早く把握し、取り組むべきカテゴリを推薦',
     descriptionKids: '24問に答えて、宇宙のしごとで自分に合う種類を見つけよう！',
     href: '/quick-assessment',

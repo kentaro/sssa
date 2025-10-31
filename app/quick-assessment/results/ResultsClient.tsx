@@ -227,13 +227,13 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
           </CardTitle>
           <CardDescription>
             {isKidsMode
-              ? '診断を終えていないか、保存されている答えがなくなっています。もう一度かんたん宇宙のしごと診断をやってみてね。'
+              ? '診断を終えていないか、保存されている答えがなくなっています。もう一度宇宙のしごと診断をやってみてね。'
               : '診断を完了していないか、保存されている回答が失われています。再度クイック診断を実施してください。'}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link href="/quick-assessment">{isKidsMode ? 'かんたん宇宙のしごと診断に戻る' : 'クイック診断に戻る'}</Link>
+            <Link href="/quick-assessment">{isKidsMode ? '宇宙のしごと診断に戻る' : 'クイック診断に戻る'}</Link>
           </Button>
           <Button variant="outline" asChild>
             <Link href="/">トップページへ</Link>
