@@ -1,0 +1,36 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+
+  <!-- Stars decoration -->
+  <text x="180" y="80" font-size="40" opacity="0.6">✨</text>
+  <text x="960" y="140" font-size="30" opacity="0.5">⭐</text>
+  <text x="300" y="540" font-size="35" opacity="0.4">🌟</text>
+  <text x="1020" y="480" font-size="25" opacity="0.6">✨</text>
+
+  <!-- Main rocket emoji -->
+  <text x="600" y="240" font-size="160" text-anchor="middle">🚀</text>
+
+  <!-- Main title -->
+  <text x="600" y="360" font-size="72" font-weight="bold" fill="white" text-anchor="middle" style="text-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+    宇宙業界のキャリア診断
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="430" font-size="48" font-weight="600" fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="0.05em">
+    Career in Space
+  </text>
+
+  <!-- Description -->
+  <text x="600" y="510" font-size="32" fill="rgba(255,255,255,0.85)" text-anchor="middle">
+    あなたに合った宇宙業界のキャリアを見つけよう
+  </text>
+</svg>

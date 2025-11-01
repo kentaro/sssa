@@ -22,6 +22,32 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "宇宙業界のキャリア診断 | Career in Space",
   description: "あなたに合った宇宙業界のキャリアを見つけよう。24問の診断で適性のある職種やスキルを発見。内閣府宇宙スキル標準に基づいた無料診断ツール。",
+  metadataBase: new URL('https://career-in.space'),
+  icons: {
+    icon: '/favicon.svg',
+  },
+  openGraph: {
+    title: "宇宙業界のキャリア診断 | Career in Space",
+    description: "あなたに合った宇宙業界のキャリアを見つけよう。24問の診断で適性のある職種やスキルを発見。",
+    url: 'https://career-in.space',
+    siteName: 'Career in Space',
+    locale: 'ja_JP',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.svg',
+        width: 1200,
+        height: 630,
+        alt: '宇宙業界のキャリア診断 | Career in Space',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "宇宙業界のキャリア診断 | Career in Space",
+    description: "あなたに合った宇宙業界のキャリアを見つけよう。24問の診断で適性のある職種やスキルを発見。",
+    images: ['/og-image.svg'],
+  },
 };
 
 export default function RootLayout({
