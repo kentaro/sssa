@@ -152,7 +152,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2.5 text-sm font-bold tracking-tight sm:text-base">
           <span className="text-2xl">🚀</span>
           <span className="whitespace-nowrap">
-            {isKidsMode ? '宇宙のしごと' : '宇宙スキル標準'}
+            {isKidsMode ? '宇宙のしごと' : 'CAREER IN SPACE'}
           </span>
         </Link>
 
