@@ -189,7 +189,7 @@ export default function Home() {
               ) : (
                 <>
                   <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-                    宇宙スキル標準にもとづく<br className="hidden sm:block" />セルフアセスメント
+                    宇宙業界の<br className="hidden sm:block" />キャリア診断
                   </span>
                 </>
               )}
@@ -198,7 +198,7 @@ export default function Home() {
               {isKidsMode ? (
                 <>宇宙のしごとで必要なできることを順番に整理して、今の自分のことと次の一歩をはっきりさせます✨</>
               ) : (
-                <>宇宙産業で求められるスキルセットを体系的に整理し、あなたの現在地と次の一歩を明確化します。</>
+                <>あなたに合った宇宙業界のキャリアを見つけよう。24問の診断で適性のある職種やスキルを発見できます。</>
               )}
             </p>
           </div>
