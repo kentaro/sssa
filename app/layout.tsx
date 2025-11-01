@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: '宇宙業界のキャリア診断 | Career in Space',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "宇宙業界のキャリア診断 | Career in Space",
     description: "あなたに合った宇宙業界のキャリアを見つけよう。24問の診断で適性のある職種やスキルを発見。",
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
   },
 };
 
