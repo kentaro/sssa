@@ -42,36 +42,36 @@
   <circle cx="100" cy="315" r="30" fill="white" opacity="0.2"/>
   <circle cx="1100" cy="315" r="40" fill="#dbeafe" opacity="0.3"/>
 
-  <!-- Decorative emojis -->
-  <g opacity="0.6">
-    <text x="150" y="150" font-size="48" text-anchor="middle">⭐</text>
-    <text x="1050" y="180" font-size="40" text-anchor="middle">🌟</text>
-    <text x="250" y="500" font-size="36" text-anchor="middle">✨</text>
-    <text x="950" y="520" font-size="42" text-anchor="middle">🪐</text>
-    <text x="80" y="100" font-size="32" text-anchor="middle">🌙</text>
-    <text x="1120" y="550" font-size="38" text-anchor="middle">🌠</text>
+  <!-- Simple rocket icon (SVG path instead of emoji) -->
+  <g transform="translate(600, 200)">
+    <!-- Rocket body -->
+    <path d="M0 -60 L20 -20 L15 -20 L15 10 L-15 10 L-15 -20 L-20 -20 Z" fill="white" opacity="0.95"/>
+    <!-- Window -->
+    <circle cx="0" cy="-30" r="8" fill="#3b82f6"/>
+    <!-- Flames -->
+    <path d="M-10 10 L-5 25 L0 20 L5 25 L10 10" fill="#fbbf24" opacity="0.9"/>
+    <!-- Fins -->
+    <path d="M-15 -20 L-25 5 L-15 5 Z" fill="#dbeafe"/>
+    <path d="M15 -20 L25 5 L15 5 Z" fill="#dbeafe"/>
   </g>
 
   <!-- Content container - centered vertically -->
-  <g transform="translate(0, 280)">
-    <!-- Rocket emoji -->
-    <text x="600" y="-80" font-size="100" text-anchor="middle">🚀</text>
-
+  <g transform="translate(0, 330)">
     <!-- Main title -->
-    <text x="600" y="20" font-size="80" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em">
+    <text x="600" y="0" font-size="80" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em" font-family="sans-serif">
       宇宙業界のキャリア診断
     </text>
 
     <!-- Accent line -->
-    <rect x="450" y="40" width="300" height="4" fill="white" rx="2"/>
+    <rect x="450" y="20" width="300" height="4" fill="white" rx="2"/>
 
     <!-- Subtitle -->
-    <text x="600" y="100" font-size="48" font-weight="600" fill="#dbeafe" text-anchor="middle" letter-spacing="0.08em">
+    <text x="600" y="80" font-size="48" font-weight="600" fill="#dbeafe" text-anchor="middle" letter-spacing="0.08em" font-family="sans-serif">
       CAREER IN SPACE
     </text>
 
     <!-- Description -->
-    <text x="600" y="160" font-size="28" font-weight="500" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    <text x="600" y="140" font-size="28" font-weight="500" fill="rgba(255,255,255,0.9)" text-anchor="middle" font-family="sans-serif">
       あなたに合った宇宙業界のキャリアを見つけよう
     </text>
   </g>
