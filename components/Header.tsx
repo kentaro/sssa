@@ -102,18 +102,20 @@ function ModeToggle({
       <Button
         size="sm"
         variant={isKidsMode ? 'ghost' : 'secondary'}
-        className="h-8 px-3 text-xs font-medium"
+        className="h-8 px-3 text-xs font-medium flex items-center gap-1.5"
         onClick={() => setMode('adult')}
       >
-        通常モード
+        <span className="text-sm leading-none">💼</span>
+        <span className="leading-none">通常モード</span>
       </Button>
       <Button
         size="sm"
         variant={isKidsMode ? 'secondary' : 'ghost'}
-        className="h-8 px-3 text-xs font-medium"
+        className="h-8 px-3 text-xs font-medium flex items-center gap-1.5"
         onClick={() => setMode('kids')}
       >
-        子供向け
+        <span className="text-sm leading-none">🎈</span>
+        <span className="leading-none">子供向け</span>
       </Button>
     </div>
   );
