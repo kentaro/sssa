@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "宇宙スキル標準アセスメント - SSSA",
-  description: "内閣府宇宙開発戦略推進事務局が公開している宇宙スキル標準（試作版）を基にしたWebベースのスキルアセスメントツール",
+  title: "宇宙業界のキャリア診断 | Career in Space",
+  description: "あなたに合った宇宙業界のキャリアを見つけよう。24問の診断で適性のある職種やスキルを発見。内閣府宇宙スキル標準に基づいた無料診断ツール。",
 };
 
 export default function RootLayout({
