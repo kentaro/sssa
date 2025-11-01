@@ -1,14 +1,24 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
     </linearGradient>
   </defs>
 
-  <!-- Background with gradient -->
-  <rect width="32" height="32" rx="7" fill="url(#icon-gradient)"/>
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#bg-gradient)"/>
 
-  <!-- Rocket emoji centered -->
-  <text x="16" y="24" font-size="20" text-anchor="middle">🚀</text>
+  <!-- Rocket body -->
+  <path d="M16 4 L20 14 L18 14 L18 20 L14 20 L14 14 L12 14 Z" fill="white"/>
+
+  <!-- Rocket window -->
+  <circle cx="16" cy="12" r="2" fill="#3b82f6"/>
+
+  <!-- Rocket flames -->
+  <path d="M13 20 L14 24 L16 22 L18 24 L19 20" fill="#fbbf24"/>
+
+  <!-- Rocket fins -->
+  <path d="M12 14 L10 18 L12 18 Z" fill="#dbeafe"/>
+  <path d="M20 14 L22 18 L20 18 Z" fill="#dbeafe"/>
 </svg>
