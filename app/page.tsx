@@ -188,8 +188,9 @@ export default function Home() {
                 </>
               ) : (
                 <>
+                  <span className="inline-block">🚀</span>{' '}
                   <span className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-                    宇宙業界の<br className="hidden sm:block" />キャリア診断
+                    宇宙業界のキャリア診断
                   </span>
                 </>
               )}
