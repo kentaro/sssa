@@ -22,32 +22,47 @@
   <!-- Background -->
   <rect width="1200" height="630" fill="url(#bg-gradient)"/>
 
+  <!-- Geometric shapes in background -->
+  <g opacity="0.15">
+    <!-- Grid pattern -->
+    <line x1="0" y1="157.5" x2="1200" y2="157.5" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="315" x2="1200" y2="315" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="472.5" x2="1200" y2="472.5" stroke="white" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="900" y1="0" x2="900" y2="630" stroke="white" stroke-width="1"/>
+  </g>
+
   <!-- Decorative circles -->
   <circle cx="150" cy="100" r="120" fill="url(#circle-gradient-1)"/>
   <circle cx="1050" cy="150" r="150" fill="url(#circle-gradient-2)"/>
-  <circle cx="200" cy="500" r="100" fill="url(#circle-gradient-1)"/>
-  <circle cx="1000" cy="520" r="130" fill="url(#circle-gradient-2)"/>
+  <circle cx="200" cy="530" r="100" fill="url(#circle-gradient-1)"/>
+  <circle cx="1000" cy="500" r="130" fill="url(#circle-gradient-2)"/>
 
-  <!-- Content container -->
-  <g>
-    <!-- Main title with emphasis -->
-    <text x="600" y="240" font-size="88" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em">
-      宇宙業界の
-    </text>
-    <text x="600" y="340" font-size="88" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em">
-      キャリア診断
+  <!-- Orbiting circles (planets) -->
+  <circle cx="100" cy="315" r="30" fill="#60a5fa" opacity="0.2"/>
+  <circle cx="1100" cy="315" r="40" fill="#a78bfa" opacity="0.15"/>
+
+  <!-- Content container - centered vertically -->
+  <g transform="translate(0, 315)">
+    <!-- Rocket emoji -->
+    <text x="600" y="-100" font-size="100" text-anchor="middle">🚀</text>
+
+    <!-- Main title -->
+    <text x="600" y="10" font-size="80" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em">
+      宇宙業界のキャリア診断
     </text>
 
     <!-- Accent line -->
-    <rect x="450" y="370" width="300" height="4" fill="#60a5fa" rx="2"/>
+    <rect x="450" y="30" width="300" height="4" fill="#60a5fa" rx="2"/>
 
     <!-- Subtitle -->
-    <text x="600" y="440" font-size="52" font-weight="600" fill="#93c5fd" text-anchor="middle" letter-spacing="0.08em">
+    <text x="600" y="90" font-size="48" font-weight="600" fill="#93c5fd" text-anchor="middle" letter-spacing="0.08em">
       CAREER IN SPACE
     </text>
 
     <!-- Description -->
-    <text x="600" y="520" font-size="30" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">
+    <text x="600" y="150" font-size="28" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">
       あなたに合った宇宙業界のキャリアを見つけよう
     </text>
   </g>
