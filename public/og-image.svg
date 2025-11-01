@@ -1,36 +1,54 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background gradient -->
   <defs>
+    <!-- Main background gradient -->
     <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
     </linearGradient>
+
+    <!-- Accent gradient for circles -->
+    <radialGradient id="circle-gradient-1">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0" />
+    </radialGradient>
+
+    <radialGradient id="circle-gradient-2">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:0" />
+    </radialGradient>
   </defs>
 
+  <!-- Background -->
   <rect width="1200" height="630" fill="url(#bg-gradient)"/>
 
-  <!-- Stars decoration -->
-  <text x="180" y="80" font-size="40" opacity="0.6">✨</text>
-  <text x="960" y="140" font-size="30" opacity="0.5">⭐</text>
-  <text x="300" y="540" font-size="35" opacity="0.4">🌟</text>
-  <text x="1020" y="480" font-size="25" opacity="0.6">✨</text>
+  <!-- Decorative circles -->
+  <circle cx="150" cy="100" r="120" fill="url(#circle-gradient-1)"/>
+  <circle cx="1050" cy="150" r="150" fill="url(#circle-gradient-2)"/>
+  <circle cx="200" cy="500" r="100" fill="url(#circle-gradient-1)"/>
+  <circle cx="1000" cy="520" r="130" fill="url(#circle-gradient-2)"/>
 
-  <!-- Main rocket emoji -->
-  <text x="600" y="240" font-size="160" text-anchor="middle">🚀</text>
+  <!-- Content container -->
+  <g>
+    <!-- Main title with emphasis -->
+    <text x="600" y="240" font-size="88" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em">
+      宇宙業界の
+    </text>
+    <text x="600" y="340" font-size="88" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-0.02em">
+      キャリア診断
+    </text>
 
-  <!-- Main title -->
-  <text x="600" y="360" font-size="72" font-weight="bold" fill="white" text-anchor="middle" style="text-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-    宇宙業界のキャリア診断
-  </text>
+    <!-- Accent line -->
+    <rect x="450" y="370" width="300" height="4" fill="#60a5fa" rx="2"/>
 
-  <!-- Subtitle -->
-  <text x="600" y="430" font-size="48" font-weight="600" fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="0.05em">
-    Career in Space
-  </text>
+    <!-- Subtitle -->
+    <text x="600" y="440" font-size="52" font-weight="600" fill="#93c5fd" text-anchor="middle" letter-spacing="0.08em">
+      CAREER IN SPACE
+    </text>
 
-  <!-- Description -->
-  <text x="600" y="510" font-size="32" fill="rgba(255,255,255,0.85)" text-anchor="middle">
-    あなたに合った宇宙業界のキャリアを見つけよう
-  </text>
+    <!-- Description -->
+    <text x="600" y="520" font-size="30" font-weight="500" fill="rgba(255,255,255,0.8)" text-anchor="middle">
+      あなたに合った宇宙業界のキャリアを見つけよう
+    </text>
+  </g>
 </svg>
