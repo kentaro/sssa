@@ -67,6 +67,7 @@ function useQuickAssessmentResult(roles: Role[]) {
   const [result, setResult] = useState<QuickAssessmentResult | null>(null);
   const [shareUrl, setShareUrl] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [showShareButton, setShowShareButton] = useState(false);
 
   useEffect(() => {
     const loadResult = async () => {
@@ -117,11 +118,25 @@ function useQuickAssessmentResult(roles: Role[]) {
     loadResult();
   }, [roles]);
 
-  return { result, shareUrl, isLoading };
+  // スクロール検知で共有ボタンの表示/非表示を制御
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowShareButton(true);
+      } else {
+        setShowShareButton(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return { result, shareUrl, isLoading, showShareButton };
 }
 
 function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
-  const { result, shareUrl, isLoading } = useQuickAssessmentResult(roles);
+  const { result, shareUrl, isLoading, showShareButton } = useQuickAssessmentResult(roles);
   const { isKidsMode } = useKidsMode();
   const canShare = typeof navigator !== 'undefined' && 'share' in navigator;
 
@@ -245,7 +260,18 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
 
   return (
     <PageContainer>
-      <header className="space-y-3 text-center">
+      {/* スクロール連動型共有ボタン */}
+      <button
+        onClick={handleShare}
+        className={`fixed bottom-8 right-8 z-50 h-16 w-16 rounded-full shadow-2xl backdrop-blur-md bg-primary/90 hover:bg-primary hover:scale-110 transition-all duration-300 no-print flex items-center justify-center ${
+          showShareButton ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+        aria-label={canShare ? '共有する' : 'URLをコピー'}
+      >
+        {canShare ? <Share2 className="h-7 w-7 text-primary-foreground" /> : <Copy className="h-7 w-7 text-primary-foreground" />}
+      </button>
+
+      <header className="space-y-3 text-center no-print">
         <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-wider">
           Quick Assessment
         </Badge>
@@ -260,16 +286,6 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
-          <Button onClick={handleShare} className="gap-2">
-            {canShare ? <Share2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            {isKidsMode
-              ? canShare
-                ? '結果をみんなに見せる'
-                : '結果のリンクをコピー'
-              : canShare
-              ? '結果を共有'
-              : '結果URLをコピー'}
-          </Button>
           <Button variant="outline" asChild>
             <Link href="/quick-assessment">
               {isKidsMode ? 'もう一度診断する' : 'もう一度診断する'}
@@ -331,38 +347,21 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
         })}
       </div>
 
-      {isKidsMode && (
-        <Card className="border-primary/40 bg-primary/5">
-          <CardHeader className="text-center">
-            <CardTitle className="text-lg font-semibold">もっと宇宙のしごとを知りたい？</CardTitle>
-            <CardDescription>
-              他にもたくさんの宇宙のしごとがあるよ！どんなしごとがあるか見てみよう。
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Button asChild size="lg">
-              <Link href="/roles">
-                しごとの種類一覧を見る
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card className="border-border/70 bg-muted/40">
-        <CardContent className="flex justify-center py-6">
-          <Button variant="default" onClick={handleShare} className="gap-2">
-            {canShare ? (
-              <>
-                <Share2 className="h-4 w-4" />
-                {isKidsMode ? '結果をみんなに見せる' : '結果を共有'}
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                {isKidsMode ? 'リンクをコピーしてみんなに見せる' : 'URLをコピーして共有する'}
-              </>
-            )}
+      {/* 職種一覧への動線 */}
+      <Card className="border-border/70 bg-muted/30 shadow-sm">
+        <CardContent className="flex flex-col items-center gap-4 py-8 text-center">
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">
+              {isKidsMode ? 'もっと宇宙のしごとを知りたい？' : '他の職種も見てみませんか？'}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {isKidsMode
+                ? '宇宙にはいろいろなしごとがあるよ。他のしごとも見てみよう！'
+                : '宇宙スキル標準に掲載されている職種を一覧で確認できます。'}
+            </p>
+          </div>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/roles">{isKidsMode ? 'しごと一覧を見る' : '職種一覧へ'}</Link>
           </Button>
         </CardContent>
       </Card>
@@ -373,13 +372,7 @@ function ResultsContent({ roles, kidsContent }: ResultsClientProps) {
             トップページへ
           </Link>
         </Button>
-        {isKidsMode ? (
-          <Button asChild>
-            <Link href="/roles">
-              他のしごとも見てみよう
-            </Link>
-          </Button>
-        ) : (
+        {!isKidsMode && (
           <Button asChild>
             <Link href="/categories">
               詳細診断に進む

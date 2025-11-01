@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-border/50 bg-background">
+    <footer className="mt-auto border-t border-border/50 bg-muted/30">
       <div className="container mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-4xl flex-col gap-16 md:flex-row md:justify-between">
           <div className="space-y-4">
@@ -25,16 +25,29 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-wider">
               開発者
             </h3>
-            <div className="space-y-3">
-              <p className="text-base font-medium">栗林健太郎</p>
-              <a
-                href="https://kentarokuribayashi.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-base text-muted-foreground hover:underline"
-              >
-                kentarokuribayashi.com
-              </a>
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <p className="text-base font-medium">栗林健太郎</p>
+                <a
+                  href="https://kentarokuribayashi.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-sm text-muted-foreground hover:underline"
+                >
+                  kentarokuribayashi.com
+                </a>
+              </div>
+              <div className="space-y-2">
+                <p className="text-base font-medium">横山遥乙</p>
+                <a
+                  href="https://x.com/haruotsu_hy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-sm text-muted-foreground hover:underline"
+                >
+                  @haruotsu_hy
+                </a>
+              </div>
             </div>
           </div>
         </div>

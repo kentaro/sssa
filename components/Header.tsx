@@ -218,13 +218,13 @@ export default function Header() {
           <Button
             variant="outline"
             size="sm"
-            className="lg:hidden gap-2 px-3 text-xs font-medium"
+            className="lg:hidden gap-2 px-3 text-xs font-medium items-center"
             onClick={() => setMode(isKidsMode ? 'adult' : 'kids')}
           >
-            <span className="text-lg" aria-hidden>
-              {isKidsMode ? '🎈' : '👶'}
+            <span className="text-base leading-none" aria-hidden>
+              {isKidsMode ? '🎈' : '💼'}
             </span>
-            <span>{isKidsMode ? '子供向け' : '通常'}モード</span>
+            <span className="leading-none">{isKidsMode ? '子供向け' : '通常'}モード</span>
           </Button>
 
           {/* Mobile Menu */}

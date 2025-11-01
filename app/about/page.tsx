@@ -204,17 +204,31 @@ export default function AboutPage() {
         <CardHeader>
           <CardTitle className="text-xl">{isKidsMode ? '作った人' : '開発者'}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-1 text-sm text-muted-foreground">
-          <p className="text-base font-semibold text-foreground">栗林健太郎</p>
-          <a
-            href="https://kentarokuribayashi.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-fit items-center gap-1 text-primary hover:text-primary/80"
-          >
-            kentarokuribayashi.com
-            <ExternalLink className="h-3.5 w-3.5" />
-          </a>
+        <CardContent className="grid gap-8 sm:grid-cols-2">
+          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+            <p className="text-base font-semibold text-foreground">栗林健太郎</p>
+            <a
+              href="https://kentarokuribayashi.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-fit items-center gap-1 text-primary hover:text-primary/80"
+            >
+              kentarokuribayashi.com
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+            <p className="text-base font-semibold text-foreground">横山遥乙</p>
+            <a
+              href="https://x.com/haruotsu_hy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-fit items-center gap-1 text-primary hover:text-primary/80"
+            >
+              @haruotsu_hy
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
         </CardContent>
       </Card>
 

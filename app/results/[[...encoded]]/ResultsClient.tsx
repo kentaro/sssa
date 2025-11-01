@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import CategoryRadarChart from '@/components/CategoryRadarChart';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -103,10 +102,27 @@ const CATEGORY_SLUG: Record<string, string> = {
   'コーポレート': 'corporate',
 };
 
+function getLevelLabel(score: number): string {
+  if (score >= 4.0) return 'EXPERT';
+  if (score >= 3.0) return 'ADVANCED';
+  if (score >= 2.0) return 'INTERMEDIATE';
+  if (score > 0.0) return 'BEGINNER';
+  return 'NOT STARTED';
+}
+
+function getLevelEmoji(score: number): string {
+  if (score >= 4.0) return '🥇';
+  if (score >= 3.0) return '🥈';
+  if (score >= 2.0) return '🥉';
+  if (score > 0.0) return '⚪';
+  return '⚫';
+}
+
 export default function ResultsClient({ data, kidsContent }: ResultsClientProps) {
   const [state, dispatch] = useReducer(resultsReducer, INITIAL_RESULTS_STATE);
   const { result, summaries, permalink, isLoading } = state;
   const { isKidsMode } = useKidsMode();
+  const [showShareButton, setShowShareButton] = useState(false);
   const kidsCategoryMap = useMemo(() => {
     const map = new Map<string, { name: string }>();
     kidsContent.categories.forEach((category) => {
@@ -194,9 +210,29 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
     };
   }, [data]);
 
+  // スクロール検知で共有ボタンの表示/非表示を制御
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowShareButton(true);
+      } else {
+        setShowShareButton(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const canShare = typeof navigator !== 'undefined' && 'share' in navigator;
 
-  const topCategories = useMemo(() => getTopCategories(summaries, 3), [summaries]);
+  // 診断済みカテゴリのみをフィルタリング
+  const assessedSummaries = useMemo(
+    () => summaries.filter((s) => s.assessedSkillCount > 0).sort((a, b) => b.averageScore - a.averageScore),
+    [summaries]
+  );
+
+  const topCategories = useMemo(() => getTopCategories(assessedSummaries, 3), [assessedSummaries]);
 
   const relatedRoles = useMemo(() => {
     return topCategories
@@ -320,113 +356,110 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
 
   return (
     <PageContainer>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-2">
-          <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-wider">
-            Assessment Result
-          </Badge>
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              {isKidsMode ? '宇宙のしごと診断の結果' : 'アセスメント結果'}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {isKidsMode ? '診断した日時' : '評価日時'}: {new Date(result.timestamp).toLocaleString('ja-JP')}
-            </p>
-          </div>
+      {/* スクロール連動型共有ボタン */}
+      <button
+        onClick={handleShare}
+        className={`fixed bottom-8 right-8 z-50 h-16 w-16 rounded-full shadow-2xl backdrop-blur-md bg-primary/90 hover:bg-primary hover:scale-110 transition-all duration-300 no-print flex items-center justify-center ${
+          showShareButton ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+        aria-label={canShare ? '共有する' : 'URLをコピー'}
+      >
+        {canShare ? <Share2 className="h-7 w-7 text-primary-foreground" /> : <Copy className="h-7 w-7 text-primary-foreground" />}
+      </button>
+
+      <header className="space-y-2 no-print">
+        <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-wider">
+          Assessment Result
+        </Badge>
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            {isKidsMode ? '宇宙のしごと診断の結果' : 'アセスメント結果'}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {isKidsMode ? '診断した日時' : '評価日時'}: {new Date(result.timestamp).toLocaleString('ja-JP')}
+          </p>
         </div>
-        <Button variant="outline" onClick={handleShare} className="gap-2">
-          {canShare ? <Share2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          {isKidsMode ? (canShare ? 'みんなに見せる' : 'リンクをコピー') : (canShare ? '共有する' : 'URLをコピー')}
-        </Button>
       </header>
 
-      <Card className="border-border/70 shadow-sm">
-        <CardHeader className="space-y-2">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Sparkles className="h-5 w-5 text-primary" />
-            {isKidsMode ? '診断のまとめ' : '評価サマリー'}
-          </CardTitle>
-          <CardDescription>
-            {isKidsMode
-              ? '各種類の平均スコアと診断済みのできることの数をまとめています。スコアはレベル0〜5で表示されます。'
-              : '各カテゴリの平均スコアと評価済みスキル数をまとめています。スコアは6段階（Lv0〜Lv5）で表示されます。'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {summaries.map((summary) => {
-              const isEvaluated = summary.assessedSkillCount > 0;
-              const completion = Math.round(summary.completionRate);
-
+      {/* 診断済みカテゴリ一覧 */}
+      {assessedSummaries.length > 0 && (
+        <Card className="border-border/70 shadow-sm print:border-2">
+          <CardHeader className="space-y-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Sparkles className="h-5 w-5 text-primary" />
+              {isKidsMode ? 'あなたの診断結果 🏅' : 'あなたの強みカテゴリ'}
+            </CardTitle>
+            <CardDescription>
+              {isKidsMode
+                ? `診断したできることを、スコアが高い順に表示しています。（${assessedSummaries.length}種類）`
+                : `評価したスキルを、平均スコアが高い順に表示しています。（${assessedSummaries.length}カテゴリ）`}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {assessedSummaries.map((summary, idx) => {
+              const medals = ['🥇', '🥈', '🥉'];
+              const rankColors = [
+                'text-yellow-600 dark:text-yellow-400',
+                'text-slate-500 dark:text-slate-400',
+                'text-orange-600 dark:text-orange-400',
+              ];
+              const isTopThree = idx < 3;
               return (
-                <Card
-                  key={summary.category}
-                  className="border border-border/60 bg-card/80 shadow-sm"
-                >
-                  <CardHeader className="space-y-2">
-                    <CardTitle className="text-base font-semibold text-foreground">
-                      {summary.category}
-                    </CardTitle>
-                    <CardDescription className="text-xs text-muted-foreground">
-                      {isKidsMode ? `${summary.assessedSkillCount} / ${summary.skillCount} 診断済みのできること` : `${summary.assessedSkillCount} / ${summary.skillCount} スキル評価`}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-semibold text-primary">
-                        {isEvaluated ? summary.averageScore.toFixed(1) : '—'}
+                <div key={summary.category} className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className={isTopThree ? "text-4xl" : "text-2xl"}>
+                        {isTopThree ? medals[idx] : getLevelEmoji(summary.averageScore)}
                       </span>
-                      <span className="text-sm text-muted-foreground">/ 5.0</span>
-                    </div>
-                    <Progress value={isEvaluated ? completion : 0} />
-                    <p className="text-xs text-muted-foreground">
-                      {isKidsMode ? '終わった割合' : '完了率'} {completion}%
-                    </p>
-                    {!isKidsMode && (
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="sm"
-                          disabled={!CATEGORY_SLUG[summary.category]}
-                        >
-                          <Link href={`/assessment/${CATEGORY_SLUG[summary.category] ?? ''}`}>
-                            詳細診断を続ける
-                          </Link>
-                        </Button>
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs text-muted-foreground"
-                        >
-                          <Link href={`/categories`}>カテゴリに戻る</Link>
-                        </Button>
+                      <div>
+                        <h3 className="text-lg font-semibold text-foreground">
+                          {isKidsMode && CATEGORY_SLUG[summary.category]
+                            ? kidsCategoryMap.get(CATEGORY_SLUG[summary.category])?.name ?? summary.category
+                            : summary.category}
+                        </h3>
+                        <div className="flex items-baseline gap-2">
+                          <Badge variant="secondary" className={isTopThree ? rankColors[idx] : ''}>
+                            {getLevelLabel(summary.averageScore)}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {summary.assessedSkillCount} / {summary.skillCount}{' '}
+                            {isKidsMode ? 'できること' : 'スキル'}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-primary">{summary.averageScore.toFixed(1)}</div>
+                      <div className="text-sm text-muted-foreground">/ 5.0</div>
+                    </div>
+                  </div>
+                  <Progress value={summary.averageScore * 20} className="h-2" />
+                  <p className="text-xs text-muted-foreground">
+                    {isKidsMode ? '完了率' : '評価完了率'}: {Math.round(summary.completionRate)}%
+                  </p>
+                </div>
               );
             })}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
-      <Card className="border-border/70 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            {isKidsMode ? '種類のレーダーチャート' : 'カテゴリレーダーチャート'}
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            {isKidsMode
-              ? '各種類の平均スコアをレーダーチャートで見やすくしています。'
-              : '各カテゴリの平均スコアをレーダーチャートで可視化しています。'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <CategoryRadarChart summaries={summaries} />
-        </CardContent>
-      </Card>
+      {/* 他のカテゴリも診断する動線 */}
+      {!isKidsMode && (
+        <Card className="border-border/70 bg-muted/30 shadow-sm">
+          <CardContent className="flex flex-col items-center gap-4 py-8 text-center">
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold">他のカテゴリも診断してみませんか？</h3>
+              <p className="text-sm text-muted-foreground">
+                全8カテゴリの診断で、あなたの宇宙業界でのスキルをより詳しく把握できます。
+              </p>
+            </div>
+            <Button asChild size="lg">
+              <Link href="/categories">カテゴリ一覧へ</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {relatedRoles.some((entry) => entry.roles.length > 0) && (
         <Card className="border-border/70 shadow-sm">
@@ -489,23 +522,23 @@ export default function ResultsClient({ data, kidsContent }: ResultsClientProps)
         </Card>
       )}
 
-      <Card className="border-border/70 bg-muted/40">
-        <CardContent className="flex justify-center py-6">
-          <Button variant="default" onClick={handleShare} className="gap-2">
-            {canShare ? (
-              <>
-                <Share2 className="h-4 w-4" />
-                {isKidsMode ? '結果をみんなに見せる' : '結果を共有'}
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                {isKidsMode ? 'リンクをコピーしてみんなに見せる' : 'URLをコピーして共有する'}
-              </>
-            )}
-          </Button>
-        </CardContent>
-      </Card>
+      {/* 職種一覧への動線 */}
+      {!isKidsMode && (
+        <Card className="border-border/70 bg-muted/30 shadow-sm">
+          <CardContent className="flex flex-col items-center gap-4 py-8 text-center">
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold">他の職種も見てみませんか？</h3>
+              <p className="text-sm text-muted-foreground">
+                宇宙スキル標準に掲載されている職種を一覧で確認できます。
+              </p>
+            </div>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/roles">職種一覧へ</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
 
       <div className="flex flex-wrap justify-center gap-3">
         <Button asChild variant="outline">

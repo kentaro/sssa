@@ -83,3 +83,71 @@ body {
 [role="menu"] [role="menuitem"] * {
   text-align: left !important;
 }
+
+/* 印刷用スタイル */
+@media print {
+  /* 印刷しない要素を非表示 */
+  .no-print,
+  header,
+  footer,
+  button:not(.print-show),
+  nav,
+  .fixed,
+  .sticky {
+    display: none !important;
+  }
+
+  /* 改ページ */
+  .page-break {
+    page-break-after: always;
+  }
+
+  /* 色を保持（カラー印刷時） */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* 余白調整 */
+  @page {
+    margin: 2cm;
+    size: A4;
+  }
+
+  /* ページレイアウト */
+  body {
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  /* 背景と枠線を表示 */
+  .print\:border-2 {
+    border: 2px solid #000 !important;
+  }
+
+  /* カードのマージン調整 */
+  .print\:mb-4 {
+    margin-bottom: 1rem !important;
+  }
+
+  /* リンクのURL表示を無効化 */
+  a[href]:after {
+    content: none !important;
+  }
+
+  /* 白黒印刷でも見やすく */
+  .text-primary {
+    color: #000 !important;
+    font-weight: 600;
+  }
+
+  /* プログレスバーの背景 */
+  [role="progressbar"] {
+    background-color: #e5e7eb !important;
+  }
+
+  [role="progressbar"] > div {
+    background-color: #000 !important;
+  }
+}
