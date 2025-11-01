@@ -42,6 +42,16 @@
   <circle cx="100" cy="315" r="30" fill="white" opacity="0.2"/>
   <circle cx="1100" cy="315" r="40" fill="#dbeafe" opacity="0.3"/>
 
+  <!-- Decorative emojis -->
+  <g opacity="0.6">
+    <text x="150" y="150" font-size="48" text-anchor="middle">⭐</text>
+    <text x="1050" y="180" font-size="40" text-anchor="middle">🌟</text>
+    <text x="250" y="500" font-size="36" text-anchor="middle">✨</text>
+    <text x="950" y="520" font-size="42" text-anchor="middle">🪐</text>
+    <text x="80" y="100" font-size="32" text-anchor="middle">🌙</text>
+    <text x="1120" y="550" font-size="38" text-anchor="middle">🌠</text>
+  </g>
+
   <!-- Content container - centered vertically -->
   <g transform="translate(0, 280)">
     <!-- Rocket emoji -->
